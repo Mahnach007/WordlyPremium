@@ -8,14 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ScrollView {
+            VStack(spacing: -20) {
+                AddButtonView()
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding()
+                SearchBar()
+                    .padding()
+            }
+            .padding(.bottom, -30)
+            VStack(spacing: -10) {
+                PackSliderView(packTitle: "Your Packs", packNumber: 34)
+                PackSliderView(packTitle: "Your Folders", packNumber: 10)
+                PackSliderView(packTitle: "Community Packs", packNumber: 4)
+            }
         }
-        .padding()
     }
 }
 
