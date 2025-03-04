@@ -1,5 +1,5 @@
 //
-//  CardButtonView.swift
+//  CardButton.swift
 //  Wordly
 //
 //  Created by Diego Arroyo on 28/02/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CardButtonView: View {
+struct CardButton: View {
     @State private var isPressed = false
     var cardTitle: String
     var numberOfWords: Int
@@ -65,5 +65,5 @@ struct CardButtonView: View {
 }
 
 #Preview {
-    CardButtonView(cardTitle: "Car transport only nouns", numberOfWords: 20, icon: "cards")
+    CardButton(cardTitle: "Car transport only nouns", numberOfWords: 20, icon: "cards")
 }

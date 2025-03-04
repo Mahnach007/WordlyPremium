@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var viewModel = PackSliderViewModel()
 
     var body: some View {
         ScrollView {
             VStack(spacing: -20) {
-                AddButtonView()
+                AddButton()
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding()
                 SearchBar()
@@ -20,9 +21,17 @@ struct ContentView: View {
             }
             .padding(.bottom, -30)
             VStack(spacing: -10) {
-                PackSliderView(packTitle: "Your Packs", packNumber: 34)
-                PackSliderView(packTitle: "Your Folders", packNumber: 10)
-                PackSliderView(packTitle: "Community Packs", packNumber: 4)
+                PackSlider(
+                    packTitle: "Your Packs", packNumber: viewModel.packs.count,
+                    cards: viewModel.packs)
+                PackSlider(
+                    packTitle: "Your Folders",
+                    packNumber: viewModel.folders.count,
+                    cards: viewModel.folders)
+                PackSlider(
+                    packTitle: "Community Packs",
+                    packNumber: viewModel.community.count,
+                    cards: viewModel.community)
             }
         }
     }

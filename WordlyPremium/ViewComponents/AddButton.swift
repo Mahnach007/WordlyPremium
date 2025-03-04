@@ -1,5 +1,5 @@
 //
-//  AddButtonView.swift
+//  AddButton.swift
 //  Wordly
 //
 //  Created by Diego Arroyo on 28/02/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddButtonView: View {
+struct AddButton: View {
     @State private var isPressed = false
     
     var body: some View {
@@ -45,5 +45,5 @@ struct AddButtonView: View {
 }
 
 #Preview {
-    AddButtonView()
+    AddButton()
 }

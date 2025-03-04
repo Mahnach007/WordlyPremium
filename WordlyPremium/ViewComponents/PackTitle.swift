@@ -1,5 +1,5 @@
 //
-//  PackTitleView.swift
+//  PackTitle.swift
 //  Wordly
 //
 //  Created by Diego Arroyo on 03/03/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PackTitleView: View {
+struct PackTitle: View {
     var packTitle: String
     var packNumber: Int
     
@@ -34,5 +34,5 @@ struct PackTitleView: View {
 }
 
 #Preview {
-    PackTitleView(packTitle: "Your Packs", packNumber: 34)
+    PackTitle(packTitle: "Your Packs", packNumber: 34)
 }
