@@ -15,7 +15,7 @@ struct Packs: View {
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(.black)
                 
-                Text("2 packs")
+                Text("20 words")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.gray)
             }
