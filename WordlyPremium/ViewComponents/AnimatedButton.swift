@@ -7,9 +7,9 @@
 import SwiftUI
 
 struct AnimatedMeshGradient: View {
-    @State private var isLoading = false
+    @State private var isPressed = false
+    
     var btnName: String
-    var isLoadingText: String
     var subtitle: String?
     
     var body: some View {
@@ -17,23 +17,19 @@ struct AnimatedMeshGradient: View {
             Color.black.edgesIgnoringSafeArea(.all)
             
             VStack {
-                Button(action: { isLoading.toggle() }) {
+                Button(action: {}) {
                     VStack(spacing: 4) {
                         // Main button text
                         HStack {
-                            if isLoading {
-                                ProgressView()
-                                    .tint(.black)
-                            } else {
-                                Image(systemName: "sparkles")
-                                    .foregroundColor(.black)
-                            }
-                            Text(isLoading ? isLoadingText : btnName)
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.black)
+                            
+                            Text(btnName)
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(.black)
                         }
                         
-                        // If there is Subtitle
+                        // Subtitle inside the button (if available)
                         if let subtitle = subtitle, !subtitle.isEmpty {
                             Text(subtitle)
                                 .font(.system(size: 14, weight: .medium))
@@ -64,6 +60,20 @@ struct AnimatedMeshGradient: View {
                             )
                             .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
                     )
+                    .scaleEffect(isPressed ? 0.95 : 1.0) // Press effect
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                withAnimation(.easeInOut(duration: 0.1)) {
+                                    isPressed = true
+                                }
+                            }
+                            .onEnded { _ in
+                                withAnimation(.easeInOut(duration: 0.1)) {
+                                    isPressed = false
+                                }
+                            }
+                    )
                 }
             }
             .padding()
@@ -76,13 +86,11 @@ struct AnimatedMeshGradient_Previews: PreviewProvider {
         VStack {
             AnimatedMeshGradient(
                 btnName: "AI Flashcards",
-                isLoadingText: "Generating...",
                 subtitle: "Generate flashcards instantly"
             )
             
             AnimatedMeshGradient(
                 btnName: "AI Flashcards",
-                isLoadingText: "Generating...",
                 subtitle: nil // No subtitle case
             )
         }

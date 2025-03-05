@@ -1,3 +1,11 @@
+//
+//  LanguageButton.swift
+//  WordlyPremium
+//
+//  Created by Ulugbek Abdimurodov on 05/03/25.
+//
+
+
 import SwiftUI
 
 struct LanguageButton: View {
