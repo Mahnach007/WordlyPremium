@@ -23,7 +23,7 @@ struct CardComponent: View {
             .padding(10)
             
         }
-        .padding(.horizontal, 50)
+        .padding(.horizontal, 70)
         .frame(maxWidth: .infinity)
     }
 }
