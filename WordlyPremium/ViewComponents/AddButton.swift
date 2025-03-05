@@ -12,19 +12,19 @@ struct AddButton: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 3)
                 .foregroundStyle(AppColors.darkGreen)
-                .frame(width: 35, height: 35)
-                .offset(y: 2)
+                .frame(width: 35, height: 30)
+                .offset(y: 4)
             ZStack {
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 3)
                     .foregroundStyle(AppColors.ligthGreen)
                     .frame(width: 35, height: 35)
-                    .offset(y: -5)
+                    .offset(y: -3)
                 Text("+")
                     .font(.custom("Feather", size: 42))
                     .foregroundStyle(.white)
-                    .offset(y: -10)
+                    .offset(y: -7)
             }
             .offset(y: isPressed ? 6 : 0)
         }

@@ -1,5 +1,5 @@
 //
-//  PackSlider.swift
+//  CardSlider.swift
 //  Wordly
 //
 //  Created by Diego Arroyo on 28/02/25.
@@ -7,16 +7,19 @@
 
 import SwiftUI
 
-struct PackSlider: View {
+struct CardSlider: View {
     var packTitle: String
     var packNumber: Int
     var cards: [CardButtonData]
 
     var body: some View {
         VStack {
-            PackTitle(packTitle: packTitle, packNumber: packNumber)
-                .padding()
-                .offset(y: 25)
+            SliderTitle(
+                sliderTitle: packTitle, sliderNumber: packNumber,
+                seeAllDestination: AnyView(CardList())
+            )
+            .padding(.horizontal)
+            .padding(.vertical, 2)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(cards) { card in
@@ -25,14 +28,15 @@ struct PackSlider: View {
                             numberOfWords: card.numberOfWords, icon: card.icon)
                     }
                 }
-                .padding()
+                .padding(.vertical, 7)
+                .padding(.leading)
             }
         }
     }
 }
 
 #Preview {
-    PackSlider(
+    CardSlider(
         packTitle: "Your Packs", packNumber: 34,
         cards: [
             CardButtonData(
@@ -40,7 +44,10 @@ struct PackSlider: View {
                 icon: "cards"),
             CardButtonData(
                 title: "Medicine", numberOfWords: 133, icon: "cards"),
-            CardButtonData(title: "Sports", numberOfWords: 40, icon: "cards"),
-            CardButtonData(title: "Law", numberOfWords: 10, icon: "cards"),
-        ])
+            CardButtonData(
+                title: "Sports", numberOfWords: 40, icon: "cards"),
+            CardButtonData(
+                title: "Law", numberOfWords: 10, icon: "cards"),
+        ]
+    )
 }

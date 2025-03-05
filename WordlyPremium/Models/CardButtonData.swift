@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct CardButtonData: Identifiable {
     var id = UUID()

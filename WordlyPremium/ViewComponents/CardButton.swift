@@ -15,39 +15,47 @@ struct CardButton: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .foregroundStyle(.gray)
-                .frame(width: 233, height: 140)
-                .offset(y: 12)
-            RoundedRectangle(cornerRadius: 15)
-                .foregroundStyle(.white)
-                .frame(width: 230, height: 150)
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(AppColors.gray)
+                .frame(width: 178, height: 115)
+                .offset(y: 5)
+
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(AppColors.white)
+                .frame(width: 175, height: 115)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 15)
-                        .stroke(.gray, lineWidth: 4)
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(AppColors.gray, lineWidth: 3)
                 )
                 .offset(y: isPressed ? 4 : 0)
-            ZStack() {
-                    Text(cardTitle)
-                        .font(.custom("Feather", size: 20))
-                        .foregroundStyle(AppColors.eel)
-                        .offset(x: -20, y: -12)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .frame(width: 140)
-                        .frame(maxHeight: .infinity, alignment: .top)
-                        .frame(height: 90)
-                    Text("\(numberOfWords) words")
-                        .font(.custom("Feather Bold", size: 16))
-                        .foregroundStyle(AppColors.gray)
-                        .offset(x: -50, y: 35)
-                        .padding(0)
+            ZStack {
+                Text(cardTitle)
+                    .font(.custom("Feather", size: 16))
+                    .foregroundStyle(AppColors.eel)
+                    .offset(x: -5)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(width: 140)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .frame(height: 90)
+                Text("\(numberOfWords) words")
+                    .font(.custom("Feather Bold", size: 16))
+                    .foregroundStyle(AppColors.gray)
+                    .offset(x: -35, y: 35)
+                    .padding(0)
             }
             .offset(y: isPressed ? 4 : 0)
-            Image(icon)
-                .offset(x: 70, y: 20)
-                .offset(y: isPressed ? 4 : 0)
         }
+        .overlay(
+            Image(icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+                .offset(y: isPressed ? 4 : 0)
+                .padding(.bottom, 12)
+                .padding(.trailing, 8),
+            alignment: .bottomTrailing
+        )
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
@@ -65,5 +73,6 @@ struct CardButton: View {
 }
 
 #Preview {
-    CardButton(cardTitle: "Car transport only nouns", numberOfWords: 20, icon: "cards")
+    CardButton(
+        cardTitle: "Car transport only nouns", numberOfWords: 20, icon: "cards")
 }
