@@ -1,59 +1,101 @@
 //
-//  apiHandle.swift
+//  FlashcardService.swift
 //  WordlyPremium
 //
 //  Created by Jahongir Abdujalilov on 06/03/25.
 //
 
+import Foundation
 import Alamofire
 
 class FlashcardService {
-    private let apiKey = "your-deepseek-api-key"
-    private let apiUrl = "https://api.deepseek.com/v1/completions" // Example URL
-
+    private let apiKey = "sk-e18b6280605d4913821ed0c37e89cffd"
+    private let apiUrl = "https://api.deepseek.com/chat/completions"
+    
     func generateCards(request: GenerateCardsRequest, completion: @escaping (Result<[Flashcard], Error>) -> Void) {
-        // Construct the prompt
         let numCardsPrompt = request.numCards == 0 ? "an appropriate number of" : "\(request.numCards)"
         let prompt = "Generate \(numCardsPrompt) \(request.fromLanguage) to \(request.toLanguage) flashcards about \(request.topic), focusing on \(request.wordType)."
-
-        // Prepare the request body
+        
+        let systemContent = """
+        The user will provide the topic and parameters to create Flashcards
+        Parameters: Topic, fromLanguage, toLanguage, CardsAmount, and WordType, CardType
+        
+        Parameter options:
+        CardsAmount - 5, 10, 20, 0(automatic)
+        WordType - Noun, Verb, Adjective, Adverb, Mixed
+        CardType - Single word, Phrase, Sentence, Mixed
+        
+        EXAMPLE INPUT:
+        - Single word: "Transport"
+        - Full sentence: "Give me the most common words to use in a Barbershop."
+        
+        EXAMPLE JSON OUTPUT:
+        {
+            "packName": "Barbershop",
+            "flashCards": [
+                {
+                    "langFrom": "hair",
+                    "langTo": "cabello"
+                },
+                {
+                    "langFrom": "cut",
+                    "langTo": "corte"
+                }
+            ]
+        }
+        """
+        
         let requestBody: [String: Any] = [
-            "prompt": prompt,
+            "model": "deepseek-chat",
+            "messages": [
+                ["role": "system", "content": systemContent],
+                ["role": "user", "content": prompt]
+            ],
+            "response_format": ["type": "json_object"],
+            "stream": false,
             "max_tokens": 1000
         ]
-
-        // Define headers
+        
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(apiKey)",
             "Content-Type": "application/json"
         ]
-
-        // Send the request using Alamofire
+        
         AF.request(apiUrl, method: .post, parameters: requestBody, encoding: JSONEncoding.default, headers: headers)
             .validate()
-            .responseJSON { response in
+            .responseData { response in
                 switch response.result {
-                case .success(let value):
-                    // Parse the response
-                    if let json = value as? [String: Any],
-                       let choices = json["choices"] as? [[String: Any]] {
-                        var cards: [Flashcard] = []
-                        for choice in choices {
-                            if let text = choice["text"] as? String {
-                                let lines = text.components(separatedBy: "\n")
-                                for line in lines {
-                                    let parts = line.components(separatedBy: ":")
-                                    guard parts.count == 2 else { continue }
-                                    let flashcard = Flashcard(question: parts[0], answer: parts[1])
-                                    cards.append(flashcard)
-                                }
-                            }
+                case .success(let data):
+                    do {
+                        // First, parse the outer JSON to extract the content string
+                        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                        print("✅ Parsed JSON: \(json ?? [:])")
+
+                        guard let choices = json?["choices"] as? [[String: Any]],
+                              let message = choices.first?["message"] as? [String: Any],
+                              let contentString = message["content"] as? String,
+                              let contentData = contentString.data(using: .utf8) else {
+                            print("❌ Failed to extract content string")
+                            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format"])))
+                            return
                         }
-                        completion(.success(cards))
-                    } else {
-                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format"])))
+
+                        // Print the extracted JSON content before decoding
+                        print("✅ Extracted Content String: \(contentString)")
+
+                        // Second, decode the inner JSON string into FlashcardResponse
+                        let parsedResponse = try JSONDecoder().decode(FlashcardResponse.self, from: contentData)
+                        print("✅ Successfully Decoded FlashcardResponse: \(parsedResponse)")
+                        
+                        completion(.success(parsedResponse.flashCards))
+
+                    } catch {
+                        print("❌ JSON Decoding Error: \(error)")
+                        completion(.failure(error))
                     }
+
                 case .failure(let error):
+                    print("❌ Request failed: \(error)")
                     completion(.failure(error))
                 }
             }
