@@ -1,6 +1,0 @@
-framework module Pods_WordlyPremium {
-  umbrella header "Pods-WordlyPremium-umbrella.h"
-
-  export *
-  module * { export * }
-}
