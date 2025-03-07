@@ -16,68 +16,81 @@ struct AnimatedMeshGradient: View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
             
-            VStack {
-                Button(action: {}) {
-                    VStack(spacing: 4) {
-                        // Main button text
-                        HStack {
-                            Image(systemName: "sparkles")
-                                .foregroundColor(.black)
-                            
-                            Text(btnName)
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundColor(.black)
-                        }
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.purple,
+                            Color.pink,
+                            Color.orange,
+                            Color.yellow,
+                            Color.green
+                        ]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    ),
+                    lineWidth: 3
+                )
+                .frame(width: 217, height: 115)
+                .offset(y:3)
+            
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(AppColors.white)
+                .frame(width: 217, height: 115)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.purple,
+                                    Color.pink,
+                                    Color.orange,
+                                    Color.yellow,
+                                    Color.green
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ),
+                            lineWidth: 3
+                        )
+                )
+                .offset(y: isPressed ? 4 : 0)
+            
+            ZStack {
+                VStack {
+                    HStack {
+                        Image(systemName: "sparkles")
+                            .foregroundColor(.black)
                         
-                        // Subtitle inside the button (if available)
-                        if let subtitle = subtitle, !subtitle.isEmpty {
-                            Text(subtitle)
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.gray)
-                        }
+                        Text(btnName)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(.black)
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [
-                                                Color.purple,
-                                                Color.pink,
-                                                Color.orange,
-                                                Color.yellow,
-                                                Color.green
-                                            ]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        ),
-                                        lineWidth: 3
-                                    )
-                            )
-                            .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
-                    )
-                    .scaleEffect(isPressed ? 0.95 : 1.0) // Press effect
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                withAnimation(.easeInOut(duration: 0.1)) {
-                                    isPressed = true
-                                }
-                            }
-                            .onEnded { _ in
-                                withAnimation(.easeInOut(duration: 0.1)) {
-                                    isPressed = false
-                                }
-                            }
-                    )
+                    
+                    if let subtitle = subtitle, !subtitle.isEmpty {
+                        Text(subtitle)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.gray)
+                    }
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
             }
-            .padding()
+            .offset(y: isPressed ? 4 : 0)
         }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        isPressed = true
+                    }
+                }
+                .onEnded { _ in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        isPressed = false
+                    }
+                }
+        )
     }
 }
 

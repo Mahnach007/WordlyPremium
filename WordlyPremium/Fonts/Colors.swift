@@ -22,5 +22,9 @@ struct AppColors {
     static let red = Color.red
     static let blue = Color.blue
     static let black = Color.black
+    static let purple = Color.purple
+    static let pink = Color.pink
+    static let orange = Color.orange
+    static let yellow = Color.yellow
 }
 
