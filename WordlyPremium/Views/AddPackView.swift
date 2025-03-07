@@ -13,7 +13,7 @@ struct AddPackView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 25) {
-                CardButtonExtended(cardTitle: "E", numberOfWords: 20, icon: "cards")
+                AnimatedButton(btnName: "AI Flashcards", subtitle: "Generate flashcards instantly")
                 CardButtonExtended(cardTitle: "E", numberOfWords: 20, icon: "cards")
                 CardButtonExtended(cardTitle: "E", numberOfWords: 20, icon: "cards")
             }

@@ -9,11 +9,24 @@
 import SwiftUI
 
 struct LanguageButton: View {
+    @State private var isPressed = false
     var flagImage: String // SF Symbol or asset image name
     var languageName: String
     
     var body: some View {
-        Button(action: {}) {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(AppColors.gray)
+                .frame(height: 80)
+                .offset(y: 11)
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(.white)
+                .frame(height: 90)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(AppColors.gray, lineWidth: 4)
+                )
+                .offset(y: isPressed ? 4 : 0)
             HStack {
                 Image(flagImage)
                     .resizable()
@@ -22,18 +35,27 @@ struct LanguageButton: View {
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                 
                 Text(languageName)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.black)
                 
                 Spacer()
             }
+            .offset(y: isPressed ? 4 : 0)
             .padding()
-            .frame(maxWidth: .infinity, minHeight: 50)
-            .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 2)
         }
-        .buttonStyle(PlainButtonStyle()) // Removes default button styling
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        isPressed = true
+                    }
+                }
+                .onEnded { _ in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        isPressed = false
+                    }
+                }
+        )
     }
 }
 
@@ -42,7 +64,5 @@ struct LanguageButton_Previews: PreviewProvider {
         VStack {
             LanguageButton(flagImage: "italy", languageName: "Italian")
         }
-        .padding()
-        .background(Color.black.edgesIgnoringSafeArea(.all))
     }
 }

@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct AnimatedMeshGradient: View {
+struct AnimatedButton: View {
     @State private var isPressed = false
     
     var btnName: String
@@ -14,8 +14,6 @@ struct AnimatedMeshGradient: View {
     
     var body: some View {
         ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
-            
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
                     LinearGradient(
@@ -31,12 +29,12 @@ struct AnimatedMeshGradient: View {
                     ),
                     lineWidth: 3
                 )
-                .frame(width: 217, height: 115)
+                .frame(height: 80)
                 .offset(y:3)
             
             RoundedRectangle(cornerRadius: 16)
                 .foregroundStyle(AppColors.white)
-                .frame(width: 217, height: 115)
+                .frame(height: 80)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(
@@ -94,15 +92,15 @@ struct AnimatedMeshGradient: View {
     }
 }
 
-struct AnimatedMeshGradient_Previews: PreviewProvider {
+struct AnimatedButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            AnimatedMeshGradient(
+            AnimatedButton(
                 btnName: "AI Flashcards",
                 subtitle: "Generate flashcards instantly"
             )
             
-            AnimatedMeshGradient(
+            AnimatedButton(
                 btnName: "AI Flashcards",
                 subtitle: nil // No subtitle case
             )
