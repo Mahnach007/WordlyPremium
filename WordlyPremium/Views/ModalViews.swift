@@ -46,7 +46,7 @@ struct AddPackModalView: View {
     }
 }
 
-struct SelectCardInModalView: View {
+struct SelectWordTypeInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
     @Binding var selectedOption: OptionType?
