@@ -342,6 +342,7 @@ struct SingleButton: View {
             }
             .offset(y: isPressed ? 3 : 0)
         }
+
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.1)) {
                 if !isPressed {
