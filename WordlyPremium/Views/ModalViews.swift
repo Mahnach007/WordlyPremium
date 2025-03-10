@@ -79,15 +79,7 @@ struct SelectWordTypeInModalView: View {
                     description: "Where can I buy apples?", icon: "cards",
                     isGradient: false, isFolder: false)
                 .onTapGesture {
-                    selectedOption = .sentence
-                    isPresented = false
-                }
-                CardButtonExtended(
-                    cardTitle: "Mixed",
-                    description: "All types of cards", icon: "cards",
-                    isGradient: false, isFolder: false)
-                .onTapGesture {
-                    selectedOption = .mixed
+                    selectedOption = .thirdOption
                     isPresented = false
                 }
             }

@@ -9,7 +9,11 @@ import SwiftUI
 
 struct AIGenerationCardView: View {
     @Environment(\.dismiss) var dismiss
-    
+    @State private var selectedWordOption: WordType? = nil
+    @State private var selectedFrontLanguageOption: LanguageType? = nil
+    @State private var selectedBackLanguageOption: LanguageType? = nil
+    @State private var wordTypeIsVisible = true
+
     var body: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
@@ -18,7 +22,10 @@ struct AIGenerationCardView: View {
             }
             VStack(alignment: .leading) {
                 Text("Card type")
-                SelectorWithModal(modalType: 0)
+                SelectorWithModal<WordType>(
+                    selectedOption: $selectedWordOption,
+                    selectionType: .wordType
+                )
             }
             VStack(alignment: .leading) {
                 Text("Amount of cards")
@@ -27,20 +34,28 @@ struct AIGenerationCardView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Front side")
-                    SelectorWithModal(modalType: 1)
+                    SelectorWithModal<LanguageType>(
+                        selectedOption: $selectedFrontLanguageOption,
+                        selectionType: .languageType
+                    )
                 }
                 VStack(alignment: .leading) {
                     Text("Back side")
-                    SelectorWithModal(modalType: 1)
+                    SelectorWithModal<LanguageType>(
+                        selectedOption: $selectedBackLanguageOption,
+                        selectionType: .languageType
+                    )
                 }
             }
-            VStack(alignment: .leading) {
-                Text("Word type")
-                HStack {
-                    SingleButton(word: "Noun")
-                    SingleButton(word: "Verb")
-                    SingleButton(word: "Adjective")
-                    SingleButton(word: "Adverb")
+            if !wordTypeIsVisible {
+                VStack(alignment: .leading) {
+                    Text("Word type")
+                    HStack {
+                        SingleButton(word: "Noun")
+                        SingleButton(word: "Verb")
+                        SingleButton(word: "Adjective")
+                        SingleButton(word: "Adverb")
+                    }
                 }
             }
             Spacer()
@@ -60,17 +75,27 @@ struct AIGenerationCardView: View {
                     HStack {
                         Text(Image(systemName: "arrow.left"))
                             .fontWeight(.bold)
-                            .foregroundStyle(AppColors.eel)
+                            .foregroundStyle(Color.eel)
                     }
                 }
             }
             ToolbarItem(placement: .principal) {
                 Text("AI Card Generation")
-                    .foregroundStyle(AppColors.eel)
+                    .foregroundStyle(Color.eel)
                     .font(.custom("Feather", size: 24))
             }
         }
         .padding(.vertical, -50)
+        .onChange(of: selectedWordOption) {
+            if let newValue = selectedWordOption {
+                if newValue == .firstOption {
+                    wordTypeIsVisible = false
+                } else {
+                    wordTypeIsVisible = true
+                }
+            }
+        }
+        .background(Color.background)
     }
 }
 
