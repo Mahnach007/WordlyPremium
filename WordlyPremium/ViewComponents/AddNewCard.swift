@@ -7,8 +7,8 @@ struct CardComponent: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 7)
-                .fill(AppColors.white)
-                .stroke(AppColors.gray, lineWidth: 1.5)
+                .fill(Color.white)
+                .stroke(Color.gray, lineWidth: 1.5)
                 .overlay(
                     Image("Regenerate")
                         .padding(7)
@@ -46,7 +46,7 @@ struct UnderlineTextField: View {
                     }
                 })
                 .font(.custom("feather", size: 16))
-                .foregroundStyle(AppColors.eel)
+                .foregroundStyle(Color.eel)
                 .underlineTextField()
             }
 
@@ -54,7 +54,7 @@ struct UnderlineTextField: View {
             HStack {
                 Text(wordType)
                     .font(.custom("feather", size: 10))
-                    .foregroundStyle(AppColors.gray)
+                    .foregroundStyle(Color.gray)
                 Spacer()
             }
 
@@ -81,13 +81,13 @@ struct CardComponentSuggestion: View {
             ForEach(suggestions, id: \.self) { suggestion in
                 RoundedRectangle(cornerRadius: 2)
                     .frame(maxWidth: .infinity)
-                    .foregroundStyle(AppColors.gray)
+                    .foregroundStyle(Color.gray)
                     .frame(maxWidth: .infinity, minHeight: 25)
                     .overlay (
                         Text(suggestion)
                             .padding(5)
                             .font(.custom("feather", size: 10))
-                            .foregroundStyle(AppColors.eel)
+                            .foregroundStyle(Color.eel)
                             .onTapGesture {
                                 onSelect(suggestion) // Select suggestion
                             }
@@ -110,7 +110,7 @@ extension View {
                     .frame(height: 2)
                     .padding(.top, 35)
             )
-            .foregroundStyle(AppColors.gray)
+            .foregroundStyle(Color.gray)
     }
 }
 

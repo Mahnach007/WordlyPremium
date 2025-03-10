@@ -18,10 +18,10 @@ struct SliderTitle: View {
             HStack {
                 Text(sliderTitle)
                     .font(.custom("Feather", size: 21))
-                    .foregroundStyle(AppColors.eel)
+                    .foregroundStyle(Color.eel)
                 Text("(\(sliderNumber))")
                     .font(.custom("Feather", size: 13))
-                    .foregroundStyle(AppColors.gray)
+                    .foregroundStyle(Color.gray)
                     .offset(y: 2)
             }
             Spacer()

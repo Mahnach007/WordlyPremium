@@ -11,7 +11,10 @@ import SwiftUI
 struct WordlyPremiumApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack {
+                Color.background.ignoresSafeArea()
+                ContentView()
+            }
         }
     }
 }

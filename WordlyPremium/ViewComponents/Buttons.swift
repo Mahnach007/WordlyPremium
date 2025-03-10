@@ -55,12 +55,12 @@ struct AddButton: View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: 3)
-                    .foregroundStyle(AppColors.darkGreen)
+                    .foregroundStyle(Color.darkGreen)
                     .frame(width: 35, height: 30)
                     .offset(y: 4)
                 ZStack {
                     RoundedRectangle(cornerRadius: 3)
-                        .foregroundStyle(AppColors.ligthGreen)
+                        .foregroundStyle(Color.lightGreen)
                         .frame(width: 35, height: 35)
                         .offset(y: -3)
                     Text("+")
@@ -86,22 +86,22 @@ struct CardButton: View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(AppColors.gray)
+                    .foregroundStyle(Color.gray)
                     .frame(width: 178, height: 115)
                     .offset(y: 5)
 
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(AppColors.white)
+                    .foregroundStyle(Color.background)
                     .frame(width: 175, height: 115)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(AppColors.gray, lineWidth: 3)
+                            .stroke(Color.gray, lineWidth: 3)
                     )
                     .offset(y: isPressed ? 4 : 0)
                 ZStack {
                     Text(cardTitle)
                         .font(.custom("Feather", size: 16))
-                        .foregroundStyle(AppColors.eel)
+                        .foregroundStyle(Color.eel)
                         .offset(x: -5)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -110,7 +110,7 @@ struct CardButton: View {
                         .frame(height: 90)
                     Text("\(numberOfWords) words")
                         .font(.custom("Feather Bold", size: 16))
-                        .foregroundStyle(AppColors.gray)
+                        .foregroundStyle(Color.gray)
                         .offset(x: -35, y: 35)
                         .padding(0)
                 }
@@ -145,7 +145,7 @@ struct CardButtonExtended: View {
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [AppColors.gray, AppColors.gray]),
+                gradient: Gradient(colors: [Color.gray, Color.gray]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -157,7 +157,7 @@ struct CardButtonExtended: View {
                     .frame(height: 80)
                     .offset(y: 10)
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(AppColors.white)
+                    .foregroundStyle(Color.background)
                     .frame(height: 90)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -168,9 +168,9 @@ struct CardButtonExtended: View {
                     VStack(alignment: .leading) {
                         Text(cardTitle)
                             .font(.custom("Feather", size: 20))
-                            .foregroundColor(.black)
+                            .foregroundColor(Color.eel)
                         Text(description)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color.gray)
                             .font(.custom("Feather", size: 16))
                     }
                     Spacer()
@@ -194,6 +194,7 @@ struct ButtonWithImage: View {
     var cardTitle: String
     var icon: String
     var isGradient: Bool
+    var isChecked: Bool
     let impact = UIImpactFeedbackGenerator(style: .light)
     @State private var hasTriggeredHaptic = false
 
@@ -202,7 +203,7 @@ struct ButtonWithImage: View {
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [AppColors.gray, AppColors.gray]),
+                gradient: Gradient(colors: [Color.gray, Color.gray]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -214,7 +215,7 @@ struct ButtonWithImage: View {
                     .frame(height: 70)
                     .offset(y: 10)
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(AppColors.white)
+                    .foregroundStyle(Color.background)
                     .frame(height: 80)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -224,11 +225,20 @@ struct ButtonWithImage: View {
                 VStack(alignment: .leading) {
                     Text(cardTitle)
                         .font(.custom("Feather", size: 26))
-                        .foregroundStyle(AppColors.eel)
+                        .foregroundStyle(Color.eel)
                         .offset(x: 105)
                         .offset(y: isPressed ? 4 : 0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .background(Color.background)
+            .overlay {
+                isChecked ?
+                Text(Image(systemName: "checkmark"))
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundStyle(Color.blue)
+                    .offset(x: 140)
+                : nil
             }
             .overlay(
                 Image(icon)
@@ -240,6 +250,7 @@ struct ButtonWithImage: View {
                     .padding(.leading, 8),
                 alignment: .leading
             )
+
         }
     }
 }
@@ -262,7 +273,7 @@ struct ConfirmButton: View {
                     .offset(y: 5)
 
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(AppColors.white)
+                    .foregroundStyle(Color.background)
                     .frame(width: 205, height: 65)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -273,7 +284,7 @@ struct ConfirmButton: View {
                     Text(cardTitle)
                         .font(.custom("Feather", size: 22))
                         .offset(x: 20)
-                        .foregroundStyle(AppColors.eel)
+                        .foregroundStyle(Color.eel)
                         .multilineTextAlignment(.leading)
                 }
                 .offset(y: isPressed ? 4 : 0)
@@ -302,29 +313,28 @@ struct SingleButton: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundStyle(
-                    isPressed ? AppColors.blue : AppColors.gray
+                    isPressed ? Color.blue : Color.gray
                 )
-                .frame(width: 86, height: 40)
+                .frame(width: 81, height: 40)
                 .offset(y: 3)
             RoundedRectangle(cornerRadius: 10)
-                .fill(isPressed ? AppColors.lightBlue : AppColors.white)
-                .frame(width: 85, height: 40)
+                .fill(isPressed ? Color.lightBlue : Color.background)
+                .frame(width: 80, height: 40)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            isPressed ? AppColors.blue : AppColors.gray,
+                            isPressed ? Color.blue : Color.gray,
                             lineWidth: 2)
                 )
                 .offset(y: isPressed ? 3 : 0)
             ZStack {
                 Text(word)
                     .font(.custom("Feather", size: 15))
-                    .foregroundStyle(AppColors.eel)
+                    .foregroundStyle(Color.eel)
                     .multilineTextAlignment(.leading)
             }
             .offset(y: isPressed ? 3 : 0)
         }
-
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.1)) {
                 if !isPressed {
@@ -344,10 +354,10 @@ struct SingleButton: View {
     //        cardTitle: "Englishoens", icon: "gb", isGradient: false)
     //    ButtonWithImage(
     //        cardTitle: "Italian", icon: "it", isGradient: false)
-    //    ButtonWithImage(
-    //        cardTitle: "Ukranian", icon: "ua", isGradient: false)
+//    ButtonWithImage(
+//        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
     //    ConfirmButton(cardTitle: "e", icon: "gb")
-    SingleButton(word: "Adjective")
+        SingleButton(word: "Adjective")
 }
 
 //#Preview {

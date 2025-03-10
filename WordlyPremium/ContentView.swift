@@ -13,60 +13,66 @@ struct ContentView: View {
     @State private var selectedDestination: DestinationType? = nil
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                HStack {
-                    AddButton()
+        ZStack {
+            NavigationStack {
+                VStack(spacing: 0) {
+                    HStack {
+                        AddButton()
+                            .padding()
+                            .padding(.vertical, -30)
+                            .padding(.top, 20)
+                            .onTapGesture {
+                                isModalPresented = true
+                            }
+                            .sheet(isPresented: $isModalPresented) {
+                                AddPackModalView(
+                                    isPresented: $isModalPresented,
+                                    selectedDestination: $selectedDestination
+                                )
+                                .presentationBackground(Color.background)
+                                .presentationDetents([.fraction(0.5)])
+                                .presentationDragIndicator(.visible)
+                            }
+                        NavigationLink(
+                            destination: selectedDestination?.view,
+                            tag: .firstOption, selection: $selectedDestination
+                        ) { EmptyView() }
+                        NavigationLink(
+                            destination: selectedDestination?.view,
+                            tag: .secondOption, selection: $selectedDestination
+                        ) { EmptyView() }
+                        NavigationLink(
+                            destination: selectedDestination?.view,
+                            tag: .thirdOption, selection: $selectedDestination
+                        ) { EmptyView() }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    SearchBar()
                         .padding()
-                        .padding(.vertical, -30)
-                        .padding(.top, 20)
-                        .onTapGesture {
-                            isModalPresented = true
-                        }
-                        .sheet(isPresented: $isModalPresented) {
-                            AddPackModalView(
-                                isPresented: $isModalPresented,
-                                selectedDestination: $selectedDestination
-                            )
-                            .presentationDetents([.fraction(0.5)])
-                            .presentationDragIndicator(.visible)
-                        }
-                    NavigationLink(
-                        destination: selectedDestination?.view,
-                        tag: .firstOption, selection: $selectedDestination
-                    ) { EmptyView() }
-                    NavigationLink(
-                        destination: selectedDestination?.view,
-                        tag: .secondOption, selection: $selectedDestination
-                    ) { EmptyView() }
-                    NavigationLink(
-                        destination: selectedDestination?.view,
-                        tag: .thirdOption, selection: $selectedDestination
-                    ) { EmptyView() }
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                SearchBar()
-                    .padding()
-            }
-            ScrollView {
-                VStack(spacing: 35) {
-                    CardSlider(
-                        packTitle: "Your Packs",
-                        packNumber: viewModel.packs.count,
-                        cards: viewModel.packs
-                    )
-                    CardSlider(
-                        packTitle: "Your Folders",
-                        packNumber: viewModel.folders.count,
-                        cards: viewModel.folders
-                    )
-                    CardSlider(
-                        packTitle: "Community Packs",
-                        packNumber: viewModel.community.count,
-                        cards: viewModel.community
-                    )
+                .background(Color.background)
+                .padding(.bottom, -10)
+                ScrollView {
+                    VStack(spacing: 35) {
+                        CardSlider(
+                            packTitle: "Your Packs",
+                            packNumber: viewModel.packs.count,
+                            cards: viewModel.packs
+                        )
+                        CardSlider(
+                            packTitle: "Your Folders",
+                            packNumber: viewModel.folders.count,
+                            cards: viewModel.folders
+                        )
+                        CardSlider(
+                            packTitle: "Community Packs",
+                            packNumber: viewModel.community.count,
+                            cards: viewModel.community
+                        )
+                    }
+                    .padding(.top, 20)
                 }
-                .padding(.top, 20)
+                .background(Color.background)
             }
         }
     }

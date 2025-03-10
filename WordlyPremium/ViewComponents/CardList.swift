@@ -39,7 +39,7 @@ struct CardList: View {
                     HStack {
                         Text(Image(systemName: "arrow.left"))
                             .fontWeight(.bold)
-                            .foregroundStyle(AppColors.eel)
+                            .foregroundStyle(Color.eel)
                     }
                 }
             }
