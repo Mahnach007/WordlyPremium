@@ -39,8 +39,8 @@ struct SearchBar: View {
         .padding(5)
         .background {
             RoundedRectangle(cornerRadius: 2)
-                .fill(Color.background)
-                .stroke(Color.gray, style: .init(lineWidth: 1))
+                .fill(AppColors.white)
+                .stroke(AppColors.gray, style: .init(lineWidth: 1))
         }
     }
 }
@@ -50,19 +50,20 @@ struct SearchBar: View {
 struct TextArea: View {
 
     @State var inputText: String = ""
+
     var guidingText: String = "Enter your prompt"
+    let imageName: String = "magnifier"
 
     var body: some View {
         HStack {
             TextEditor(text: $inputText)
-                .scrollContentBackground(.hidden)
                 .font(.custom("feather", size: 16))
                 .padding(4)
                 .frame(height: 100)
                 .overlay(
                     Text(guidingText)
                         .font(.custom("Feather", size: 16))
-                        .foregroundColor(Color.gray)
+                        .foregroundColor(AppColors.gray)
                         .opacity(inputText.isEmpty ? 1 : 0)
                         .padding(.top, 12)
                         .padding(.leading, 10),
@@ -71,38 +72,36 @@ struct TextArea: View {
         }
         .background {
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.background)
-                .stroke(Color.gray, style: .init(lineWidth: 1))
+                .fill(AppColors.white)
+                .stroke(AppColors.gray, style: .init(lineWidth: 1))
         }
     }
 }
 
 ///
 
-struct SelectorWithModal<T: Equatable>: View {
-    @Binding var selectedOption: T?
-    var selectionType: SelectionType
+struct SelectorWithModal: View {
+
     @State private var isModalPresented = false
+    @State private var selectedOption: OptionType? = nil
     @State private var placeholderText: String = "Select type"
-    @State private var placeholderImage: String = ""
-    @State private var placeholderColor = Color.gray
-    let paddingValue: CGFloat = (T.self == WordType.self) ? 4 : 14
+    var modalType: Int
+
+    let imageName: String = "chevron.down"
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.background)
+                .fill(AppColors.white)
                 .frame(height: 50)
                 .font(.custom("feather", size: 16))
             HStack {
-                Image(placeholderImage)
-                    .offset(x: 15)
                 Text(placeholderText)
-                    .padding(.leading, paddingValue)
+                    .padding(.leading)
                     .font(.custom("feather", size: 16))
-                    .foregroundStyle(placeholderColor)
+                    .foregroundStyle(AppColors.gray)
                 Spacer()
-                Image(systemName: "chevron.down")
+                Image(systemName: imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 15, height: 15)
@@ -111,72 +110,28 @@ struct SelectorWithModal<T: Equatable>: View {
         }
         .background {
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.background)
-                .stroke(Color.eel, style: .init(lineWidth: 1))
+                .fill(AppColors.white)
+                .stroke(AppColors.eel, style: .init(lineWidth: 1))
         }
         .onTapGesture {
             isModalPresented = true
         }
         .sheet(isPresented: $isModalPresented) {
-            if T.self == WordType.self {
-                SelectWordTypeInModalView(
+            if (modalType == 0) {
+                SelectCardInModalView(
                     isPresented: $isModalPresented,
-                    selectedOption: Binding<WordType?>(
-                        get: { selectedOption as? WordType },
-                        set: { selectedOption = $0 as? T }
-                    )
-                )
-                .presentationDetents([.fraction(0.65)])
-                .presentationDragIndicator(.visible)
-            } else if T.self == LanguageType.self {
-                SelectLanguageInModalView(
-                    isPresented: $isModalPresented,
-                    selectedOption: Binding<LanguageType?>(
-                        get: { selectedOption as? LanguageType },
-                        set: { selectedOption = $0 as? T }
-                    )
+                    selectedOption: $selectedOption
                 )
                 .presentationDetents([.fraction(0.5)])
                 .presentationDragIndicator(.visible)
-            }
-        }
-        .background(Color.background)
-        .onChange(of: selectedOption) {
-            updatePlaceholder()
-        }
-    }
-
-    private func updatePlaceholder() {
-        if let newValue = selectedOption {
-            placeholderColor = Color.eel
-            switch selectionType {
-            case .wordType:
-                if let wordType = newValue as? WordType {
-                    switch wordType {
-                    case .firstOption:
-                        placeholderText = "Single Word"
-                    case .secondOption:
-                        placeholderText = "Phrase"
-                    case .thirdOption:
-                        placeholderText = "Full Sentence"
-                    case .fourthOption:
-                        placeholderText = "Mixed"
-                    }
-                }
-            case .languageType:
-                if let language = newValue as? LanguageType {
-                    switch language {
-                    case .firstOption:
-                        placeholderText = "English"
-                        placeholderImage = "gb"
-                    case .secondOption:
-                        placeholderText = "Ukranian"
-                        placeholderImage = "ua"
-                    case .thirdOption:
-                        placeholderText = "Italian"
-                        placeholderImage = "it"
-                    }
-                }
+            } else if (modalType == 1) {
+                SelectLanguageInModalView(
+                    isPresented: $isModalPresented,
+                    selectedOption: $selectedOption
+                    
+                )
+                .presentationDetents([.fraction(0.5)])
+                .presentationDragIndicator(.visible)
             }
         }
     }
@@ -200,7 +155,7 @@ struct SelectorWithModal<T: Equatable>: View {
 //                .overlay(
 //                    Text(guidingText)
 //                        .font(.custom("Feather", size: 16))
-//                        .foregroundColor(Color.gray)
+//                        .foregroundColor(AppColors.gray)
 //                        .padding(.top, 12)
 //                        .padding(.leading),
 //                    alignment: .topLeading
@@ -208,8 +163,8 @@ struct SelectorWithModal<T: Equatable>: View {
 //        }
 //        .background {
 //            RoundedRectangle(cornerRadius: 8)
-//                .fill(Color.white)
-//                .stroke(Color.gray, style: .init(lineWidth: 1))
+//                .fill(AppColors.white)
+//                .stroke(AppColors.gray, style: .init(lineWidth: 1))
 //        }
 //    }
 //}
@@ -225,14 +180,13 @@ struct NumericField: View {
         HStack {
             TextEditor(text: $inputText)
                 .keyboardType(.numberPad)
-                .scrollContentBackground(.hidden)
                 .font(.custom("feather", size: 16))
                 .padding(4)
                 .frame(height: 45)
                 .overlay(
                     Text(guidingText)
                         .font(.custom("Feather", size: 16))
-                        .foregroundColor(Color.gray)
+                        .foregroundColor(AppColors.gray)
                         .opacity(inputText.isEmpty ? 1 : 0)
                         .padding(.top, 12)
                         .padding(.leading),
@@ -241,14 +195,12 @@ struct NumericField: View {
         }
         .background {
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.background)
-                .stroke(Color.gray, style: .init(lineWidth: 1))
+                .fill(AppColors.white)
+                .stroke(AppColors.gray, style: .init(lineWidth: 1))
         }
     }
 }
 
 #Preview {
-    AIGenerationCardView()
-    //    SelectorWithModal(selectionType: )
-//        NumericField()
+    TextArea()
 }

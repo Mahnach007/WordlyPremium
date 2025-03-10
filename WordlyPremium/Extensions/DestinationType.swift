@@ -25,42 +25,16 @@ enum DestinationType: Hashable {
     }
 }
 
-enum SelectionType {
-    case wordType
-    case languageType
-}
-
-enum WordType: Hashable {
+enum OptionType: Hashable {
     case firstOption
     case secondOption
     case thirdOption
-    case fourthOption
 
     @ViewBuilder
     var view: some View {
         switch self {
         case .firstOption:
             AIGenerationCardView()
-        case .secondOption:
-            CardList()
-        case .thirdOption:
-            CardList()
-        case .fourthOption:
-            CardList()
-        }
-    }
-}
-
-enum LanguageType: Hashable {
-    case firstOption
-    case secondOption
-    case thirdOption
-    
-    @ViewBuilder
-    var view: some View {
-        switch self {
-        case .firstOption:
-            CardList()
         case .secondOption:
             CardList()
         case .thirdOption:
