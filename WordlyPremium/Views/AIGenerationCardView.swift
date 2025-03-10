@@ -13,79 +13,93 @@ struct AIGenerationCardView: View {
     @State private var selectedFrontLanguageOption: LanguageType? = nil
     @State private var selectedBackLanguageOption: LanguageType? = nil
     @State private var wordTypeIsVisible = true
+    @FocusState private var isFocused: Bool
 
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(alignment: .leading) {
-                Text("Topic/Prompt*")
-                TextArea()
-            }
-            VStack(alignment: .leading) {
-                Text("Card type")
-                SelectorWithModal<WordType>(
+        GeometryReader{ geometry in
+            VStack(spacing: 20) {
+                VStack(alignment: .leading) {
+                    Text("Topic/Prompt*")
+                    TextArea()
+                        .focused($isFocused)
+                }
+                VStack(alignment: .leading) {
+                    Text("Card type")
+                    SelectorWithModal<WordType>(
                     selectedOption: $selectedWordOption,
                     selectionType: .wordType
                 )
-            }
-            VStack(alignment: .leading) {
-                Text("Amount of cards")
-                NumericField()
-            }
-            HStack {
+                }
                 VStack(alignment: .leading) {
-                    Text("Front side")
-                    SelectorWithModal<LanguageType>(
+                    Text("Amount of cards")
+                    NumericField()
+                        .focused($isFocused)
+                }
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Front side")
+                        SelectorWithModal<LanguageType>(
                         selectedOption: $selectedFrontLanguageOption,
                         selectionType: .languageType
                     )
-                }
-                VStack(alignment: .leading) {
-                    Text("Back side")
-                    SelectorWithModal<LanguageType>(
+                    }
+                    VStack(alignment: .leading) {
+                        Text("Back side")
+                        SelectorWithModal<LanguageType>(
                         selectedOption: $selectedBackLanguageOption,
                         selectionType: .languageType
                     )
+                    }
                 }
-            }
-            if !wordTypeIsVisible {
+                if !wordTypeIsVisible {
                 VStack(alignment: .leading) {
-                    Text("Word type")
-                    HStack {
-                        SingleButton(word: "Noun")
-                        SingleButton(word: "Verb")
-                        SingleButton(word: "Adjective")
-                        SingleButton(word: "Adverb")
+                        Text("Word type")
+                        HStack {
+                            SingleButton(word: "Noun")
+                            SingleButton(word: "Verb")
+                            SingleButton(word: "Adjective")
+                            SingleButton(word: "Adverb")
+                        }
+                }
+                }
+                Spacer()
+                ConfirmButton(cardTitle: "Generate", icon: "generate")
+                    .padding(.bottom, 50)
+                Spacer()
+            }
+            .font(.custom("Feather", size: 12))
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding()
+            .toolbar {
+                ToolbarItemGroup(placement:.keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        isFocused = false // Dismiss keyboard
                     }
                 }
-            }
-            Spacer()
-            ConfirmButton(cardTitle: "Generate", icon: "generate")
-                .padding(.bottom, 50)
-        }
-        .font(.custom("Feather", size: 12))
-        .frame(maxHeight: .infinity, alignment: .top)
-        .padding()
-        .navigationBarBackButtonHidden(true)
-        .regainSwipeBack()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    HStack {
-                        Text(Image(systemName: "arrow.left"))
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.eel)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Text(Image(systemName: "arrow.left"))
+                                .fontWeight(.bold)
+                                .foregroundStyle(Color.eel)
+                        }
                     }
                 }
+                ToolbarItem(placement: .principal) {
+                    Text("AI Card Generation")
+                        .foregroundStyle(Color.eel)
+                        .font(.custom("Feather", size: 15))
+                }
             }
-            ToolbarItem(placement: .principal) {
-                Text("AI Card Generation")
-                    .foregroundStyle(Color.eel)
-                    .font(.custom("Feather", size: 24))
-            }
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .regainSwipeBack()
+//            .toolbarBackground(AppColors.white, for: .navigationBar)
+//            .padding(.vertical, -50)
         }
-        .padding(.vertical, -50)
         .onChange(of: selectedWordOption) {
             if let newValue = selectedWordOption {
                 if newValue == .firstOption {
@@ -97,6 +111,7 @@ struct AIGenerationCardView: View {
         }
         .background(Color.background)
     }
+    
 }
 
 #Preview {

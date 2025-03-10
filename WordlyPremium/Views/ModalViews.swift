@@ -43,7 +43,8 @@ struct AddPackModalView: View {
                         isPresented = false
                     }
                 }
-                .padding()
+                .navigationBarBackButtonHidden(true)
+            .padding()
             }
         }
     }

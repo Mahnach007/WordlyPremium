@@ -47,35 +47,39 @@ struct SearchBar: View {
 
 ///
 
-struct TextArea: View {
+import SwiftUI
 
-    @State var inputText: String = ""
+struct TextArea: View {
+    @State private var inputText: String = ""
+    @FocusState private var isFocused: Bool
     var guidingText: String = "Enter your prompt"
 
     var body: some View {
-        HStack {
+        ZStack(alignment: .topLeading) {
             TextEditor(text: $inputText)
                 .scrollContentBackground(.hidden)
+                .focused($isFocused)
                 .font(.custom("feather", size: 16))
                 .padding(4)
-                .frame(height: 100)
-                .overlay(
-                    Text(guidingText)
-                        .font(.custom("Feather", size: 16))
-                        .foregroundColor(Color.gray)
-                        .opacity(inputText.isEmpty ? 1 : 0)
-                        .padding(.top, 12)
-                        .padding(.leading, 10),
-                    alignment: .topLeading
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.background)
+                        .stroke(Color.gray, lineWidth: 1)
                 )
-        }
-        .background {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.background)
-                .stroke(Color.gray, style: .init(lineWidth: 1))
+                .frame(height: 100)
+            
+            if inputText.isEmpty {
+                Text(guidingText)
+                    .font(.custom("Feather", size: 16))
+                    .foregroundColor(Color.gray)
+                    .padding(.top, 12)
+                    .padding(.leading, 10)
+            }
         }
     }
 }
+
+
 
 ///
 
@@ -217,17 +221,19 @@ struct SelectorWithModal<T: Equatable>: View {
 struct NumericField: View {
 
     @State var inputText: String = ""
-
+    @FocusState var isFocused: Bool
+    
     var guidingText: String = "Enter card amount"
     let imageName: String = "magnifier"
 
     var body: some View {
         HStack {
-            TextEditor(text: $inputText)
+            TextField("" ,text: $inputText)
+                .focused($isFocused)
                 .keyboardType(.numberPad)
                 .scrollContentBackground(.hidden)
                 .font(.custom("feather", size: 16))
-                .padding(4)
+                .padding(.horizontal,10)
                 .frame(height: 45)
                 .overlay(
                     Text(guidingText)
@@ -235,7 +241,7 @@ struct NumericField: View {
                         .foregroundColor(Color.gray)
                         .opacity(inputText.isEmpty ? 1 : 0)
                         .padding(.top, 12)
-                        .padding(.leading),
+                        .padding(.leading,10),
                     alignment: .topLeading
                 )
         }
