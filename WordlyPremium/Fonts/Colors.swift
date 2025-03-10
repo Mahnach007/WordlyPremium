@@ -17,7 +17,7 @@ struct AppColors {
     static let ligthGreen: Color = Color(#colorLiteral(red: 0.3450980392, green: 0.8, blue: 0.007843137255, alpha: 1))
     static let darkGreen: Color = Color(#colorLiteral(red: 0.3450980392, green: 0.6549019608, blue: 0, alpha: 1))
     static let blue: Color = Color(#colorLiteral(red: 0.1098039216, green: 0.6901960784, blue: 0.9647058824, alpha: 1))
-    static let lightBlue: Color = Color(#colorLiteral(red: 0.8232, green: 0.950060819, blue: 0.98, alpha: 1))
+    static let lightBlue: Color = Color(#colorLiteral(red: 0.8235294118, green: 0.9490196078, blue: 0.9803921569, alpha: 1))
     static let gradient = LinearGradient(
             gradient: Gradient(colors: [
                 Color(#colorLiteral(red: 0.5647058824, green: 0.4117647059, blue: 0.8039215686, alpha: 1)),

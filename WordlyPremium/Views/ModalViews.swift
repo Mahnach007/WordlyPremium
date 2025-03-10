@@ -13,35 +13,38 @@ struct AddPackModalView: View {
     @Binding var selectedDestination: DestinationType?
 
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 18) {
-                CardButtonExtended(
-                    cardTitle: "AI Flashcards",
-                    description: "Generate flashcards instantly", icon: "cards",
-                    isGradient: true, isFolder: false
-                )
-                .onTapGesture {
-                    selectedDestination = .firstOption
-                    isPresented = false
+        ZStack {
+            Color.background.ignoresSafeArea()
+            NavigationView {
+                VStack(alignment: .leading, spacing: 18) {
+                    CardButtonExtended(
+                        cardTitle: "AI Flashcards",
+                        description: "Generate flashcards instantly", icon: "cards",
+                        isGradient: true, isFolder: false
+                    )
+                    .onTapGesture {
+                        selectedDestination = .firstOption
+                        isPresented = false
+                    }
+                    CardButtonExtended(
+                        cardTitle: "Photo",
+                        description: "Create flashcards from your notes",
+                        icon: "cards", isGradient: false, isFolder: false)
+                    .onTapGesture {
+                        selectedDestination = .secondOption
+                        isPresented = false
+                    }
+                    CardButtonExtended(
+                        cardTitle: "Manual Flashcards",
+                        description: "Create your own flashcards", icon: "cards",
+                        isGradient: false, isFolder: false)
+                    .onTapGesture {
+                        selectedDestination = .thirdOption
+                        isPresented = false
+                    }
                 }
-                CardButtonExtended(
-                    cardTitle: "Photo",
-                    description: "Create flashcards from your notes",
-                    icon: "cards", isGradient: false, isFolder: false)
-                .onTapGesture {
-                    selectedDestination = .secondOption
-                    isPresented = false
-                }
-                CardButtonExtended(
-                    cardTitle: "Manual Flashcards",
-                    description: "Create your own flashcards", icon: "cards",
-                    isGradient: false, isFolder: false)
-                .onTapGesture {
-                    selectedDestination = .thirdOption
-                    isPresented = false
-                }
+                .padding()
             }
-            .padding()
         }
     }
 }
@@ -49,7 +52,7 @@ struct AddPackModalView: View {
 struct SelectWordTypeInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
-    @Binding var selectedOption: OptionType?
+    @Binding var selectedOption: WordType?
 
     var body: some View {
         NavigationView {
@@ -79,6 +82,14 @@ struct SelectWordTypeInModalView: View {
                     selectedOption = .thirdOption
                     isPresented = false
                 }
+                CardButtonExtended(
+                    cardTitle: "Mixed",
+                    description: "All types of cards", icon: "cards",
+                    isGradient: false, isFolder: false)
+                .onTapGesture {
+                    selectedOption = .fourthOption
+                    isPresented = false
+                }
             }
             .padding()
         }
@@ -88,33 +99,40 @@ struct SelectWordTypeInModalView: View {
 struct SelectLanguageInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
-    @Binding var selectedOption: OptionType?
+    @Binding var selectedOption: LanguageType?
+    @State var selected: LanguageType?
 
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 18) {
                 ButtonWithImage(
                     cardTitle: "English", icon: "gb",
-                    isGradient: false
+                    isGradient: false,
+                    isChecked: selected == .firstOption
                 )
                 .onTapGesture {
                     selectedOption = .firstOption
+                    selected = .firstOption
                     isPresented = false
                 }
                 ButtonWithImage(
                     cardTitle: "Ukranian", icon: "ua",
-                    isGradient: false
+                    isGradient: false,
+                    isChecked: selected == .secondOption
                 )
                 .onTapGesture {
                     selectedOption = .secondOption
+                    selected = .secondOption
                     isPresented = false
                 }
                 ButtonWithImage(
                     cardTitle: "Italian", icon: "it",
-                    isGradient: false
+                    isGradient: false,
+                    isChecked: selected == .thirdOption
                 )
                 .onTapGesture {
                     selectedOption = .thirdOption
+                    selected = .thirdOption
                     isPresented = false
                 }
             }
@@ -124,5 +142,5 @@ struct SelectLanguageInModalView: View {
 }
 
 #Preview {
-    ContentView()
+    AIGenerationCardView()
 }
