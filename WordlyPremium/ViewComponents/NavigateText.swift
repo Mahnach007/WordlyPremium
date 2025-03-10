@@ -15,7 +15,7 @@ struct NavigateText: View {
         NavigationLink(destination: destination) {
             Text(label)
                 .font(.custom("Feather", size: 17))
-                .foregroundStyle(AppColors.lightBlue)
+                .foregroundStyle(AppColors.blue)
                 .underline()
                 .offset(y: 3)
         }

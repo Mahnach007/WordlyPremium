@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = PackSliderViewModel()
-    @State private var showAddView = false
+    @State private var isModalPresented = false
+    @State private var selectedDestination: DestinationType? = nil
 
     var body: some View {
         NavigationStack {
@@ -20,13 +21,28 @@ struct ContentView: View {
                         .padding(.vertical, -30)
                         .padding(.top, 20)
                         .onTapGesture {
-                            showAddView = true
+                            isModalPresented = true
                         }
-                        .sheet(isPresented: $showAddView) {
-                            AddPackView()
-                                .presentationDetents([.fraction(0.5)])
-                                .presentationDragIndicator(.visible)
+                        .sheet(isPresented: $isModalPresented) {
+                            AddPackModalView(
+                                isPresented: $isModalPresented,
+                                selectedDestination: $selectedDestination
+                            )
+                            .presentationDetents([.fraction(0.5)])
+                            .presentationDragIndicator(.visible)
                         }
+                    NavigationLink(
+                        destination: selectedDestination?.view,
+                        tag: .firstOption, selection: $selectedDestination
+                    ) { EmptyView() }
+                    NavigationLink(
+                        destination: selectedDestination?.view,
+                        tag: .secondOption, selection: $selectedDestination
+                    ) { EmptyView() }
+                    NavigationLink(
+                        destination: selectedDestination?.view,
+                        tag: .thirdOption, selection: $selectedDestination
+                    ) { EmptyView() }
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 SearchBar()

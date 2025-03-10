@@ -20,11 +20,11 @@ struct CardList: View {
             .padding(.bottom, 20)
             VStack(spacing: 20) {
                 CardButtonExtended(
-                    cardTitle: "cardTitle", numberOfWords: 1, icon: "cards")
+                    cardTitle: "cardTitle", description: "1", icon: "cards", isGradient: true, isFolder: true)
                 CardButtonExtended(
-                    cardTitle: "cardTitle", numberOfWords: 1, icon: "cards")
+                    cardTitle: "cardTitle", description: "1", icon: "cards", isGradient: false, isFolder: true)
                 CardButtonExtended(
-                    cardTitle: "cardTitle", numberOfWords: 1, icon: "cards")
+                    cardTitle: "cardTitle", description: "1", icon: "cards", isGradient: false, isFolder: true)
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)

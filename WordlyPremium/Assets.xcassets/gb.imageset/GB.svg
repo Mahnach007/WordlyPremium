@@ -1,0 +1,23 @@
+<svg width="35" height="27" viewBox="0 0 35 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2004_366)">
+<mask id="mask0_2004_366" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="35" height="27">
+<path d="M31.6667 0H3.33333C1.49238 0 0 1.61177 0 3.6V23.4C0 25.3882 1.49238 27 3.33333 27H31.6667C33.5076 27 35 25.3882 35 23.4V3.6C35 1.61177 33.5076 0 31.6667 0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_2004_366)">
+<path d="M33.2857 -2H1.71429C-0.337058 -2 -2 -0.149444 -2 2.13333V24.8667C-2 27.1494 -0.337058 29 1.71429 29H33.2857C35.3371 29 37 27.1494 37 24.8667V2.13333C37 -0.149444 35.3371 -2 33.2857 -2Z" fill="#1453A3"/>
+<path d="M1.71429 -1.5H33.2857C35.012 -1.5 36.5 0.0750852 36.5 2.13333V24.8667C36.5 26.9249 35.012 28.5 33.2857 28.5H1.71429C-0.011984 28.5 -1.5 26.9249 -1.5 24.8667V2.13333C-1.5 0.0750847 -0.0119842 -1.5 1.71429 -1.5Z" stroke="black" stroke-opacity="0.1"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.72329 0L0 0.053884L0.0477816 4.14492L31.2565 27L35 26.9233L34.9302 22.8572L3.72329 0Z" fill="#F7F7F7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.84211 0L0 2.07692L33.1579 27L35 24.9231L1.84211 0Z" fill="#FF4B4B"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M31.3418 0H35V4.13845C35 4.13845 13.508 19.4424 3.93807 26.9579C3.82284 27.0489 0.283512 26.9641 0.283512 26.9641L0 23.0305L31.3418 0Z" fill="#F7F7F7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M33.2371 0L35 2.13049L1.84211 27L0 24.9275L33.2371 0Z" fill="#FF4B4B"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12.8947 0H22.1053V8.30769H35V18.6923H22.1053V27H12.8947V18.6923H0V8.30769H12.8947V0Z" fill="#F7F7F7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14.7368 0H20.2632V10.3846H35V16.6154H20.2632V27H14.7368V16.6154H0V10.3846H14.7368V0Z" fill="#FF4B4B"/>
+<path d="M33.225 -1H1.775C0.24241 -1 -1 0.391115 -1 2.10714V24.8929C-1 26.6089 0.24241 28 1.775 28H33.225C34.7576 28 36 26.6089 36 24.8929V2.10714C36 0.391115 34.7576 -1 33.225 -1Z" stroke="black" stroke-opacity="0.1" stroke-width="3"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2004_366">
+<rect width="35" height="27" fill="white"/>
+</clipPath>
+</defs>
+</svg>
