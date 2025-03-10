@@ -118,7 +118,7 @@ struct SelectorWithModal: View {
         }
         .sheet(isPresented: $isModalPresented) {
             if (modalType == 0) {
-                SelectCardInModalView(
+                SelectWordTypeInModalView(
                     isPresented: $isModalPresented,
                     selectedOption: $selectedOption
                 )
