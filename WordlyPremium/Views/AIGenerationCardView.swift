@@ -11,12 +11,26 @@ struct AIGenerationCardView: View {
     @Environment(\.dismiss) var dismiss
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 20c26cb (complete ai card generation ui)
     @State private var selectedWordOption: WordType? = nil
+=======
+    // Parameters
+    @State private var selectedCardOption: CardType? = nil
+>>>>>>> c34d0a7 (refactor card generation models and update button actions for improved flexibility.)
     @State private var selectedFrontLanguageOption: LanguageType? = nil
     @State private var selectedBackLanguageOption: LanguageType? = nil
+    @State private var topic = ""
+    @State private var cardAmount: String = ""
+    @State private var wordType: WordType? = nil
+    @State private var selectedWordTypes: Set<String> = []
+    @State private var flashcards: [Flashcard] = []
+    
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     @State private var wordTypeIsVisible = true
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 =======
@@ -24,14 +38,22 @@ struct AIGenerationCardView: View {
 >>>>>>> c179555 (add ai card generation view)
 =======
 >>>>>>> 20c26cb (complete ai card generation ui)
+=======
+    
+    private let flashcardService = FlashcardService()
+    
+>>>>>>> c34d0a7 (refactor card generation models and update button actions for improved flexibility.)
     var body: some View {
         VStack(spacing: 20) {
+//            Topic
             VStack(alignment: .leading) {
                 Text("Topic/Prompt*")
-                TextArea()
+                TextArea(inputText: $topic)
             }
+//            Card Type
             VStack(alignment: .leading) {
                 Text("Card type")
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -39,6 +61,11 @@ struct AIGenerationCardView: View {
                 SelectorWithModal<WordType>(
                     selectedOption: $selectedWordOption,
                     selectionType: .wordType
+=======
+                SelectorWithModal<CardType>(
+                    selectedOption: $selectedCardOption,
+                    selectionType: .cardType
+>>>>>>> c34d0a7 (refactor card generation models and update button actions for improved flexibility.)
                 )
 <<<<<<< HEAD
 =======
@@ -47,10 +74,12 @@ struct AIGenerationCardView: View {
 =======
 >>>>>>> 20c26cb (complete ai card generation ui)
             }
+//            Amount of Cards
             VStack(alignment: .leading) {
                 Text("Amount of cards")
-                NumericField()
+                NumericField(inputText: $cardAmount)
             }
+//            Lang
             HStack {
                 VStack(alignment: .leading) {
                     Text("Front side")
@@ -72,14 +101,20 @@ struct AIGenerationCardView: View {
                     )
                 }
             }
+//            Word Type
             if !wordTypeIsVisible {
                 VStack(alignment: .leading) {
                     Text("Word type")
                     HStack {
-                        SingleButton(word: "Noun")
-                        SingleButton(word: "Verb")
-                        SingleButton(word: "Adjective")
-                        SingleButton(word: "Adverb")
+                        ForEach(WordType.allCases, id: \.self) { word in
+                            SingleButton(word: word.rawValue, onTap: {
+                                if selectedWordTypes.contains(word.rawValue) {
+                                    selectedWordTypes.remove(word.rawValue)
+                                } else {
+                                    selectedWordTypes.insert(word.rawValue)
+                                }
+                            }).tag(word.rawValue)
+                        }
                     }
 =======
                     SelectorWithModal(modalType: 1)
@@ -117,7 +152,7 @@ struct AIGenerationCardView: View {
                 }
             }
             Spacer()
-            ConfirmButton(cardTitle: "Generate", icon: "generate")
+            ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
                 .padding(.bottom, 50)
         }
         .font(.custom("Feather", size: 12))
@@ -162,26 +197,63 @@ struct AIGenerationCardView: View {
         .padding(.vertical, -50)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 20c26cb (complete ai card generation ui)
         .onChange(of: selectedWordOption) {
             if let newValue = selectedWordOption {
                 if newValue == .firstOption {
+=======
+        .onChange(of: selectedCardOption) {
+            if let newValue = selectedCardOption {
+                if newValue == .singleWord {
+>>>>>>> c34d0a7 (refactor card generation models and update button actions for improved flexibility.)
                     wordTypeIsVisible = false
                 } else {
                     wordTypeIsVisible = true
                 }
             }
         }
+<<<<<<< HEAD
         .background(Color.background)
 <<<<<<< HEAD
 =======
 >>>>>>> c179555 (add ai card generation view)
 =======
 >>>>>>> 20c26cb (complete ai card generation ui)
+=======
+>>>>>>> c34d0a7 (refactor card generation models and update button actions for improved flexibility.)
     }
+    
+    private func generateFlashcards() {
+        isLoading = true
+        errorMessage = nil
+        
+        let request = GenerateCardsRequest(
+            fromLanguage: selectedFrontLanguageOption?.rawValue,
+            toLanguage: selectedBackLanguageOption?.rawValue,
+            topic: topic,
+            cardType: selectedCardOption?.rawValue,
+            numCards: cardAmount,
+            wordTypes: selectedWordTypes
+        )
+        
+        flashcardService.generateCards(request: request) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let cards):
+                    flashcards = cards
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
 }
 
 #Preview {
     AIGenerationCardView()
 }
+

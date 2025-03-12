@@ -52,7 +52,7 @@ struct AddPackModalView: View {
 struct SelectWordTypeInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
-    @Binding var selectedOption: WordType?
+    @Binding var selectedOption: CardType?
 
     var body: some View {
         NavigationView {
@@ -63,7 +63,7 @@ struct SelectWordTypeInModalView: View {
                     isGradient: false, isFolder: false
                 )
                 .onTapGesture {
-                    selectedOption = .firstOption
+                    selectedOption = .singleWord
                     isPresented = false
                 }
                 CardButtonExtended(
@@ -71,7 +71,7 @@ struct SelectWordTypeInModalView: View {
                     description: "I love you | Good morning",
                     icon: "cards", isGradient: false, isFolder: false)
                 .onTapGesture {
-                    selectedOption = .secondOption
+                    selectedOption = .phrase
                     isPresented = false
                 }
                 CardButtonExtended(
@@ -79,7 +79,7 @@ struct SelectWordTypeInModalView: View {
                     description: "Where can I buy apples?", icon: "cards",
                     isGradient: false, isFolder: false)
                 .onTapGesture {
-                    selectedOption = .thirdOption
+                    selectedOption = .sentence
                     isPresented = false
                 }
                 CardButtonExtended(
@@ -87,7 +87,7 @@ struct SelectWordTypeInModalView: View {
                     description: "All types of cards", icon: "cards",
                     isGradient: false, isFolder: false)
                 .onTapGesture {
-                    selectedOption = .fourthOption
+                    selectedOption = .mixed
                     isPresented = false
                 }
             }
@@ -108,31 +108,31 @@ struct SelectLanguageInModalView: View {
                 ButtonWithImage(
                     cardTitle: "English", icon: "gb",
                     isGradient: false,
-                    isChecked: selected == .firstOption
+                    isChecked: selected == .english
                 )
                 .onTapGesture {
-                    selectedOption = .firstOption
-                    selected = .firstOption
+                    selectedOption = .english
+                    selected = .english
                     isPresented = false
                 }
                 ButtonWithImage(
                     cardTitle: "Ukranian", icon: "ua",
                     isGradient: false,
-                    isChecked: selected == .secondOption
+                    isChecked: selected == .ukrainian
                 )
                 .onTapGesture {
-                    selectedOption = .secondOption
-                    selected = .secondOption
+                    selectedOption = .ukrainian
+                    selected = .ukrainian
                     isPresented = false
                 }
                 ButtonWithImage(
                     cardTitle: "Italian", icon: "it",
                     isGradient: false,
-                    isChecked: selected == .thirdOption
+                    isChecked: selected == .italian
                 )
                 .onTapGesture {
-                    selectedOption = .thirdOption
-                    selected = .thirdOption
+                    selectedOption = .italian
+                    selected = .italian
                     isPresented = false
                 }
             }

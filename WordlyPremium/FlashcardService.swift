@@ -13,17 +13,18 @@ class FlashcardService {
     private let apiUrl = "https://api.deepseek.com/chat/completions"
     
     func generateCards(request: GenerateCardsRequest, completion: @escaping (Result<[Flashcard], Error>) -> Void) {
-        let numCardsPrompt = request.numCards == 0 ? "an appropriate number of" : "\(request.numCards)"
-        let prompt = "Generate \(numCardsPrompt) \(request.fromLanguage) to \(request.toLanguage) flashcards about \(request.topic), focusing on \(request.wordType)."
+        let numCardsPrompt = request.numCards == "0" ? "an appropriate number of" : "\(String(describing: request.numCards))"
+        let selectedWordTypes = request.wordTypes.map{$0}.joined(separator: ", ")
+        let prompt = "Generate \(numCardsPrompt) \(String(describing: request.fromLanguage)) to \(String(describing: request.toLanguage))  \(String(describing: request.cardType)) flashcards about \(String(describing: request.topic)), focusing on \(String(describing: selectedWordTypes))."
         
         let systemContent = """
         The user will provide the topic and parameters to create Flashcards
         Parameters: Topic, fromLanguage, toLanguage, CardsAmount, and WordType, CardType
         
         Parameter options:
-        CardsAmount - 5, 10, 20, 0(automatic)
-        WordType - Noun, Verb, Adjective, Adverb, Mixed
+        CardsAmount - 0 means automatic
         CardType - Single word, Phrase, Sentence, Mixed
+        WordType - Noun, Verb, Adjective, Adverb (these options are available only when Single word card type is selected)
         
         EXAMPLE INPUT:
         - Single word: "Transport"

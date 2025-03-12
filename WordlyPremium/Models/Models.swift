@@ -33,17 +33,12 @@ struct Pack: Codable, Identifiable {
 
 // Request Model
 struct GenerateCardsRequest: Codable {
-    let fromLanguage: String
-    let toLanguage: String
-    let topic: String
-    let numCards: Int
-    let wordType: String
-    let options: Options?
-
-    struct Options: Codable {
-        let difficulty: String?
-        let context: String?
-    }
+    var fromLanguage: String? = nil
+    var toLanguage: String? = nil
+    var topic: String? = nil
+    var cardType: String? = nil
+    var numCards: String? = nil
+    var wordTypes: Set<String>
 }
 
 // Response Model
