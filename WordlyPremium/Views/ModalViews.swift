@@ -53,6 +53,7 @@ struct SelectWordTypeInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
     @Binding var selectedOption: CardType?
+    @Binding var selectedOption: CardType?
 
     var body: some View {
         NavigationView {
@@ -79,7 +80,15 @@ struct SelectWordTypeInModalView: View {
                     description: "Where can I buy apples?", icon: "cards",
                     isGradient: false, isFolder: false)
                 .onTapGesture {
-                    selectedOption = .thirdOption
+                    selectedOption = .sentence
+                    isPresented = false
+                }
+                CardButtonExtended(
+                    cardTitle: "Mixed",
+                    description: "All types of cards", icon: "cards",
+                    isGradient: false, isFolder: false)
+                .onTapGesture {
+                    selectedOption = .mixed
                     isPresented = false
                 }
             }

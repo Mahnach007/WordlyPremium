@@ -9,28 +9,43 @@ import SwiftUI
 
 struct AIGenerationCardView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedWordOption: WordType? = nil
+    // Parameters
+    @State private var selectedCardOption: CardType? = nil
     @State private var selectedFrontLanguageOption: LanguageType? = nil
     @State private var selectedBackLanguageOption: LanguageType? = nil
+    @State private var topic = ""
+    @State private var cardAmount: String = ""
+    @State private var wordType: WordType? = nil
+    @State private var selectedWordTypes: Set<String> = []
+    @State private var flashcards: [Flashcard] = []
+    
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     @State private var wordTypeIsVisible = true
-
+    
+    private let flashcardService = FlashcardService()
+    
     var body: some View {
         VStack(spacing: 20) {
+//            Topic
             VStack(alignment: .leading) {
                 Text("Topic/Prompt*")
-                TextArea()
+                TextArea(inputText: $topic)
             }
+//            Card Type
             VStack(alignment: .leading) {
                 Text("Card type")
-                SelectorWithModal<WordType>(
-                    selectedOption: $selectedWordOption,
-                    selectionType: .wordType
+                SelectorWithModal<CardType>(
+                    selectedOption: $selectedCardOption,
+                    selectionType: .cardType
                 )
             }
+//            Amount of Cards
             VStack(alignment: .leading) {
                 Text("Amount of cards")
-                NumericField()
+                NumericField(inputText: $cardAmount)
             }
+//            Lang
             HStack {
                 VStack(alignment: .leading) {
                     Text("Front side")
@@ -47,19 +62,25 @@ struct AIGenerationCardView: View {
                     )
                 }
             }
+//            Word Type
             if !wordTypeIsVisible {
                 VStack(alignment: .leading) {
                     Text("Word type")
                     HStack {
-                        SingleButton(word: "Noun")
-                        SingleButton(word: "Verb")
-                        SingleButton(word: "Adjective")
-                        SingleButton(word: "Adverb")
+                        ForEach(WordType.allCases, id: \.self) { word in
+                            SingleButton(word: word.rawValue, onTap: {
+                                if selectedWordTypes.contains(word.rawValue) {
+                                    selectedWordTypes.remove(word.rawValue)
+                                } else {
+                                    selectedWordTypes.insert(word.rawValue)
+                                }
+                            }).tag(word.rawValue)
+                        }
                     }
                 }
             }
             Spacer()
-            ConfirmButton(cardTitle: "Generate", icon: "generate")
+            ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
                 .padding(.bottom, 50)
         }
         .font(.custom("Feather", size: 12))
@@ -86,19 +107,46 @@ struct AIGenerationCardView: View {
             }
         }
         .padding(.vertical, -50)
-        .onChange(of: selectedWordOption) {
-            if let newValue = selectedWordOption {
-                if newValue == .firstOption {
+        .onChange(of: selectedCardOption) {
+            if let newValue = selectedCardOption {
+                if newValue == .singleWord {
                     wordTypeIsVisible = false
                 } else {
                     wordTypeIsVisible = true
                 }
             }
         }
-        .background(Color.background)
     }
+    
+    private func generateFlashcards() {
+        isLoading = true
+        errorMessage = nil
+        
+        let request = GenerateCardsRequest(
+            fromLanguage: selectedFrontLanguageOption?.rawValue,
+            toLanguage: selectedBackLanguageOption?.rawValue,
+            topic: topic,
+            cardType: selectedCardOption?.rawValue,
+            numCards: cardAmount,
+            wordTypes: selectedWordTypes
+        )
+        
+        flashcardService.generateCards(request: request) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let cards):
+                    flashcards = cards
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
 }
 
 #Preview {
     AIGenerationCardView()
 }
+
