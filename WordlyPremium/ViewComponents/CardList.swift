@@ -20,7 +20,7 @@ struct CardList: View {
             .padding(.bottom, 20)
             VStack(spacing: 20) {
                 CardButtonExtended(
-                    cardTitle: "cardTitle", description: "1", icon: "cards", isGradient: true, isFolder: true)
+                    cardTitle: "cardTitle", description: "1", icon: "cards", isGradient: false, isFolder: true)
                 CardButtonExtended(
                     cardTitle: "cardTitle", description: "1", icon: "cards", isGradient: false, isFolder: true)
                 CardButtonExtended(
