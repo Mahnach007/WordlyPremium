@@ -9,15 +9,17 @@ import SwiftUI
 
 struct PressableButton<Content: View>: View {
     let content: () -> Content
+    let action: () -> Void
 
     @Binding var isPressed: Bool
     @State private var hasTriggeredHaptic = false
 
     init(
-        isPressed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content
+        isPressed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content, action: @escaping () -> Void = {}
     ) {
         self._isPressed = isPressed
         self.content = content
+        self.action = action
     }
 
     var body: some View {
@@ -42,6 +44,7 @@ struct PressableButton<Content: View>: View {
                         let impact = UIImpactFeedbackGenerator(style: .light)
                         impact.impactOccurred()
                         hasTriggeredHaptic = false
+                        action()
                     }
             )
     }
@@ -259,6 +262,7 @@ struct ConfirmButton: View {
     @State private var isPressed = false
     var cardTitle: String
     var icon: String
+    let action: () -> Void
     let impact = UIImpactFeedbackGenerator(style: .light)
     @State private var hasTriggeredHaptic = false
 
@@ -300,6 +304,8 @@ struct ConfirmButton: View {
                     .padding(.leading, 8),
                 alignment: .bottomLeading
             )
+        } action: {
+            action()
         }
     }
 }
@@ -307,6 +313,7 @@ struct ConfirmButton: View {
 struct SingleButton: View {
     @State private var isPressed = false
     var word: String
+    var onTap: (() -> Void)? = nil
     let impact = UIImpactFeedbackGenerator(style: .light)
 
     var body: some View {
@@ -345,6 +352,7 @@ struct SingleButton: View {
                     impact.impactOccurred()
                 }
             }
+            onTap?()
         }
     }
 }

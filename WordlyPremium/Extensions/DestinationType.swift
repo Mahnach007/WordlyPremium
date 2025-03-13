@@ -4,9 +4,9 @@
 //
 //  Created by Diego Arroyo on 07/03/25.
 //
-
 import SwiftUI
 
+// Parameter types
 enum DestinationType: Hashable {
     case firstOption
     case secondOption
@@ -26,46 +26,27 @@ enum DestinationType: Hashable {
 }
 
 enum SelectionType {
-    case wordType
+    case cardType
     case languageType
 }
 
-enum WordType: Hashable {
-    case firstOption
-    case secondOption
-    case thirdOption
-    case fourthOption
-
-    @ViewBuilder
-    var view: some View {
-        switch self {
-        case .firstOption:
-            AIGenerationCardView()
-        case .secondOption:
-            CardList()
-        case .thirdOption:
-            CardList()
-        case .fourthOption:
-            CardList()
-        }
-    }
+enum CardType: String, CaseIterable, Codable {
+    case singleWord = "single word"
+    case phrase = "phrase"
+    case sentence = "sentence"
+    case mixed = "mixed"
 }
 
-enum LanguageType: Hashable {
-    case firstOption
-    case secondOption
-    case thirdOption
-    
-    @ViewBuilder
-    var view: some View {
-        switch self {
-        case .firstOption:
-            CardList()
-        case .secondOption:
-            CardList()
-        case .thirdOption:
-            CardList()
-        }
-    }
+enum LanguageType: String, Hashable {
+    case english = "english"
+    case ukrainian = "ukrainian"
+    case italian = "italian"
+}
+
+enum WordType: String, CaseIterable, Codable {
+    case noun = "noun"
+    case verb = "verb"
+    case adjective = "adjective"
+    case adverb = "adverb"
 }
 

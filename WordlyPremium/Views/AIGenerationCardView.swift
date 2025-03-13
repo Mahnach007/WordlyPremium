@@ -9,25 +9,37 @@ import SwiftUI
 
 struct AIGenerationCardView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedWordOption: WordType? = nil
+    // Parameters
+    @State private var selectedCardOption: CardType? = nil
     @State private var selectedFrontLanguageOption: LanguageType? = nil
     @State private var selectedBackLanguageOption: LanguageType? = nil
+    @State private var topic = ""
+    @State private var cardAmount: String = ""
+    @State private var wordType: WordType? = nil
+    @State private var selectedWordTypes: Set<String> = []
+    @State private var flashcards: [Flashcard] = []
+    
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     @State private var wordTypeIsVisible = true
     @FocusState private var isFocused: Bool
 
+    
+    private let flashcardService = FlashcardService()
+    
     var body: some View {
-        GeometryReader{ geometry in
-            VStack(spacing: 20) {
-                VStack(alignment: .leading) {
-                    Text("Topic/Prompt*")
-                    TextArea()
-                        .focused($isFocused)
-                }
-                VStack(alignment: .leading) {
-                    Text("Card type")
-                    SelectorWithModal<WordType>(
-                    selectedOption: $selectedWordOption,
-                    selectionType: .wordType
+        VStack(spacing: 20) {
+//            Topic
+            VStack(alignment: .leading) {
+                Text("Topic/Prompt*")
+                TextArea(inputText: $topic)
+            }
+//            Card Type
+            VStack(alignment: .leading) {
+                Text("Card type")
+                SelectorWithModal<CardType>(
+                    selectedOption: $selectedCardOption,
+                    selectionType: .cardType
                 )
                 }
                 VStack(alignment: .leading) {
@@ -51,65 +63,87 @@ struct AIGenerationCardView: View {
                     )
                     }
                 }
-                if !wordTypeIsVisible {
+            }
+//            Word Type
+            if !wordTypeIsVisible {
                 VStack(alignment: .leading) {
-                        Text("Word type")
-                        HStack {
-                            SingleButton(word: "Noun")
-                            SingleButton(word: "Verb")
-                            SingleButton(word: "Adjective")
-                            SingleButton(word: "Adverb")
-                        }
-                }
-                }
-                Spacer()
-                ConfirmButton(cardTitle: "Generate", icon: "generate")
-                    .padding(.bottom, 50)
-                Spacer()
-            }
-            .font(.custom("Feather", size: 12))
-            .frame(maxHeight: .infinity, alignment: .top)
-            .padding()
-            .toolbar {
-                ToolbarItemGroup(placement:.keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        isFocused = false // Dismiss keyboard
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        HStack {
-                            Text(Image(systemName: "arrow.left"))
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.eel)
+                    Text("Word type")
+                    HStack {
+                        ForEach(WordType.allCases, id: \.self) { word in
+                            SingleButton(word: word.rawValue, onTap: {
+                                if selectedWordTypes.contains(word.rawValue) {
+                                    selectedWordTypes.remove(word.rawValue)
+                                } else {
+                                    selectedWordTypes.insert(word.rawValue)
+                                }
+                            }).tag(word.rawValue)
                         }
                     }
                 }
-                ToolbarItem(placement: .principal) {
-                    Text("AI Card Generation")
-                        .foregroundStyle(Color.eel)
-                        .font(.custom("Feather", size: 15))
-                }
             }
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitleDisplayMode(.inline)
-            .regainSwipeBack()
-//            .toolbarBackground(AppColors.white, for: .navigationBar)
-//            .padding(.vertical, -50)
+            Spacer()
+            ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
+                .padding(.bottom, 50)
         }
-        .onChange(of: selectedWordOption) {
-            if let newValue = selectedWordOption {
-                if newValue == .firstOption {
+        .font(.custom("Feather", size: 12))
+        .frame(maxHeight: .infinity, alignment: .top)
+        .padding()
+        .navigationBarBackButtonHidden(true)
+        .regainSwipeBack()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack {
+                        Text(Image(systemName: "arrow.left"))
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.eel)
+                    }
+                }
+            }
+            ToolbarItem(placement: .principal) {
+                Text("AI Card Generation")
+                    .foregroundStyle(Color.eel)
+                    .font(.custom("Feather", size: 24))
+            }
+        }
+        .padding(.vertical, -50)
+        .onChange(of: selectedCardOption) {
+            if let newValue = selectedCardOption {
+                if newValue == .singleWord {
                     wordTypeIsVisible = false
                 } else {
                     wordTypeIsVisible = true
                 }
             }
         }
-        .background(Color.background)
+    }
+    
+    private func generateFlashcards() {
+        isLoading = true
+        errorMessage = nil
+        
+        let request = GenerateCardsRequest(
+            fromLanguage: selectedFrontLanguageOption?.rawValue,
+            toLanguage: selectedBackLanguageOption?.rawValue,
+            topic: topic,
+            cardType: selectedCardOption?.rawValue,
+            numCards: cardAmount,
+            wordTypes: selectedWordTypes
+        )
+        
+        flashcardService.generateCards(request: request) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let cards):
+                    flashcards = cards
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                }
+            }
+        }
     }
     
 }
@@ -117,3 +151,4 @@ struct AIGenerationCardView: View {
 #Preview {
     AIGenerationCardView()
 }
+

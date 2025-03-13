@@ -11,7 +11,7 @@ struct ContentView: View {
     @StateObject private var viewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
-
+    
     var body: some View {
         ZStack {
             NavigationStack {

@@ -90,7 +90,7 @@ struct SelectorWithModal<T: Equatable>: View {
     @State private var placeholderText: String = "Select type"
     @State private var placeholderImage: String = ""
     @State private var placeholderColor = Color.gray
-    let paddingValue: CGFloat = (T.self == WordType.self) ? 4 : 14
+    let paddingValue: CGFloat = (T.self == CardType.self) ? 4 : 14
 
     var body: some View {
         ZStack {
@@ -122,11 +122,11 @@ struct SelectorWithModal<T: Equatable>: View {
             isModalPresented = true
         }
         .sheet(isPresented: $isModalPresented) {
-            if T.self == WordType.self {
+            if T.self == CardType.self {
                 SelectWordTypeInModalView(
                     isPresented: $isModalPresented,
-                    selectedOption: Binding<WordType?>(
-                        get: { selectedOption as? WordType },
+                    selectedOption: Binding<CardType?>(
+                        get: { selectedOption as? CardType },
                         set: { selectedOption = $0 as? T }
                     )
                 )
@@ -154,29 +154,29 @@ struct SelectorWithModal<T: Equatable>: View {
         if let newValue = selectedOption {
             placeholderColor = Color.eel
             switch selectionType {
-            case .wordType:
-                if let wordType = newValue as? WordType {
+            case .cardType:
+                if let wordType = newValue as? CardType {
                     switch wordType {
-                    case .firstOption:
+                    case .singleWord:
                         placeholderText = "Single Word"
-                    case .secondOption:
+                    case .phrase:
                         placeholderText = "Phrase"
-                    case .thirdOption:
+                    case .sentence:
                         placeholderText = "Full Sentence"
-                    case .fourthOption:
+                    case .mixed:
                         placeholderText = "Mixed"
                     }
                 }
             case .languageType:
                 if let language = newValue as? LanguageType {
                     switch language {
-                    case .firstOption:
+                    case .english:
                         placeholderText = "English"
                         placeholderImage = "gb"
-                    case .secondOption:
+                    case .ukrainian:
                         placeholderText = "Ukranian"
                         placeholderImage = "ua"
-                    case .thirdOption:
+                    case .italian:
                         placeholderText = "Italian"
                         placeholderImage = "it"
                     }
@@ -185,38 +185,6 @@ struct SelectorWithModal<T: Equatable>: View {
         }
     }
 }
-
-///
-
-//struct NumericField: View {
-//
-//    @State private var inputText = 0
-//
-//    var guidingText: String = "Enter your prompt"
-//    let imageName: String = "magnifier"
-//
-//    var body: some View {
-//        HStack {
-//            TextField("e", value: $inputText, format: .number)
-//                .font(.custom("feather", size: 16))
-//                .padding(4)
-//                .frame(height: 100)
-//                .overlay(
-//                    Text(guidingText)
-//                        .font(.custom("Feather", size: 16))
-//                        .foregroundColor(Color.gray)
-//                        .padding(.top, 12)
-//                        .padding(.leading),
-//                    alignment: .topLeading
-//                )
-//        }
-//        .background {
-//            RoundedRectangle(cornerRadius: 8)
-//                .fill(Color.white)
-//                .stroke(Color.gray, style: .init(lineWidth: 1))
-//        }
-//    }
-//}
 
 struct NumericField: View {
 
