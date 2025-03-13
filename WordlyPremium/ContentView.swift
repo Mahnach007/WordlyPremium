@@ -33,18 +33,6 @@ struct ContentView: View {
                                 .presentationDetents([.fraction(0.5)])
                                 .presentationDragIndicator(.visible)
                             }
-                        NavigationLink(
-                            destination: selectedDestination?.view,
-                            tag: .firstOption, selection: $selectedDestination
-                        ) { EmptyView() }
-                        NavigationLink(
-                            destination: selectedDestination?.view,
-                            tag: .secondOption, selection: $selectedDestination
-                        ) { EmptyView() }
-                        NavigationLink(
-                            destination: selectedDestination?.view,
-                            tag: .thirdOption, selection: $selectedDestination
-                        ) { EmptyView() }
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     SearchBar()
@@ -73,6 +61,9 @@ struct ContentView: View {
                     .padding(.top, 20)
                 }
                 .background(Color.background)
+                .navigationDestination(item: $selectedDestination) { destination in
+                    destination.view
+                }
             }
         }
     }
