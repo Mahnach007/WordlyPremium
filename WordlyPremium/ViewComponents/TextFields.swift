@@ -50,7 +50,7 @@ struct SearchBar: View {
 import SwiftUI
 
 struct TextArea: View {
-    @State private var inputText: String = ""
+    @Binding var inputText: String
     @FocusState private var isFocused: Bool
     var guidingText: String = "Enter your prompt"
 

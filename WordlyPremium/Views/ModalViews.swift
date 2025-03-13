@@ -54,7 +54,6 @@ struct SelectWordTypeInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
     @Binding var selectedOption: CardType?
-    @Binding var selectedOption: CardType?
 
     var body: some View {
         NavigationView {

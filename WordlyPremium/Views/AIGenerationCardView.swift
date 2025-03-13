@@ -23,102 +23,112 @@ struct AIGenerationCardView: View {
     @State private var errorMessage: String?
     @State private var wordTypeIsVisible = true
     @FocusState private var isFocused: Bool
-
+    
     
     private let flashcardService = FlashcardService()
     
     var body: some View {
-        VStack(spacing: 20) {
-//            Topic
-            VStack(alignment: .leading) {
-                Text("Topic/Prompt*")
-                TextArea(inputText: $topic)
-            }
-//            Card Type
-            VStack(alignment: .leading) {
-                Text("Card type")
-                SelectorWithModal<CardType>(
-                    selectedOption: $selectedCardOption,
-                    selectionType: .cardType
-                )
-                }
+        GeometryReader{ geometry in
+            VStack(spacing: 20) {
+                // Topic
                 VStack(alignment: .leading) {
-                    Text("Amount of cards")
-                    NumericField()
+                    Text("Topic/Prompt*")
+                    TextArea(inputText: $topic)
                         .focused($isFocused)
                 }
+                // Card Type
+                VStack(alignment: .leading) {
+                    Text("Card type")
+                    SelectorWithModal<CardType>(
+                        selectedOption: $selectedCardOption,
+                        selectionType: .cardType
+                    )
+                }
+                // Amount
+                VStack(alignment: .leading) {
+                    Text("Amount of cards")
+                    NumericField(inputText: cardAmount)
+                        .focused($isFocused)
+                }
+                // Front/Back
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Front side")
                         SelectorWithModal<LanguageType>(
-                        selectedOption: $selectedFrontLanguageOption,
-                        selectionType: .languageType
-                    )
+                            selectedOption: $selectedFrontLanguageOption,
+                            selectionType: .languageType
+                        )
                     }
                     VStack(alignment: .leading) {
                         Text("Back side")
                         SelectorWithModal<LanguageType>(
-                        selectedOption: $selectedBackLanguageOption,
-                        selectionType: .languageType
-                    )
+                            selectedOption: $selectedBackLanguageOption,
+                            selectionType: .languageType
+                        )
                     }
                 }
-            }
-//            Word Type
-            if !wordTypeIsVisible {
-                VStack(alignment: .leading) {
-                    Text("Word type")
-                    HStack {
-                        ForEach(WordType.allCases, id: \.self) { word in
-                            SingleButton(word: word.rawValue, onTap: {
-                                if selectedWordTypes.contains(word.rawValue) {
-                                    selectedWordTypes.remove(word.rawValue)
-                                } else {
-                                    selectedWordTypes.insert(word.rawValue)
-                                }
-                            }).tag(word.rawValue)
+                // Word Type (conditional inside the main VStack)
+                if !wordTypeIsVisible {
+                    VStack(alignment: .leading) {
+                        Text("Word type")
+                        HStack {
+                            ForEach(WordType.allCases, id: \.self) { word in
+                                SingleButton(word: word.rawValue, onTap: {
+                                    if selectedWordTypes.contains(word.rawValue) {
+                                        selectedWordTypes.remove(word.rawValue)
+                                    } else {
+                                        selectedWordTypes.insert(word.rawValue)
+                                    }
+                                }).tag(word.rawValue)
+                            }
                         }
                     }
                 }
+                
+                Spacer()
+                
+                // Generate Button
+                ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
+                    .padding(.bottom, 50)
             }
-            Spacer()
-            ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
-                .padding(.bottom, 50)
-        }
-        .font(.custom("Feather", size: 12))
-        .frame(maxHeight: .infinity, alignment: .top)
-        .padding()
-        .navigationBarBackButtonHidden(true)
-        .regainSwipeBack()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    HStack {
-                        Text(Image(systemName: "arrow.left"))
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.eel)
+            .font(.custom("Feather", size: 12))
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding()
+            .toolbar {
+                ToolbarItemGroup(placement:.keyboard) {
+                                    Spacer()
+                                    Button("Done") {
+                                        isFocused = false // Dismiss keyboard
+                                    }
+                                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Text(Image(systemName: "arrow.left"))
+                                .fontWeight(.bold)
+                                .foregroundStyle(Color.eel)
+                        }
                     }
                 }
+                ToolbarItem(placement: .principal) {
+                    Text("AI Card Generation")
+                        .foregroundStyle(Color.eel)
+                        .font(.custom("Feather", size: 15))
+                }
             }
-            ToolbarItem(placement: .principal) {
-                Text("AI Card Generation")
-                    .foregroundStyle(Color.eel)
-                    .font(.custom("Feather", size: 24))
-            }
-        }
-        .padding(.vertical, -50)
-        .onChange(of: selectedCardOption) {
-            if let newValue = selectedCardOption {
-                if newValue == .singleWord {
-                    wordTypeIsVisible = false
-                } else {
-                    wordTypeIsVisible = true
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .regainSwipeBack()
+            .onChange(of: selectedCardOption) {
+                if let newValue = selectedCardOption {
+                    wordTypeIsVisible = (newValue != .singleWord)
                 }
             }
         }
     }
+
     
     private func generateFlashcards() {
         isLoading = true
@@ -145,7 +155,6 @@ struct AIGenerationCardView: View {
             }
         }
     }
-    
 }
 
 #Preview {
