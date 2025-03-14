@@ -53,18 +53,19 @@ struct PressableButton<Content: View>: View {
 struct AddButton: View {
     @State private var isPressed = false
     @State private var hasTriggeredHaptic = false
-
+    var isRounded: Bool
+    
     var body: some View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
-                RoundedRectangle(cornerRadius: 3)
+                RoundedRectangle(cornerRadius: isRounded ? 30 : 3)
                     .foregroundStyle(Color.darkGreen)
-                    .frame(width: 35, height: 30)
-                    .offset(y: 4)
+                    .frame(width: isRounded ? 60 : 35, height: isRounded ? 60 : 35)
+                    .offset(y: isRounded ? 3 : 4)
                 ZStack {
-                    RoundedRectangle(cornerRadius: 3)
+                    RoundedRectangle(cornerRadius: isRounded ? 30 : 3)
                         .foregroundStyle(Color.lightGreen)
-                        .frame(width: 35, height: 35)
+                        .frame(width: isRounded ? 60 : 35, height: isRounded ? 60 : 35)
                         .offset(y: -3)
                     Text("+")
                         .font(.custom("Feather", size: 42))
@@ -356,6 +357,28 @@ struct SingleButton: View {
         }
     }
 }
+
+struct TextLink: View {
+    var label: String
+    var destination: AnyView
+
+    var body: some View {
+        NavigationLink(destination: destination) {
+            Text(label)
+                .font(.custom("Feather", size: 17))
+                .foregroundStyle(Color.blue)
+                .underline()
+                .offset(y: 3)
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        TextLink(label: "Go to View", destination: AnyView(AddButton(isRounded: false)))
+    }
+}
+
 
 #Preview {
     //    ButtonWithImage(

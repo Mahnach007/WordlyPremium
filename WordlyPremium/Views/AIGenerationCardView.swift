@@ -33,7 +33,7 @@ struct AIGenerationCardView: View {
                 // Topic
                 VStack(alignment: .leading) {
                     Text("Topic/Prompt*")
-                    TextArea(inputText: $topic)
+                    TextArea(inputText: $topic, isMultiline: true, placeholder: "Enter your prompt...")
                         .focused($isFocused)
                 }
                 // Card Type

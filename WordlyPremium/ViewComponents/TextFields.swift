@@ -52,7 +52,8 @@ import SwiftUI
 struct TextArea: View {
     @Binding var inputText: String
     @FocusState private var isFocused: Bool
-    var guidingText: String = "Enter your prompt"
+    var isMultiline: Bool
+    var placeholder: String
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -66,10 +67,10 @@ struct TextArea: View {
                         .fill(Color.background)
                         .stroke(Color.gray, lineWidth: 1)
                 )
-                .frame(height: 100)
+                .frame(height: isMultiline ? 100 : 45)
             
             if inputText.isEmpty {
-                Text(guidingText)
+                Text(placeholder)
                     .font(.custom("Feather", size: 16))
                     .foregroundColor(Color.gray)
                     .padding(.top, 12)
