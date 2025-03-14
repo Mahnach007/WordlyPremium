@@ -10,6 +10,7 @@ import SwiftUI
 struct GenerationCardView: View {
     @Environment(\.dismiss) var dismiss
     @State private var title = ""
+    @State var isAIGenerated: Bool
     @FocusState private var isFocused: Bool
     @State private var flashcards: [Flashcard] = []
 
@@ -20,7 +21,7 @@ struct GenerationCardView: View {
                     Text("Title*")
                     TextArea(
                         inputText: $title, isMultiline: false,
-                        placeholder: "Enter the title of the pack..."
+                        placeholder: "Enter card pack title..."
                     )
                     .focused($isFocused)
                 }
@@ -28,10 +29,11 @@ struct GenerationCardView: View {
                     ForEach($flashcards) { $flashcard in
                         AddNewCard(
                             question: $flashcard.question,
-                            answer: $flashcard.answer)
+                            answer: $flashcard.answer,
+                            isAIGenerated: isAIGenerated)
+                        .padding(.bottom)
                     }
                 }
-
                 AddButton(isRounded: true)
                     .onTapGesture {
                         let newCard = Flashcard(question: "", answer: "")
@@ -60,11 +62,19 @@ struct GenerationCardView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Text("Manual Card Generation")
+                    Text(isAIGenerated ? "AI Generated Cards" : "Manual Card Generation")
                         .foregroundStyle(Color.eel)
                         .font(.custom("Feather", size: 16))
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    if isAIGenerated {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image("regenerate2")
+                        }
+                    }
+
                     Button(action: {
                         saveFlashcards()
                     }) {
@@ -93,5 +103,5 @@ struct GenerationCardView: View {
 }
 
 #Preview {
-    GenerationCardView()
+    GenerationCardView(isAIGenerated: false)
 }

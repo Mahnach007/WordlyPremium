@@ -39,7 +39,8 @@ struct ContentView: View {
                         ) { EmptyView() }
                         NavigationLink(
                             destination: selectedDestination?.view,
-                            tag: .secondOption, selection: $selectedDestination
+                            // for testing, if this false is changed to true, also change it in ModalViews
+                            tag: .secondOption(isAIGenerated: false), selection: $selectedDestination
                         ) { EmptyView() }
                         NavigationLink(
                             destination: selectedDestination?.view,

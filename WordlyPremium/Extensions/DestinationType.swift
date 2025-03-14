@@ -9,7 +9,7 @@ import SwiftUI
 // Parameter types
 enum DestinationType: Hashable {
     case firstOption
-    case secondOption
+    case secondOption(isAIGenerated: Bool)
     case thirdOption
 
     @ViewBuilder
@@ -17,8 +17,8 @@ enum DestinationType: Hashable {
         switch self {
         case .firstOption:
             AIGenerationCardView()
-        case .secondOption:
-            GenerationCardView()
+        case .secondOption(let isAIGenerated):
+            GenerationCardView(isAIGenerated: isAIGenerated)
         case .thirdOption:
             CardList()
         }

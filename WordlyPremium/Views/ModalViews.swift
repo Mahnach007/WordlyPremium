@@ -31,12 +31,12 @@ struct AddPackModalView: View {
                         description: "Create your own flashcards", icon: "cards",
                         isGradient: false, isFolder: false)
                     .onTapGesture {
-                        selectedDestination = .secondOption
+                        selectedDestination = .secondOption(isAIGenerated: false)
                         isPresented = false
                     }
                     CardButtonExtended(
-                        cardTitle: "Photo",
-                        description: "Create flashcards from your notes",
+                        cardTitle: "Add folder",
+                        description: "Keep your flashcards organized",
                         icon: "cards", isGradient: false, isFolder: false)
                     .onTapGesture {
                         selectedDestination = .thirdOption

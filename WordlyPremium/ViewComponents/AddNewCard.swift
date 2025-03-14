@@ -3,18 +3,38 @@ import SwiftUI
 struct AddNewCard: View {
     @Binding var question: String
     @Binding var answer: String
+    let isAIGenerated: Bool
+    var onRegenerate: (() -> Void)?
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.white)
                 .stroke(Color.gray, lineWidth: 1)
-            
             VStack(alignment: .trailing) {
                 UnderlineTextField(text: $question, wordType: "Question")
                 UnderlineTextField(text: $answer, wordType: "Answer")
             }
             .padding(10)
+            if isAIGenerated {
+                HStack {
+                    Spacer()
+                    VStack {
+                        Button(action: {
+                            onRegenerate?()
+                        }) {
+                            Image("regenerate")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .padding(8)
+                        }
+                        .padding(.top, 8)
+                        .padding(.trailing, 8)
+                        Spacer()
+                    }
+                }
+            }
         }
     }
 }
@@ -28,12 +48,6 @@ struct CardComponent: View {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.white)
                 .stroke(Color.gray, lineWidth: 1)
-//                .overlay(
-//                    Image("Regenerate")
-//                        .padding(7)
-//                        .padding(.horizontal, 4)
-//                    , alignment: .topTrailing
-//                )
             VStack(alignment: .trailing) {
                 UnderlineTextField(text: $word, wordType: "Word")
                 UnderlineTextField(text: $definition, wordType: "Definition")
@@ -43,21 +57,25 @@ struct CardComponent: View {
     }
 }
 
-
 struct UnderlineTextField: View {
     @Binding var text: String
     var wordType: String
-    @State private var suggestions: [String] = ["Suggestion 1", "Suggestion 2", "Suggestion 3"]
+    @State private var suggestions: [String] = [
+        "Suggestion 1", "Suggestion 2", "Suggestion 3",
+    ]
     @State private var showSuggestions: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                TextField("", text: $text, onEditingChanged: { isEditing in
-                    withAnimation {
-                        showSuggestions = isEditing
+                TextField(
+                    "", text: $text,
+                    onEditingChanged: { isEditing in
+                        withAnimation {
+                            showSuggestions = isEditing
+                        }
                     }
-                })
+                )
                 .font(.custom("feather", size: 16))
                 .foregroundColor(.black)
                 .underlineTextField()
@@ -71,12 +89,15 @@ struct UnderlineTextField: View {
             }
 
             if showSuggestions && !suggestions.isEmpty {
-                CardComponentSuggestion(suggestions: suggestions, onSelect: { selectedSuggestion in
-                    text = selectedSuggestion
-                    withAnimation {
-                        showSuggestions = false
+                CardComponentSuggestion(
+                    suggestions: suggestions,
+                    onSelect: { selectedSuggestion in
+                        text = selectedSuggestion
+                        withAnimation {
+                            showSuggestions = false
+                        }
                     }
-                })
+                )
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
@@ -101,8 +122,7 @@ struct CardComponentSuggestion: View {
                             .foregroundColor(.black)
                             .onTapGesture {
                                 onSelect(suggestion)
-                            }
-                        , alignment: .leading
+                            }, alignment: .leading
                     )
             }
         }
@@ -121,4 +141,3 @@ extension View {
             )
     }
 }
-
