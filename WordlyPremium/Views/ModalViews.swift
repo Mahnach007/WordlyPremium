@@ -20,7 +20,7 @@ struct AddPackModalView: View {
                     CardButtonExtended(
                         cardTitle: "AI Flashcards",
                         description: "Generate flashcards instantly", icon: "cards",
-                        isGradient: true, isFolder: false
+                        isGradient: true, hasIcon: false
                     )
                     .onTapGesture {
                         selectedDestination = .firstOption
@@ -28,16 +28,17 @@ struct AddPackModalView: View {
                     }
                     CardButtonExtended(
                         cardTitle: "Manual Flashcards",
-                        description: "Create your own flashcards", icon: "cards",
-                        isGradient: false, isFolder: false)
+                        description: "Create your own flashcards", icon: "handWithPen",
+                        isGradient: false, hasIcon: true)
                     .onTapGesture {
+                        /// for testing, if this false is changed to true, also change it in ContentView
                         selectedDestination = .secondOption(isAIGenerated: false)
                         isPresented = false
                     }
                     CardButtonExtended(
-                        cardTitle: "Add folder",
-                        description: "Keep your flashcards organized",
-                        icon: "cards", isGradient: false, isFolder: false)
+                        cardTitle: "Create Folder",
+                        description: "Store your packs in one place",
+                        icon: "folder", isGradient: false, hasIcon: true)
                     .onTapGesture {
                         selectedDestination = .thirdOption
                         isPresented = false
@@ -61,7 +62,7 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Single Word",
                     description: "Car | Apple", icon: "cards",
-                    isGradient: false, isFolder: false
+                    isGradient: false, hasIcon: false
                 )
                 .onTapGesture {
                     selectedOption = .singleWord
@@ -70,7 +71,7 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Phrase",
                     description: "I love you | Good morning",
-                    icon: "cards", isGradient: false, isFolder: false)
+                    icon: "cards", isGradient: false, hasIcon: false)
                 .onTapGesture {
                     selectedOption = .phrase
                     isPresented = false
@@ -78,7 +79,7 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Full Sentence",
                     description: "Where can I buy apples?", icon: "cards",
-                    isGradient: false, isFolder: false)
+                    isGradient: false, hasIcon: false)
                 .onTapGesture {
                     selectedOption = .sentence
                     isPresented = false
@@ -86,7 +87,7 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Mixed",
                     description: "All types of cards", icon: "cards",
-                    isGradient: false, isFolder: false)
+                    isGradient: false, hasIcon: false)
                 .onTapGesture {
                     selectedOption = .mixed
                     isPresented = false

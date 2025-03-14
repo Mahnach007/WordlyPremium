@@ -41,8 +41,6 @@ struct PressableButton<Content: View>: View {
                         withAnimation(.easeInOut(duration: 0.1)) {
                             isPressed = false
                         }
-                        let impact = UIImpactFeedbackGenerator(style: .light)
-                        impact.impactOccurred()
                         hasTriggeredHaptic = false
                         action()
                     }
@@ -52,7 +50,6 @@ struct PressableButton<Content: View>: View {
 
 struct AddButton: View {
     @State private var isPressed = false
-    @State private var hasTriggeredHaptic = false
     var isRounded: Bool
     
     var body: some View {
@@ -83,8 +80,6 @@ struct CardButton: View {
     var cardTitle: String
     var numberOfWords: Int
     var icon: String
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
 
     var body: some View {
         PressableButton(isPressed: $isPressed) {
@@ -102,6 +97,7 @@ struct CardButton: View {
                             .stroke(Color.gray, lineWidth: 3)
                     )
                     .offset(y: isPressed ? 4 : 0)
+
                 ZStack {
                     Text(cardTitle)
                         .font(.custom("Feather", size: 16))
@@ -112,6 +108,7 @@ struct CardButton: View {
                         .frame(width: 140)
                         .frame(maxHeight: .infinity, alignment: .top)
                         .frame(height: 90)
+
                     Text("\(numberOfWords) words")
                         .font(.custom("Feather Bold", size: 16))
                         .foregroundStyle(Color.gray)
@@ -134,15 +131,14 @@ struct CardButton: View {
     }
 }
 
+
 struct CardButtonExtended: View {
     @State private var isPressed = false
     var cardTitle: String
     var description: String
     var icon: String
     var isGradient: Bool
-    var isFolder: Bool
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
+    var hasIcon: Bool
 
     var body: some View {
         let backgroundGradient: LinearGradient =
@@ -178,11 +174,11 @@ struct CardButtonExtended: View {
                             .font(.custom("Feather", size: 16))
                     }
                     Spacer()
-                    if isFolder {
+                    if hasIcon {
                         Image(icon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 45, height: 50)
+                            .frame(width: 65, height: 65)
                             .clipped()
                     }
                 }
@@ -199,8 +195,6 @@ struct ButtonWithImage: View {
     var icon: String
     var isGradient: Bool
     var isChecked: Bool
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
 
     var body: some View {
         let backgroundGradient: LinearGradient =
@@ -264,8 +258,6 @@ struct ConfirmButton: View {
     var cardTitle: String
     var icon: String
     let action: () -> Void
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
 
     var body: some View {
         let backgroundGradient: LinearGradient = AppColors.gradient
@@ -374,13 +366,9 @@ struct TextLink: View {
 }
 
 #Preview {
-    NavigationStack {
-        TextLink(label: "Go to View", destination: AnyView(AddButton(isRounded: false)))
-    }
-}
-
-
-#Preview {
+//    NavigationStack {
+//        TextLink(label: "Go to View", destination: AnyView(AddButton(isRounded: false)))
+//    }
     //    ButtonWithImage(
     //        cardTitle: "Englishoens", icon: "gb", isGradient: false)
     //    ButtonWithImage(
@@ -388,10 +376,7 @@ struct TextLink: View {
 //    ButtonWithImage(
 //        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
     //    ConfirmButton(cardTitle: "e", icon: "gb")
-        SingleButton(word: "Adjective")
+//        SingleButton(word: "Adjective")
+    CardButtonExtended(
+        cardTitle: "AI Flashcards", description: "Generate flashcards instantly", icon: "cards", isGradient: false, hasIcon: true)
 }
-
-//#Preview {
-//    CardButtonExtended(
-//        cardTitle: "AI Flashcards", description: "Generate flashcards instantly", icon: "cards", isGradient: false, isFolder: false)
-//}

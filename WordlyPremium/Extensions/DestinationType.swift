@@ -20,7 +20,7 @@ enum DestinationType: Hashable {
         case .secondOption(let isAIGenerated):
             GenerationCardView(isAIGenerated: isAIGenerated)
         case .thirdOption:
-            CardList()
+            CreateFolderView()
         }
     }
 }

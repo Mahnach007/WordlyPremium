@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct SearchBar: View {
-
     @State var searchText: String = ""
-
     var guidingText: String = "Search your pack..."
     let imageName: String = "magnifier"
 

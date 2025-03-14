@@ -11,7 +11,7 @@ struct ContentView: View {
     @StateObject private var viewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
-    
+
     var body: some View {
         ZStack {
             NavigationStack {
@@ -19,7 +19,7 @@ struct ContentView: View {
                     HStack {
                         AddButton(isRounded: false)
                             .padding()
-                            .padding(.vertical, -30)
+                            .padding(.vertical, -25)
                             .padding(.top, 20)
                             .onTapGesture {
                                 isModalPresented = true
@@ -39,8 +39,9 @@ struct ContentView: View {
                         ) { EmptyView() }
                         NavigationLink(
                             destination: selectedDestination?.view,
-                            // for testing, if this false is changed to true, also change it in ModalViews
-                            tag: .secondOption(isAIGenerated: false), selection: $selectedDestination
+                            /// for testing, if this false is changed to true, also change it in ModalViews
+                            tag: .secondOption(isAIGenerated: false),
+                            selection: $selectedDestination
                         ) { EmptyView() }
                         NavigationLink(
                             destination: selectedDestination?.view,
@@ -58,17 +59,23 @@ struct ContentView: View {
                         CardSlider(
                             packTitle: "Your Packs",
                             packNumber: viewModel.packs.count,
-                            cards: viewModel.packs
+                            cards: viewModel.packs,
+                            hasData: false,
+                            isFolder: false
                         )
                         CardSlider(
                             packTitle: "Your Folders",
                             packNumber: viewModel.folders.count,
-                            cards: viewModel.folders
+                            cards: viewModel.folders,
+                            hasData: false,
+                            isFolder: true
                         )
                         CardSlider(
                             packTitle: "Community Packs",
                             packNumber: viewModel.community.count,
-                            cards: viewModel.community
+                            cards: viewModel.community,
+                            hasData: true,
+                            isFolder: false
                         )
                     }
                     .padding(.top, 20)

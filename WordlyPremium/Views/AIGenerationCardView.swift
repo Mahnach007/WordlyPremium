@@ -101,7 +101,7 @@ struct AIGenerationCardView: View {
                                         isFocused = false // Dismiss keyboard
                                     }
                                 }
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         dismiss()
                     }) {
