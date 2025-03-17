@@ -18,6 +18,8 @@ struct CardSlider: View {
     @State private var navigateToCreateCards = false
     @State private var selectedDestination: DestinationType? = nil
     @State private var isPressed: Bool = false
+    
+    @State private var color: Bool = false
 
     var body: some View {
         VStack {
@@ -31,14 +33,16 @@ struct CardSlider: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(cards) { card in
-                            CardButton(
+                            Button("Button") {
+                                print("ecco")
+                            }.buttonStyle(CardButton(
                                 cardTitle: card.title,
                                 numberOfWords: card.numberOfWords,
-                                icon: card.icon)
+                                icon: card.icon))
                         }
                     }
                     .padding(.vertical, 7)
-                    .padding(.leading)
+                    .padding(.horizontal)
                 }
             } else {
                 Button(action: {
