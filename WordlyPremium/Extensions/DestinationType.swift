@@ -48,6 +48,17 @@ enum LanguageType: String, Hashable {
     case english = "english"
     case ukrainian = "ukrainian"
     case italian = "italian"
+    
+    var identifier: String {
+        switch self {
+        case .english:
+            return "en-US"
+        case .italian:
+            return "it-IT"
+        case .ukrainian:
+            return "uk"
+        }
+    }
 }
 
 enum WordType: String, CaseIterable, Codable {
