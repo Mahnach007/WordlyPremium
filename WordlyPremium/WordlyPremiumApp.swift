@@ -13,7 +13,7 @@ struct WordlyPremiumApp: App {
         WindowGroup {
             ZStack {
                 Color.background.ignoresSafeArea()
-                ContentView()
+                FlashCardLearnView()
             }
         }
     }

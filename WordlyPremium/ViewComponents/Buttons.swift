@@ -58,12 +58,12 @@ struct AddButton: View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: 3)
-                    .foregroundStyle(Color.darkGreen)
+                    .foregroundStyle(Color.treeFrog)
                     .frame(width: 35, height: 30)
                     .offset(y: 4)
                 ZStack {
                     RoundedRectangle(cornerRadius: 3)
-                        .foregroundStyle(Color.lightGreen)
+                        .foregroundStyle(Color.owl)
                         .frame(width: 35, height: 35)
                         .offset(y: -3)
                     Text("+")

@@ -21,12 +21,13 @@ struct ProgressBar: View {
                 
                 // Foreground bar (progress)
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.yellow)
+                    .stroke(Color.bee)
+                    .fill(Color.bee)
                     .frame(width: max(progress, 0) * geometry.size.width, height: 10)
                 
                 // Inner highlight
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gold)
+                    .fill(Color.duck)
                     .frame(width: max(progress, 0) * geometry.size.width - 6 , height: 2.5)
                     .padding(.horizontal,3)
                     .padding(.bottom, 4)// Slight offset for inner bar
@@ -39,5 +40,5 @@ struct ProgressBar: View {
 
 
 #Preview {
-    ProgressBar(progress: 0.09)
+    ProgressBar(progress: 1.0)
 }

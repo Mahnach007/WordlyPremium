@@ -48,7 +48,7 @@ struct FlashcardResponse: Codable {
 }
 
 // Flashcard Model
-struct Flashcard: Codable, Identifiable {
+struct Flashcard: Codable, Identifiable, Hashable {
     let id: UUID = UUID()
     var question: String
     var answer: String

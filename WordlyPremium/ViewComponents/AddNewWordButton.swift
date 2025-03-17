@@ -13,11 +13,11 @@ struct AddNewWordButton: View {
     var body: some View {
         ZStack {
             Circle()
-                .foregroundStyle(Color.darkGreen)
+                .foregroundStyle(Color.treeFrog)
                 
             ZStack {
                 Circle()
-                    .foregroundStyle(Color.lightGreen)
+                    .foregroundStyle(Color.owl)
                 Image("plus")
             }.offset(x: 0, y: isPressed ? 0 : -5)
             
