@@ -38,7 +38,7 @@ struct SearchBar: View {
         .background {
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color.background)
-                .stroke(Color.gray, style: .init(lineWidth: 1))
+                .stroke(Color.rhino, style: .init(lineWidth: 1))
         }
     }
 }
@@ -63,14 +63,14 @@ struct TextArea: View {
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.background)
-                        .stroke(Color.gray, lineWidth: 1)
+                        .stroke(Color.rhino, lineWidth: 1)
                 )
                 .frame(height: isMultiline ? 100 : 45)
             
             if inputText.isEmpty {
                 Text(placeholder)
                     .font(.custom("Feather", size: 16))
-                    .foregroundColor(Color.gray)
+                    .foregroundColor(Color.rhino)
                     .padding(.top, 12)
                     .padding(.leading, 10)
             }
@@ -88,7 +88,7 @@ struct SelectorWithModal<T: Equatable>: View {
     @State private var isModalPresented = false
     @State private var placeholderText: String = "Select type"
     @State private var placeholderImage: String = ""
-    @State private var placeholderColor = Color.gray
+    @State private var placeholderColor = Color.rhino
     let paddingValue: CGFloat = (T.self == CardType.self) ? 4 : 14
 
     var body: some View {
@@ -205,7 +205,7 @@ struct NumericField: View {
                 .overlay(
                     Text(guidingText)
                         .font(.custom("Feather", size: 16))
-                        .foregroundColor(Color.gray)
+                        .foregroundColor(Color.rhino)
                         .opacity(inputText.isEmpty ? 1 : 0)
                         .padding(.top, 12)
                         .padding(.leading,10),
@@ -215,7 +215,7 @@ struct NumericField: View {
         .background {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.background)
-                .stroke(Color.gray, style: .init(lineWidth: 1))
+                .stroke(Color.rhino, style: .init(lineWidth: 1))
         }
     }
 }

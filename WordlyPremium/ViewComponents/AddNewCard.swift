@@ -10,7 +10,7 @@ struct AddNewCard: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.white)
-                .stroke(Color.gray, lineWidth: 1)
+                .stroke(Color.rhino, lineWidth: 1)
             VStack(alignment: .trailing) {
                 UnderlineTextField(text: $question, wordType: "Question")
                 UnderlineTextField(text: $answer, wordType: "Answer")
@@ -47,7 +47,7 @@ struct CardComponent: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color.white)
-                .stroke(Color.gray, lineWidth: 1)
+                .stroke(Color.rhino, lineWidth: 1)
             VStack(alignment: .trailing) {
                 UnderlineTextField(text: $word, wordType: "Word")
                 UnderlineTextField(text: $definition, wordType: "Definition")
@@ -113,7 +113,7 @@ struct CardComponentSuggestion: View {
             ForEach(suggestions, id: \.self) { suggestion in
                 RoundedRectangle(cornerRadius: 2)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(Color.gray.opacity(0.2))
+                    .foregroundColor(Color.rhino.opacity(0.2))
                     .frame(maxWidth: .infinity, minHeight: 25)
                     .overlay(
                         Text(suggestion)

@@ -68,7 +68,7 @@ struct CardButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .foregroundStyle(Color.gray)
+                .foregroundStyle(Color.rhino)
                 .frame(width: 178, height: 115)
                 .offset(y: 5)
 
@@ -77,7 +77,7 @@ struct CardButton: ButtonStyle {
                 .frame(width: 175, height: 115)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray, lineWidth: 3)
+                        .stroke(Color.rhino, lineWidth: 3)
                 )
                 .offset(y: configuration.isPressed ? 4 : 0)
                 .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
@@ -95,7 +95,7 @@ struct CardButton: ButtonStyle {
 
                 Text("\(numberOfWords) words")
                     .font(.custom("Feather Bold", size: 16))
-                    .foregroundStyle(Color.gray)
+                    .foregroundStyle(Color.rhino)
                     .offset(x: -35, y: 35)
                     .padding(0)
             }
@@ -158,7 +158,7 @@ struct AddButton: View {
 //        PressableButton(isPressed: $isPressed) {
 //            ZStack {
 //                RoundedRectangle(cornerRadius: 10)
-//                    .foregroundStyle(Color.gray)
+//                    .foregroundStyle(Color.rhino)
 //                    .frame(width: 178, height: 115)
 //                    .offset(y: 5)
 //
@@ -167,7 +167,7 @@ struct AddButton: View {
 //                    .frame(width: 175, height: 115)
 //                    .overlay(
 //                        RoundedRectangle(cornerRadius: 10)
-//                            .stroke(Color.gray, lineWidth: 3)
+//                            .stroke(Color.rhino, lineWidth: 3)
 //                    )
 //                    .offset(y: isPressed ? 4 : 0)
 //
@@ -184,7 +184,7 @@ struct AddButton: View {
 //
 //                    Text("\(numberOfWords) words")
 //                        .font(.custom("Feather Bold", size: 16))
-//                        .foregroundStyle(Color.gray)
+//                        .foregroundStyle(Color.rhino)
 //                        .offset(x: -35, y: 35)
 //                        .padding(0)
 //                }
@@ -217,7 +217,7 @@ struct CardButtonExtended: View {
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [Color.gray, Color.gray]),
+                gradient: Gradient(colors: [Color.rhino, Color.rhino]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -242,7 +242,7 @@ struct CardButtonExtended: View {
                             .font(.custom("Feather", size: 20))
                             .foregroundColor(Color.eel)
                         Text(description)
-                            .foregroundColor(Color.gray)
+                            .foregroundColor(Color.rhino)
                             .font(.custom("Feather", size: 16))
                     }
                     Spacer()
@@ -273,7 +273,7 @@ struct ButtonWithImage: View {
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [Color.gray, Color.gray]),
+                gradient: Gradient(colors: [Color.rhino, Color.rhino]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -306,7 +306,7 @@ struct ButtonWithImage: View {
                 isChecked
                     ? Text(Image(systemName: "checkmark"))
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Color.azure)
                         .offset(x: 140)
                     : nil
             }
@@ -385,17 +385,17 @@ struct SingleButton: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundStyle(
-                    isPressed ? Color.blue : Color.gray
+                    isPressed ? Color.azure : Color.rhino
                 )
                 .frame(width: 81, height: 40)
                 .offset(y: 3)
             RoundedRectangle(cornerRadius: 10)
-                .fill(isPressed ? Color.lightBlue : Color.background)
+                .fill(isPressed ? Color.ocean : Color.background)
                 .frame(width: 80, height: 40)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            isPressed ? Color.blue : Color.gray,
+                            isPressed ? Color.azure : Color.rhino,
                             lineWidth: 2)
                 )
                 .offset(y: isPressed ? 3 : 0)
@@ -430,7 +430,7 @@ struct TextLink: View {
         NavigationLink(destination: destination) {
             Text(label)
                 .font(.custom("Feather", size: 17))
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Color.azure)
                 .underline()
                 .offset(y: 3)
         }

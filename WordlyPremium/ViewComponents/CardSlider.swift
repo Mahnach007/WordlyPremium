@@ -64,7 +64,7 @@ struct CardSlider: View {
                 }
                 .padding(.vertical, 20)
                 .font(.custom("Feather", size: 16))
-                .foregroundStyle(Color.gray)
+                .foregroundStyle(Color.rhino)
                 .background(
                     NavigationLink(
                         destination: CreateFolderView(),
