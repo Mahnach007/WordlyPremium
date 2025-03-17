@@ -18,7 +18,7 @@ enum DestinationType: Hashable {
         case .firstOption:
             AIGenerationCardView()
         case .secondOption:
-            CardList()
+            GenerationCardView()
         case .thirdOption:
             CardList()
         }

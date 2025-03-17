@@ -27,17 +27,17 @@ struct AddPackModalView: View {
                         isPresented = false
                     }
                     CardButtonExtended(
-                        cardTitle: "Photo",
-                        description: "Create flashcards from your notes",
-                        icon: "cards", isGradient: false, isFolder: false)
+                        cardTitle: "Manual Flashcards",
+                        description: "Create your own flashcards", icon: "cards",
+                        isGradient: false, isFolder: false)
                     .onTapGesture {
                         selectedDestination = .secondOption
                         isPresented = false
                     }
                     CardButtonExtended(
-                        cardTitle: "Manual Flashcards",
-                        description: "Create your own flashcards", icon: "cards",
-                        isGradient: false, isFolder: false)
+                        cardTitle: "Photo",
+                        description: "Create flashcards from your notes",
+                        icon: "cards", isGradient: false, isFolder: false)
                     .onTapGesture {
                         selectedDestination = .thirdOption
                         isPresented = false

@@ -17,7 +17,7 @@ struct ContentView: View {
             NavigationStack {
                 VStack(spacing: 0) {
                     HStack {
-                        AddButton()
+                        AddButton(isRounded: false)
                             .padding()
                             .padding(.vertical, -30)
                             .padding(.top, 20)

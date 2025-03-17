@@ -25,7 +25,7 @@ struct SliderTitle: View {
                     .offset(y: 2)
             }
             Spacer()
-            NavigateText(label: "See all", destination: seeAllDestination)
+            TextLink(label: "See all", destination: seeAllDestination)
         }
     }
 }
