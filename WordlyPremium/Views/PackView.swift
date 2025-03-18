@@ -31,13 +31,13 @@ struct PackView: View {
                     }
                     HStack(spacing: 50) {
                         VStack {
-                            Text("5")
+                            Text("\(pack.notStudiedFlashcardsCount)")
                                 .font(.custom("Feather", size: 24))
                             Text("not studied")
                                 .font(.custom("Feather", size: 14))
                         }
                         VStack {
-                            Text("5")
+                            Text("\(pack.studiedFlashcardsCount)")
                                 .font(.custom("Feather", size: 24))
                             Text("learned")
                                 .font(.custom("Feather", size: 14))
@@ -82,9 +82,7 @@ struct PackView: View {
                                             Text(pack.flashcards[index].question)
                                                 .font(.custom("Feather", size: 22))
                                                 .foregroundStyle(Color.eel)
-                                            RoundedRectangle(cornerRadius: 200)
-                                                .frame(height: 5)
-                                                .foregroundStyle(pack.flashcards[index].isStudied ? Color.yellow : Color.eel)
+                                            ProgressBar(progress: pack.flashcards[index].isStudied == true ? 1 : 0)
                                             Text(pack.flashcards[index].answer)
                                                 .font(.custom("Feather", size: 20))
                                                 .foregroundStyle(Color.rhino)

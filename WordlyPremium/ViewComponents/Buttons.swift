@@ -49,70 +49,59 @@ struct PressableButton<Content: View>: View {
     }
 }
 
-struct CardButton: ButtonStyle {
-
+struct CardButton: View {
+    @State private var isPressed = false
     var cardTitle: String
-    let numberOfWords: Int
-    let icon: String
+    var numberOfWords: Int
+    var icon: String
 
-    init(
-        cardTitle: String,
-        numberOfWords: Int,
-        icon: String
-    ) {
-        self.cardTitle = cardTitle
-        self.numberOfWords = numberOfWords
-        self.icon = icon
-    }
-
-    func makeBody(configuration: Configuration) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundStyle(Color.rhino)
-                .frame(width: 178, height: 115)
-                .offset(y: 5)
-
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundStyle(Color.background)
-                .frame(width: 175, height: 115)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.rhino, lineWidth: 3)
-                )
-                .offset(y: configuration.isPressed ? 4 : 0)
-                .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
-
+    var body: some View {
+        PressableButton(isPressed: $isPressed) {
             ZStack {
-                Text(cardTitle)
-                    .font(.custom("Feather", size: 16))
-                    .foregroundStyle(Color.eel)
-                    .offset(x: -5)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .frame(width: 140)
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .frame(height: 90)
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color.gray)
+                    .frame(width: 178, height: 115)
+                    .offset(y: 5)
 
-                Text("\(numberOfWords) words")
-                    .font(.custom("Feather Bold", size: 16))
-                    .foregroundStyle(Color.rhino)
-                    .offset(x: -35, y: 35)
-                    .padding(0)
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color.background)
+                    .frame(width: 175, height: 115)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray, lineWidth: 3)
+                    )
+                    .offset(y: isPressed ? 4 : 0)
+
+                ZStack {
+                    Text(cardTitle)
+                        .font(.custom("Feather", size: 16))
+                        .foregroundStyle(Color.eel)
+                        .offset(x: -5)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(width: 140)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                        .frame(height: 90)
+
+                    Text("\(numberOfWords) words")
+                        .font(.custom("Feather Bold", size: 16))
+                        .foregroundStyle(Color.gray)
+                        .offset(x: -35, y: 35)
+                        .padding(0)
+                }
+                .offset(y: isPressed ? 4 : 0)
             }
-            .offset(y: configuration.isPressed ? 4 : 0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .overlay(
+                Image(icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .offset(y: isPressed ? 4 : 0)
+                    .padding(.bottom, 12)
+                    .padding(.trailing, 8),
+                alignment: .bottomTrailing
+            )
         }
-        .overlay(
-            Image(icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60, height: 60)
-                .offset(y: configuration.isPressed ? 4 : 0)
-                .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
-                .padding(.bottom, 12)
-                .padding(.trailing, 8),
-            alignment: .bottomTrailing
-        )
     }
 }
 

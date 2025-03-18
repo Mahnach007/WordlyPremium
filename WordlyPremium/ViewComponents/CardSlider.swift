@@ -22,92 +22,89 @@ struct CardSlider: View {
     @State private var color: Bool = false
 
     var body: some View {
-        VStack {
-            SliderTitle(
-                sliderTitle: packTitle, sliderNumber: packNumber,
-                seeAllDestination: AnyView(CardList(isForFolder: false))
-            )
-            .padding(.horizontal)
-            .padding(.vertical, 2)
-            if hasData {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(cards) { card in
-                            Button("") {
-                                navigateToPack = true
-                                print("card button")
-                            }.buttonStyle(
-                                CardButton(
-                                    cardTitle: card.title,
-                                    numberOfWords: card.numberOfWords,
-                                    icon: card.icon
-                                )
+        NavigationStack {
+            VStack {
+                SliderTitle(
+                    sliderTitle: packTitle, sliderNumber: packNumber,
+                    seeAllDestination: AnyView(CardList(isForFolder: false))
+                )
+                .padding(.horizontal)
+                .padding(.vertical, 2)
+                if hasData {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(cards) { card in
+                                NavigationLink(destination: PackView()) {
+                                    CardButton(
+                                        cardTitle: card.title,
+                                        numberOfWords: card.numberOfWords,
+                                        icon: card.icon
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding(.vertical, 7)
+                        .padding(.horizontal)
+                    }
+                } else {
+                    Button(action: {
+                        if isFolder {
+                            navigateToCreateFolder = true
+                            print("folder create button")
+                        } else {
+                            navigateToCreateCards = true
+                            print("pack create button")
+                        }
+                    }) {
+                        HStack {
+                            Text(
+                                isFolder
+                                    ? Image(systemName: "folder.badge.plus")
+                                    : Image(systemName: "plus.app")
                             )
-                            .background(
-                                NavigationLink(
-                                    destination: PackView(),
-                                    isActive: $navigateToPack,
-                                    label: { EmptyView() }
-                                )
-                            )
+                            .fontWeight(.bold)
+                            Text(
+                                isFolder
+                                    ? "Create new folder" : "Create new deck")
                         }
                     }
-                    .padding(.vertical, 7)
-                    .padding(.horizontal)
-                }
-            } else {
-                Button(action: {
-                    if isFolder {
-                        navigateToCreateFolder = true
-                        print("folder create button")
-                    } else {
-                        navigateToCreateCards = true
-                        print("pack create button")
+                    .padding(.vertical, 20)
+                    .font(.custom("Feather", size: 16))
+                    .foregroundStyle(Color.rhino)
+                    .background {
+                        NavigationLink(
+                            destination: CreateFolderView(),
+                            isActive: $navigateToCreateFolder
+                        ) {
+                            EmptyView()
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
-                }) {
-                    HStack {
-                        Text(
-                            isFolder
-                                ? Image(systemName: "folder.badge.plus")
-                                : Image(systemName: "plus.app")
+                    .sheet(isPresented: $navigateToCreateCards) {
+                        AddPackModalView(
+                            isPresented: $navigateToCreateCards,
+                            selectedDestination: $selectedDestination
                         )
-                        .fontWeight(.bold)
-                        Text(isFolder ? "Create new folder" : "Create new deck")
+                        .presentationBackground(Color.background)
+                        .presentationDetents([.fraction(0.5)])
+                        .presentationDragIndicator(.visible)
                     }
-                }
-                .padding(.vertical, 20)
-                .font(.custom("Feather", size: 16))
-                .foregroundStyle(Color.rhino)
-                .background(
                     NavigationLink(
-                        destination: CreateFolderView(),
-                        isActive: $navigateToCreateFolder,
-                        label: { EmptyView() }
-                    )
-                )
-                .sheet(isPresented: $navigateToCreateCards) {
-                    AddPackModalView(
-                        isPresented: $navigateToCreateCards,
-                        selectedDestination: $selectedDestination
-                    )
-                    .presentationBackground(Color.background)
-                    .presentationDetents([.fraction(0.5)])
-                    .presentationDragIndicator(.visible)
+                        destination: selectedDestination?.view,
+                        tag: .firstOption, selection: $selectedDestination
+                    ) { EmptyView() }
+                    NavigationLink(
+                        destination: selectedDestination?.view,
+                        /// for testing, if this false is changed to true, also change it in ModalViews
+                        tag: .secondOption(isAIGenerated: false),
+                        selection: $selectedDestination
+                    ) { EmptyView() }
+                    NavigationLink(
+                        destination: selectedDestination?.view,
+                        tag: .thirdOption, selection: $selectedDestination
+                    ) { EmptyView() }
                 }
-                NavigationLink(
-                    destination: selectedDestination?.view,
-                    tag: .firstOption, selection: $selectedDestination
-                ) { EmptyView() }
-                NavigationLink(
-                    destination: selectedDestination?.view,
-                    /// for testing, if this false is changed to true, also change it in ModalViews
-                    tag: .secondOption(isAIGenerated: false),
-                    selection: $selectedDestination
-                ) { EmptyView() }
-                NavigationLink(
-                    destination: selectedDestination?.view,
-                    tag: .thirdOption, selection: $selectedDestination
-                ) { EmptyView() }
             }
         }
     }
@@ -127,7 +124,7 @@ struct CardSlider: View {
             CardButtonData(
                 title: "Law", numberOfWords: 10, icon: "cards"),
         ],
-        hasData: true,
+        hasData: false,
         isFolder: true
     )
 }

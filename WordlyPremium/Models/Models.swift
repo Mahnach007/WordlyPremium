@@ -36,6 +36,14 @@ struct Pack: Codable, Identifiable {
         return flashcards.count
     }
 
+    var studiedFlashcardsCount: Int {
+        return flashcards.filter { $0.isStudied }.count
+    }
+
+    var notStudiedFlashcardsCount: Int {
+        return flashcards.filter { !$0.isStudied }.count
+    }
+
     enum CodingKeys: String, CodingKey {
         case name, isAIGenerated, flashcards
     }

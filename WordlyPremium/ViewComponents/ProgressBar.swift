@@ -34,7 +34,6 @@ struct ProgressBar: View {
             }
         }
         .frame(height: 10) // Fix height externally
-        .padding(.horizontal) // Control padding externally
     }
 }
 
