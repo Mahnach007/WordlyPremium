@@ -43,34 +43,6 @@ struct Pack: Codable, Identifiable {
 
 // Flashcard Model
 struct Flashcard: Codable, Identifiable {
-    let id: UUID = UUID()
-    var question: String
-    var answer: String
-
-    enum CodingKeys: String, CodingKey {
-        case question = "langFrom"
-        case answer = "langTo"
-    }
-}
-
-// Request Model
-struct GenerateCardsRequest: Codable {
-    var fromLanguage: String? = nil
-    var toLanguage: String? = nil
-    var topic: String? = nil
-    var cardType: String? = nil
-    var numCards: String? = nil
-    var wordTypes: Set<String>
-}
-
-// Response Model
-struct FlashcardResponse: Codable {
-    let packName: String
-    let flashCards: [Flashcard]
-}
-
-// Flashcard Model
-struct Flashcard: Codable, Identifiable {
     var id: UUID = UUID()
     var question: String
     var answer: String
@@ -91,6 +63,22 @@ struct Flashcard: Codable, Identifiable {
         self.answer = answer
         self.isStudied = isStudied
     }
+}
+
+// Request Model
+struct GenerateCardsRequest: Codable {
+    var fromLanguage: String? = nil
+    var toLanguage: String? = nil
+    var topic: String? = nil
+    var cardType: String? = nil
+    var numCards: String? = nil
+    var wordTypes: Set<String>
+}
+
+// Response Model
+struct FlashcardResponse: Codable {
+    let packName: String
+    let flashCards: [Flashcard]
 }
 
 // Enum for Card Amount Selection

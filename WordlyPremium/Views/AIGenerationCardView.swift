@@ -5,10 +5,12 @@
 //  Created by Diego Arroyo on 07/03/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct AIGenerationCardView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.dataService) private var dataService
     // Parameters
     @State private var selectedCardOption: CardType? = nil
     @State private var selectedFrontLanguageOption: LanguageType? = nil
@@ -18,16 +20,21 @@ struct AIGenerationCardView: View {
     @State private var wordType: WordType? = nil
     @State private var selectedWordTypes: Set<String> = []
     @State private var flashcards: [Flashcard] = []
-    
+
+    // Add state to track selected folder
+    @State private var selectedFolder: FolderEntity?
+    @State private var showFolderSelector = false
+    @State private var folders: [FolderEntity] = []
+
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var wordTypeIsVisible = true
     @FocusState private var isFocused: Bool
-    
+
     @State private var navigateToGeneratedCards = false
-    
+
     private let flashcardService = FlashcardService()
-    
+
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
@@ -35,8 +42,11 @@ struct AIGenerationCardView: View {
                     // Topic
                     VStack(alignment: .leading) {
                         Text("Topic/Prompt*")
-                        TextArea(inputText: $topic, isMultiline: true, placeholder: "Enter your prompt...")
-                            .focused($isFocused)
+                        TextArea(
+                            inputText: $topic, isMultiline: true,
+                            placeholder: "Enter your prompt..."
+                        )
+                        .focused($isFocused)
                     }
                     // Card Type
                     VStack(alignment: .leading) {
@@ -75,22 +85,59 @@ struct AIGenerationCardView: View {
                             Text("Word type")
                             HStack {
                                 ForEach(WordType.allCases, id: \.self) { word in
-                                    SingleButton(word: word.rawValue, onTap: {
-                                        if selectedWordTypes.contains(word.rawValue) {
-                                            selectedWordTypes.remove(word.rawValue)
-                                        } else {
-                                            selectedWordTypes.insert(word.rawValue)
+                                    SingleButton(
+                                        word: word.rawValue,
+                                        onTap: {
+                                            if selectedWordTypes.contains(word.rawValue) {
+                                                selectedWordTypes.remove(word.rawValue)
+                                            } else {
+                                                selectedWordTypes.insert(word.rawValue)
+                                            }
                                         }
-                                    }).tag(word.rawValue)
+                                    ).tag(word.rawValue)
                                 }
                             }
                         }
                     }
+
+                    // Folder selector
+                    VStack(alignment: .leading) {
+                        Text("Save to folder")
+                        Menu {
+                            ForEach(folders, id: \.id) { folder in
+                                Button(folder.name) {
+                                    selectedFolder = folder
+                                }
+                            }
+
+                            Button("Create New Folder") {
+                                // Add new folder creation logic here
+                                let newFolder = dataService.createFolder(name: "New Folder")
+                                folders.append(newFolder)
+                                selectedFolder = newFolder
+                            }
+                        } label: {
+                            HStack {
+                                Text(selectedFolder?.name ?? "Select Folder")
+                                    .foregroundColor(selectedFolder == nil ? .gray : .black)
+                                Spacer()
+                                Image(systemName: "chevron.down")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(8)
+                        }
+                    }
+                    .padding(.top)
+
                     Spacer()
-                    
+
                     // Generate Button
-                    ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
-                        .padding(.bottom, 50)
+                    ConfirmButton(
+                        cardTitle: "Generate", icon: "generate", action: generateFlashcards
+                    )
+                    .padding(.bottom, 50)
                 }
                 .font(.custom("Feather", size: 12))
                 .frame(maxHeight: .infinity, alignment: .top)
@@ -99,7 +146,7 @@ struct AIGenerationCardView: View {
                     ToolbarItemGroup(placement: .keyboard) {
                         Spacer()
                         Button("Done") {
-                            isFocused = false // Dismiss keyboard
+                            isFocused = false  // Dismiss keyboard
                         }
                     }
                     ToolbarItem(placement: .topBarLeading) {
@@ -127,15 +174,27 @@ struct AIGenerationCardView: View {
                         wordTypeIsVisible = (newValue != .singleWord)
                     }
                 }
+                .onAppear {
+                    // Load folders when view appears
+                    folders = dataService.fetchAllFolders()
+                    // Create default folder if none exist
+                    if folders.isEmpty {
+                        let defaultFolder = dataService.createFolder(name: "My Cards")
+                        folders.append(defaultFolder)
+                    }
+                    selectedFolder = folders.first
+                }
                 .navigationDestination(for: NavigationDestination.self) { destination in
                     switch destination {
                     case .generationCardView:
                         GenerationCardView(
                             flashcards: $flashcards,
+                            isAIGenerated: true,
                             titlePlaceholder: "AI-generated pack title...",
                             onSave: {
                                 print("AI-generated flashcards saved!")
                             },
+                            selectedFolder: selectedFolder,
                             onAddFlashcard: {
                                 flashcards.append(Flashcard(question: "Question", answer: "Answer"))
                             }
@@ -145,11 +204,16 @@ struct AIGenerationCardView: View {
             }
         }
     }
-    
+
     private func generateFlashcards() {
+        guard selectedFolder != nil else {
+            errorMessage = "Please select a folder to save the cards"
+            return
+        }
+
         isLoading = true
         errorMessage = nil
-        
+
         let request = GenerateCardsRequest(
             fromLanguage: selectedFrontLanguageOption?.rawValue,
             toLanguage: selectedBackLanguageOption?.rawValue,
@@ -158,7 +222,7 @@ struct AIGenerationCardView: View {
             numCards: cardAmount,
             wordTypes: selectedWordTypes
         )
-        
+
         flashcardService.generateCards(request: request) { result in
             DispatchQueue.main.async {
                 isLoading = false
@@ -177,4 +241,3 @@ struct AIGenerationCardView: View {
 #Preview {
     AIGenerationCardView()
 }
-

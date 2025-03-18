@@ -19,9 +19,11 @@ enum DestinationType: Hashable {
             AIGenerationCardView()
         case .secondOption:
             GenerationCardView(
-                flashcards: .constant([]),
-                titlePlaceholder: "Manual flashcard list",
+                flashcards: .constant([Flashcard(question: "Example", answer: "Answer")]),
+                isAIGenerated: false,
+                titlePlaceholder: "New Pack",
                 onSave: {},
+                selectedFolder: nil,
                 onAddFlashcard: {}
             )
         case .thirdOption:
