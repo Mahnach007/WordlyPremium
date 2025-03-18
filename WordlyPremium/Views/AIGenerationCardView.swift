@@ -54,7 +54,7 @@ struct AIGenerationCardView: View {
                     // Amount
                     VStack(alignment: .leading) {
                         Text("Amount of cards")
-                        NumericField(inputText: cardAmount)
+                        NumericField(inputText: $cardAmount)
                             .focused($isFocused)
                     }
                     // Front/Back
@@ -175,6 +175,26 @@ struct AIGenerationCardView: View {
     }
 
     private func generateFlashcards() {
+        // Validate inputs first
+        if topic.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            errorMessage = "Please enter a topic or prompt"
+            return
+        }
+
+        // Ensure language selections are made
+        if selectedFrontLanguageOption == nil || selectedBackLanguageOption == nil {
+            errorMessage = "Please select both front and back languages"
+            return
+        }
+
+        // Set reasonable defaults if needed
+        let effectiveCardAmount = cardAmount.isEmpty ? "10" : cardAmount
+
+        // For single word type, ensure at least one word type is selected
+        if selectedCardOption == .singleWord && selectedWordTypes.isEmpty {
+            selectedWordTypes.insert("Mixed")  // Default to mixed if nothing selected
+        }
+
         isLoading = true
         errorMessage = nil
 
@@ -183,19 +203,41 @@ struct AIGenerationCardView: View {
             toLanguage: selectedBackLanguageOption?.rawValue,
             topic: topic,
             cardType: selectedCardOption?.rawValue,
-            numCards: cardAmount,
+            numCards: effectiveCardAmount,
             wordTypes: selectedWordTypes
         )
+        
+//        print("✅ here is the amount: \(cardAmount)")
+
+//        print("✅ Generating cards with parameters: \(request)")
 
         flashcardService.generateCards(request: request) { result in
             DispatchQueue.main.async {
                 isLoading = false
                 switch result {
                 case .success(let cards):
-                    flashcards = cards
-                    // This will now trigger the navigation
-                    navigateToGeneratedCards = true
+                    // Convert the Flashcard objects to FlashcardEntity objects if needed
+                    self.flashcards = cards.map { card in
+                        return FlashcardEntity(
+                            question: card.question,
+                            answer: card.answer,
+                            isStudied: false
+                        )
+                    }
+
+                    // Log success
+//                    print("✅ Generated \(self.flashcards.count) flashcards successfully")
+
+                    // Only navigate if we actually got cards
+                    if !self.flashcards.isEmpty {
+                        navigateToGeneratedCards = true
+                    } else {
+                        errorMessage =
+                            "No flashcards could be generated. Please try different parameters."
+                    }
+
                 case .failure(let error):
+                    print("❌ Error generating flashcards: \(error.localizedDescription)")
                     errorMessage = error.localizedDescription
                 }
             }

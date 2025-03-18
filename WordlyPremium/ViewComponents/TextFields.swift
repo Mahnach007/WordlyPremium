@@ -186,8 +186,7 @@ struct SelectorWithModal<T: Equatable>: View {
 }
 
 struct NumericField: View {
-
-    @State var inputText: String = ""
+    @Binding var inputText: String
     @FocusState var isFocused: Bool
     
     var guidingText: String = "Enter card amount"
@@ -195,12 +194,12 @@ struct NumericField: View {
 
     var body: some View {
         HStack {
-            TextField("" ,text: $inputText)
+            TextField("", text: $inputText)
                 .focused($isFocused)
                 .keyboardType(.numberPad)
                 .scrollContentBackground(.hidden)
                 .font(.custom("feather", size: 16))
-                .padding(.horizontal,10)
+                .padding(.horizontal, 10)
                 .frame(height: 45)
                 .overlay(
                     Text(guidingText)
@@ -208,7 +207,7 @@ struct NumericField: View {
                         .foregroundColor(Color.rhino)
                         .opacity(inputText.isEmpty ? 1 : 0)
                         .padding(.top, 12)
-                        .padding(.leading,10),
+                        .padding(.leading, 10),
                     alignment: .topLeading
                 )
         }
