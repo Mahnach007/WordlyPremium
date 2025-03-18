@@ -52,7 +52,7 @@ struct PackView: View {
                         )
                         VStack(spacing: -17) {
                             // VLAD: for it to work, you should pass the pack's flashcards as the argument in the FlashCardLearnView as I put in there. Jump to definition to keep track of the argument
-                            NavigationLink(destination: FlashCardLearnView(/* flashCards: pack.flashcards */)) {
+                            NavigationLink(destination: FlashCardLearnView( flashCards: pack.flashcards)) {
                                 CardButtonExtended(
                                     cardTitle: "Flashcards", icon: "flashcards",
                                     isGradient: false, hasIcon: true,

@@ -12,23 +12,19 @@ class FlashCardViewModel: ObservableObject {
 
     private var synthesizer = AVSpeechSynthesizer()
 
-    @Published var rememberedCards: [Flashcard] = []
-    @Published var cardsToLearn: [Flashcard] = []
-    @Published var currentCards: [Flashcard] = []
+    @Published var rememberedCards: [FlashcardEntity] = []
+    @Published var cardsToLearn: [FlashcardEntity] = []
+    @Published var currentCards: [FlashcardEntity] = []
     @Published var progress: Double = 0.0
     @Published var isRoundComplete: Bool = false
     @Published var allCardsLearned: Bool = false
     
-    var allCards: [Flashcard] = []
+    var allCards: [FlashcardEntity] = []
 
 
-    init() {
+    init(flashCards: [FlashcardEntity]) {
         // Initialize with sample cards
-        let initialCards = [
-            Flashcard(question: "car", answer: "smth"),
-            Flashcard(question: "airplane", answer: "cazzo"),
-            Flashcard(question: "Hello what is your name", answer: "come ti ciami"),
-        ]
+        let initialCards = flashCards
         self.allCards = initialCards  // Add this line to initialize allCards
         self.cardsToLearn = []
         self.currentCards = initialCards
@@ -52,7 +48,7 @@ class FlashCardViewModel: ObservableObject {
         synthesizer.speak(utterance)
     }
 
-    func processSwipe(card: Flashcard, direction: SwipeDirection) {
+    func processSwipe(card: FlashcardEntity, direction: SwipeDirection) {
         // Remove the card from current deck
         if let index = currentCards.firstIndex(where: { $0.id == card.id }) {
             currentCards.remove(at: index)

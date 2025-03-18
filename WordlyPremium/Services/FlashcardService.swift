@@ -111,6 +111,7 @@ class FlashcardService {
                             answer: apiCard.answer,
                             isStudied: false  // Default value for new cards
                         )
+                        
                     }
 
                     completion(.success(flashcards))

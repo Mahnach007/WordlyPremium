@@ -2,13 +2,17 @@ import SwiftUI
 
 struct FlashCardLearnView: View {
     @Environment(\.dismiss) var dismiss
-    // Here you should uncomment this
-    // @State var flashCards: FlashCardEntity?
-    // and use that variable to show the words in the flashcards
+    @State var flashCards: [FlashcardEntity]
     @State private var offset = CGSize.zero
     @State private var cardBorderColor: Color = .clear
-    @StateObject private var viewModel = FlashCardViewModel()
+    @StateObject private var viewModel: FlashCardViewModel
 
+    // Initialize with flashCards and create the viewModel
+    init(flashCards: [FlashcardEntity]) {
+        self._flashCards = State(initialValue: flashCards)
+        self._viewModel = StateObject(
+            wrappedValue: FlashCardViewModel(flashCards: flashCards))
+    }
     var body: some View {
         VStack {
             ProgressBar(progress: viewModel.progress)
@@ -36,7 +40,8 @@ struct FlashCardLearnView: View {
                             question: card.question,
                             answer: card.answer,
                             borderColor: index == 0
-                                ? $cardBorderColor : .constant(.clear)
+                                ? $cardBorderColor : .constant(.clear),
+                            onSpeak: viewModel.speak  // Pass the speak function from viewModel
                         )
                         .padding()
                         .offset(
@@ -70,8 +75,7 @@ struct FlashCardLearnView: View {
                                 : nil
                         )
                     }
-                }
-                // Show round completion dialog
+                }  // Show round completion dialog
                 if viewModel.isRoundComplete {
                     RoundCompletionView(
                         totalCards: viewModel.rememberedCards.count
@@ -84,7 +88,6 @@ struct FlashCardLearnView: View {
                             viewModel.resetAllCards()
                         }
                     )
-
                 }
                 // Show message when all cards are learned
                 if viewModel.allCardsLearned {
@@ -172,7 +175,7 @@ struct FlashCardLearnView: View {
     }
 
     // Handle swipe gesture
-    func handleSwipe(width: CGFloat, card: Flashcard) {
+    func handleSwipe(width: CGFloat, card: FlashcardEntity) {
         if width < -150 {
             // Swipe left (need to learn again)
             offset = CGSize(width: -500, height: 0)
@@ -292,5 +295,8 @@ struct LearnCardCounterView: View {
 }
 
 #Preview {
-    FlashCardLearnView()
+
+    FlashCardLearnView(flashCards: [
+        FlashcardEntity(question: "hello", answer: "hallo")
+    ])
 }

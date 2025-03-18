@@ -1,13 +1,10 @@
 import SwiftUI
 import AVFoundation
 
-
-
 struct FlashCard: View {
-    
     // Card content
-    @State var question: String = "Car"
-    @State var answer: String = "La machina"
+    var question: String
+    var answer: String
     
     // Animation states
     @State private var frontDegree: Double = 0.0
@@ -17,7 +14,8 @@ struct FlashCard: View {
     // Change to @Binding to receive color from parent view
     @Binding var borderColor: Color
     
-    @StateObject private var viewModel = FlashCardViewModel()
+    // Speech callback from parent instead of local ViewModel
+    var onSpeak: (String, LanguageType) -> Void
     
     let durationAndDelay: CGFloat = 0.2
     
@@ -26,16 +24,16 @@ struct FlashCard: View {
             BackPart(
                 answer: answer,
                 degree: $backDegree,
-                action: speakPressed,
+                action: { speakPressed(isAnswer: true) },
                 isFlipped: $isFlipped,
                 borderColor: $borderColor
             )
             FrontPart(
                 question: question,
                 degree: $frontDegree,
-                action: speakPressed,
+                action: { speakPressed(isAnswer: false) },
                 isFlipped: $isFlipped,
-                borderColor: $borderColor // Pass binding to FrontPart
+                borderColor: $borderColor
             )
         }
         .onTapGesture {
@@ -43,9 +41,9 @@ struct FlashCard: View {
         }
     }
     
-    // Rest of your methods remain the same
-    private func speakPressed() {
-        viewModel.speak(word: isFlipped ? answer : question, language: isFlipped ? .english : .italian)
+    // Delegate speech to parent via callback
+    private func speakPressed(isAnswer: Bool) {
+        onSpeak(isAnswer ? answer : question, isAnswer ? .english : .italian)
     }
     
     func flipCard() {
@@ -77,7 +75,7 @@ struct FrontPart: View {
     let action: () -> Void
     
     @Binding var isFlipped: Bool
-    @Binding var borderColor: Color // Add binding for border color
+    @Binding var borderColor: Color
     
     var body: some View {
         GeometryReader { geometry in
@@ -138,7 +136,7 @@ struct FrontPart: View {
                         .padding(20)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .frame(width: geometry.size.width - 6, height: geometry.size.height - 6) // Accounting for border width
+                .frame(width: max(geometry.size.width - 6, 0), height: max(geometry.size.height - 6, 0))
             }
             .rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))
         }
@@ -217,15 +215,11 @@ struct BackPart: View {
                         .padding(20)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .frame(width: geometry.size.width - 6, height: geometry.size.height - 6)
+                .frame(width: max(geometry.size.width - 6, 0), height: max(geometry.size.height - 6, 0))
             }
             .rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))
         }.padding()
     }
 }
 
-#Preview {
-    @Previewable
-    @State var value: Color = .blue
-    FlashCard(borderColor: $value)
-}
+
