@@ -12,7 +12,7 @@ struct PackView: View {
     @State var pack: PackEntity?
     @State var progress: CGFloat = 0.0
     @State var progressPercentage: Int = 0
-
+    
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
@@ -23,10 +23,11 @@ struct PackView: View {
                                 .font(.custom("Feather", size: 24))
                         }
                         ZStack {
-                            CircularProgressView(progress: progress)
+                            CircularProgressView(progress: pack.studiedPercentage)
                                 .frame(width: 155, height: 155)
                                 .padding()
-                            Text("\(progressPercentage)%")
+//                            Text("\(pack.studiedPercentage*100)%")
+                            Text(String(format: "%.0f", pack.studiedPercentage*100) + "%")
                                 .font(.custom("Feather", size: 36))
                                 .padding()
                         }

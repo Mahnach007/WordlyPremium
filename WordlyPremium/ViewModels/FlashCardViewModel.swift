@@ -59,6 +59,7 @@ class FlashCardViewModel: ObservableObject {
             // Add to remembered cards
             rememberedCards.append(card)
             // Remove from cards to learn
+            card.isStudied = true
             if let index = cardsToLearn.firstIndex(where: { $0.id == card.id }) {
                 cardsToLearn.remove(at: index)
             }
@@ -69,7 +70,7 @@ class FlashCardViewModel: ObservableObject {
             // For left swipe, we just need to make sure it stays in cardsToLearn
             // The card is already removed from currentCards above
             // We don't need to add it back to currentCards - it will be included in the next round
-            
+            card.isStudied = false
             // Make sure it's in cardsToLearn (in case it was somehow not there)
             if !cardsToLearn.contains(where: { $0.id == card.id }) {
                 cardsToLearn.append(card)
@@ -105,7 +106,6 @@ class FlashCardViewModel: ObservableObject {
         
         // Calculate progress based on remembered cards
         func updateProgress() {
-//            let totalCards = rememberedCards.count + cardsToLearn.count
             if allCards.count > 0 {
                 progress = Double(rememberedCards.count) / Double(allCards.count)
             } else {
