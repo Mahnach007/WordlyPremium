@@ -13,7 +13,7 @@ class FlashcardService {
     private let apiUrl = "https://api.deepseek.com/chat/completions"
 
     func generateCards(
-        request: GenerateCardsRequest, completion: @escaping (Result<[Flashcard], Error>) -> Void
+        request: GenerateCardsRequest, completion: @escaping (Result<[FlashcardEntity], Error>) -> Void
     ) {
         let numCardsPrompt =
             request.numCards == "0"
@@ -106,7 +106,7 @@ class FlashcardService {
 
                     // Convert API response to Flashcard model with default isStudied value
                     let flashcards = apiResponse.flashCards.map { apiCard in
-                        return Flashcard(
+                        return FlashcardEntity(
                             question: apiCard.question,
                             answer: apiCard.answer,
                             isStudied: false  // Default value for new cards

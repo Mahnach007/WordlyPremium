@@ -10,11 +10,10 @@ import SwiftUI
 
 struct GenerationCardView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var flashcards: [Flashcard]
+    @Binding var flashcards: [FlashcardEntity]
 
     var isAIGenerated: Bool
     var titlePlaceholder: String
-    var onSave: () -> Void
     var onAddFlashcard: () -> Void
 
     @State private var title = ""
@@ -26,6 +25,8 @@ struct GenerationCardView: View {
     private var canSave: Bool {
         return !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !flashcards.isEmpty
     }
+    
+    var dataService = DataService()
 
     private func savePack() {
         // Validate title and cards
@@ -42,16 +43,14 @@ struct GenerationCardView: View {
         }
 
         // Create a Pack (but don't save to a folder yet)
-        let pack = Pack(
+        let pack = PackEntity(
             name: title,
             isAIGenerated: isAIGenerated,
             flashcards: flashcards
         )
-
-        // Call the original onSave callback
-        // This will pass the created pack to parent components
-        onSave()
-
+        
+        dataService.createPack(name: title, isAIGenerated: isAIGenerated, flashcards: flashcards)
+        
         // Show success message
         showSaveConfirmation = true
 
@@ -69,7 +68,7 @@ struct GenerationCardView: View {
     // Function to add a new flashcard to the collection
     private func addNewFlashcard() {
         withAnimation {
-            flashcards.append(Flashcard(question: "", answer: ""))
+            flashcards.append(FlashcardEntity(question: "", answer: ""))
             print("New flashcard added. Total: \(flashcards.count)")
         }
         // Also call the provided onAddFlashcard function
@@ -181,12 +180,11 @@ struct GenerationCardView: View {
     }
 }
 
-#Preview {
-    GenerationCardView(
-        flashcards: .constant([Flashcard(question: "Example", answer: "Answer")]),
-        isAIGenerated: false,
-        titlePlaceholder: "New Pack",
-        onSave: {},
-        onAddFlashcard: {}
-    )
-}
+//#Preview {
+//    GenerationCardView(
+//        flashcards: .constant([FlashcardEntity(question: "Example", answer: "Answer")]),
+//        isAIGenerated: false,
+//        titlePlaceholder: "New Pack",
+//        onAddFlashcard: {}
+//    )
+//}

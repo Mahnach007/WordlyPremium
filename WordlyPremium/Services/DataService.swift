@@ -70,11 +70,11 @@ class DataService: ObservableObject {
     }
 
     func createPack(
-        name: String, isAIGenerated: Bool, flashcards: [FlashcardEntity] = [],
-        inFolder: FolderEntity
+        name: String, isAIGenerated: Bool, flashcards: [FlashcardEntity] = []
+//        inFolder: FolderEntity
     ) -> PackEntity {
         let pack = PackEntity(name: name, isAIGenerated: isAIGenerated, flashcards: flashcards)
-        inFolder.packs.append(pack)
+//        inFolder.packs.append(pack)
         modelContext.insert(pack)
         saveContext()
         return pack

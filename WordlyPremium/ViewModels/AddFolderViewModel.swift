@@ -16,7 +16,8 @@ class AddFolderViewModel: ObservableObject {
         // Load folders initially
         refreshFolders()
     }
-    
+        
+//    Folders
     func createFolder(withName name: String) {
         dataService.createFolder(name: name)
         refreshFolders() // Refresh after creating

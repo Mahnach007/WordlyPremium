@@ -19,10 +19,9 @@ enum DestinationType: Hashable {
             AIGenerationCardView()
         case .secondOption:
             GenerationCardView(
-                flashcards: .constant([Flashcard(question: "Example", answer: "Answer")]),
+                flashcards: .constant([FlashcardEntity(question: "Example", answer: "Answer")]),
                 isAIGenerated: false,
                 titlePlaceholder: "New Pack",
-                onSave: {},
                 onAddFlashcard: {}
             )
         case .thirdOption:

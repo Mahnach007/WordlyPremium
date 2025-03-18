@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var folderViewModel = AddFolderViewModel()
+    @StateObject private var packViewModel = AddPackViewModel()
     @StateObject private var cardViewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
@@ -45,9 +46,9 @@ struct ContentView: View {
                     VStack(spacing: 35) {
                         CardSlider(
                             packTitle: "Your Packs",
-                            packNumber: cardViewModel.packs.count,
-                            cards: cardViewModel.packs,
-                            hasData: true,
+                            packNumber: packViewModel.packs.count,
+                            packs: packViewModel.packs,
+                            hasData: false,
                             isFolder: false
                         )
                         CardSlider(
@@ -57,13 +58,13 @@ struct ContentView: View {
                             hasData: folderViewModel.folders.isEmpty, // Note the negation here
                             isFolder: true
                         )
-                        CardSlider(
-                            packTitle: "Community Packs",
-                            packNumber: cardViewModel.community.count,
-                            cards: cardViewModel.community,
-                            hasData: true,
-                            isFolder: false
-                        )
+//                        CardSlider(
+//                            packTitle: "Community Packs",
+//                            packNumber: cardViewModel.community.count,
+//                            cards: cardViewModel.community,
+//                            hasData: true,
+//                            isFolder: false
+//                        )
                     }
                     .padding(.top, 20)
                 }
@@ -73,6 +74,8 @@ struct ContentView: View {
                 }
                 .onAppear() {
                     folderViewModel.refreshFolders()
+                    packViewModel.refreshPacks()
+                    print(packViewModel.packs)
                 }
             }
         }

@@ -18,7 +18,7 @@ struct AIGenerationCardView: View {
     @State private var cardAmount: String = ""
     @State private var wordType: WordType? = nil
     @State private var selectedWordTypes: Set<String> = []
-    @State private var flashcards: [Flashcard] = []
+    @State private var flashcards: [FlashcardEntity] = []
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -152,11 +152,8 @@ struct AIGenerationCardView: View {
                         flashcards: $flashcards,
                         isAIGenerated: true,
                         titlePlaceholder: "AI-generated pack title...",
-                        onSave: {
-                            print("AI-generated flashcards saved!")
-                        },
                         onAddFlashcard: {
-                            flashcards.append(Flashcard(question: "", answer: ""))
+                            flashcards.append(FlashcardEntity(question: "", answer: ""))
                         }
                     )
                 }

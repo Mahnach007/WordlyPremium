@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct PackView: View {
+ struct PackView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var pack: Pack? = nil
+    @State private var pack: PackEntity? = nil
     @State private var progress: CGFloat = 0.0
     @State private var progressPercentage: Int = 0
 

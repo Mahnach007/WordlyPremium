@@ -10,7 +10,7 @@ import SwiftUI
 struct CardSlider: View {
     var packTitle: String
     var packNumber: Int
-    var cards: [CardButtonData]?
+    var packs: [PackEntity]?
     var folders: [FolderEntity]?
     var hasData: Bool
     var isFolder: Bool
@@ -33,16 +33,26 @@ struct CardSlider: View {
             if !hasData {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(folders ?? [FolderEntity(name: "New Folder")]) { folder in
-                            NavigationLink(destination: CardList(title: folder.name, isFolderList: true)) {
+                        ForEach(packs ?? [PackEntity(name: "New Folder")]) { pack in
+                            NavigationLink(destination: PackView(pack: pack, progress: 0.0, progressPercentage: 0)) {
                                 CardButton(
-                                    cardTitle: folder.name,
-                                    numberOfWords: folder.packs.count,
-                                    icon: "folder"
+                                    cardTitle: pack.name,
+                                    numberOfWords: pack.flashcards.count,
+                                    icon: "cards"
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
+//                        ForEach(folders ?? [FolderEntity(name: "New Folder")]) { folder in
+//                            NavigationLink(destination: CardList(title: folder.name, isFolderList: true)) {
+//                                CardButton(
+//                                    cardTitle: folder.name,
+//                                    numberOfWords: folder.packs.count,
+//                                    icon: "folder"
+//                                )
+//                            }
+//                            .buttonStyle(PlainButtonStyle())
+//                        }
                     }
                     .padding(.vertical, 7)
                     .padding(.horizontal)
@@ -58,12 +68,11 @@ struct CardSlider: View {
                     }
                 }) {
                     HStack {
-                        Text(
-                            isFolder
-                                ? Image(systemName: "folder.badge.plus")
-                                : Image(systemName: "plus.app")
-                        )
-                        .fontWeight(.bold)
+                        if isFolder {
+                            Image(systemName: "folder.badge.plus")
+                        } else {
+                            Image(systemName: "plus.app")
+                        }
                         Text(isFolder ? "Create new folder" : "Create new deck")
                     }
                 }
