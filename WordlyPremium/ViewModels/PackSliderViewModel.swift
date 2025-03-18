@@ -22,8 +22,8 @@ class PackSliderViewModel: ObservableObject {
     ]
 
     @Published var community: [CardButtonData] = [
-        CardButtonData(title: "Slang", numberOfWords: 30, icon: "community cards"),
-        CardButtonData(title: "Idioms", numberOfWords: 25, icon: "community cards"),
-        CardButtonData(title: "Expressions", numberOfWords: 60, icon: "community cards")
+//        CardButtonData(title: "Slang", numberOfWords: 30, icon: "community cards"),
+//        CardButtonData(title: "Idioms", numberOfWords: 25, icon: "community cards"),
+//        CardButtonData(title: "Expressions", numberOfWords: 60, icon: "community cards")
     ]
 }

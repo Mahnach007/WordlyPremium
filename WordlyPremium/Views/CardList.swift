@@ -11,6 +11,9 @@ struct CardList: View {
     @Environment(\.dismiss) var dismiss
     @State private var navigateToCreateFolder = false
     @State private var navigateToCreateCards = false
+    @State private var navigateToPack = false
+    @StateObject var folderViewModel: AddFolderViewModel = AddFolderViewModel()
+
     var isForFolder: Bool
 
     var body: some View {
@@ -23,12 +26,23 @@ struct CardList: View {
             .padding(.bottom, 15)
             ScrollView(.vertical) {
                 VStack(spacing: 10) {
-                    CardButtonExtended(
-                        cardTitle: "Car transport only nouns", description: "20 words", icon: "cards", isGradient: false, hasIcon: true)
-                    CardButtonExtended(
-                        cardTitle: "Medicine", description: "133 words", icon: "cards", isGradient: false, hasIcon: true)
-                    CardButtonExtended(
-                        cardTitle: "Sports", description: "60 words", icon: "cards", isGradient: false, hasIcon: true)
+                    ForEach(folderViewModel.folders) { folder in
+                        CardButtonExtended(
+                            cardTitle: folder.name,
+                            description: String(folder.packs.count),
+                            icon: "folder",
+                            isGradient: false,
+                            hasIcon: true,
+                            color: .rhino
+                        )
+                        .background(
+                            NavigationLink(
+                                destination: PackView(),
+                                isActive: $navigateToPack,
+                                label: { EmptyView() }
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -50,7 +64,7 @@ struct CardList: View {
             }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button(action: {
-                    
+
                 }) {
                     HStack {
                         Text(Image(systemName: "ellipsis"))
@@ -97,4 +111,3 @@ struct CardList: View {
 #Preview {
     ContentView()
 }
-

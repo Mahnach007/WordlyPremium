@@ -8,69 +8,74 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = PackSliderViewModel()
+    @StateObject private var folderViewModel = AddFolderViewModel()
+    @StateObject private var cardViewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
 
+    
+    
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                HStack {
-                    AddButton(isRounded: false)
+        ZStack {
+            NavigationStack {
+                VStack(spacing: 0) {
+                    HStack {
+                        AddButton(isRounded: false)
+                            .padding()
+                            .padding(.vertical, -25)
+                            .padding(.top, 20)
+                            .onTapGesture {
+                                isModalPresented = true
+                            }
+                            .sheet(isPresented: $isModalPresented) {
+                                AddPackModalView(
+                                    isPresented: $isModalPresented,
+                                    selectedDestination: $selectedDestination
+                                )
+                                .presentationBackground(Color.background)
+                                .presentationDetents([.fraction(0.5)])
+                                .presentationDragIndicator(.visible)
+                            }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    SearchBar()
                         .padding()
-                        .padding(.vertical, -25)
-                        .padding(.top, 20)
-                        .onTapGesture {
-                            isModalPresented = true
-                        }
-                        .sheet(isPresented: $isModalPresented) {
-                            AddPackModalView(
-                                isPresented: $isModalPresented,
-                                selectedDestination: $selectedDestination
-                            )
-                            .presentationBackground(Color.background)
-                            .presentationDetents([.fraction(0.5)])
-                            .presentationDragIndicator(.visible)
-                        }
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                SearchBar()
-                    .padding()
-            }
-            .background(Color.background)
-            .padding(.bottom, -10)
-            ScrollView {
-                VStack(spacing: 35) {
-                    CardSlider(
-                        packTitle: "Your Packs",
-                        packNumber: viewModel.packs.count,
-                        cards: viewModel.packs,
-                        hasData: true,
-                        isFolder: false
-                    )
-                    CardSlider(
-                        packTitle: "Your Folders",
-                        packNumber: viewModel.folders.count,
-                        cards: viewModel.folders,
-                        hasData: false,
-                        isFolder: true
-                    )
-                    CardSlider(
-                        packTitle: "Community Packs",
-                        packNumber: viewModel.community.count,
-                        cards: viewModel.community,
-                        hasData: true,
-                        isFolder: false
-                    )
+                .background(Color.background)
+                .padding(.bottom, -10)
+                ScrollView {
+                    VStack(spacing: 35) {
+                        CardSlider(
+                            packTitle: "Your Packs",
+                            packNumber: cardViewModel.packs.count,
+                            cards: cardViewModel.packs,
+                            hasData: true,
+                            isFolder: false
+                        )
+                        CardSlider(
+                            packTitle: "Your Folders",
+                            packNumber: folderViewModel.folders.count,
+                            folders: folderViewModel.folders,
+                            hasData: folderViewModel.folders.isEmpty, // Note the negation here
+                            isFolder: true
+                        )
+                        CardSlider(
+                            packTitle: "Community Packs",
+                            packNumber: cardViewModel.community.count,
+                            cards: cardViewModel.community,
+                            hasData: true,
+                            isFolder: false
+                        )
+                    }
+                    .padding(.top, 20)
                 }
-                .padding(.top, 20)
-            }
-            .background(Color.background)
-            NavigationLink(value: selectedDestination) {
-                EmptyView()
-            }
-            .navigationDestination(item: $selectedDestination) { destination in
-                destination.view
+                .background(Color.background)
+                .navigationDestination(item: $selectedDestination) { destination in
+                    destination.view
+                }
+                .onAppear() {
+                    folderViewModel.refreshFolders()
+                }
             }
         }
     }
