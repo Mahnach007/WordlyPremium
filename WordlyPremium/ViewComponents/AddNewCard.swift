@@ -60,21 +60,12 @@ struct CardComponent: View {
 struct UnderlineTextField: View {
     @Binding var text: String
     var wordType: String
-    @State private var suggestions: [String] = [
-        "Suggestion 1", "Suggestion 2", "Suggestion 3",
-    ]
-    @State private var showSuggestions: Bool = false
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 TextField(
-                    "", text: $text,
-                    onEditingChanged: { isEditing in
-                        withAnimation {
-                            showSuggestions = isEditing
-                        }
-                    }
+                    "", text: $text
                 )
                 .font(.custom("feather", size: 16))
                 .foregroundColor(.black)
@@ -86,19 +77,6 @@ struct UnderlineTextField: View {
                     .font(.custom("feather", size: 10))
                     .foregroundColor(.gray)
                 Spacer()
-            }
-
-            if showSuggestions && !suggestions.isEmpty {
-                CardComponentSuggestion(
-                    suggestions: suggestions,
-                    onSelect: { selectedSuggestion in
-                        text = selectedSuggestion
-                        withAnimation {
-                            showSuggestions = false
-                        }
-                    }
-                )
-                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
     }

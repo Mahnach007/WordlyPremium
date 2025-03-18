@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 class AddFolderViewModel: ObservableObject {
     
     private var dataService: DataService = DataService()

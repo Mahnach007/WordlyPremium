@@ -26,31 +26,22 @@ struct CardSlider: View {
         VStack {
             SliderTitle(
                 sliderTitle: packTitle, sliderNumber: packNumber,
-                seeAllDestination: AnyView(CardList(isForFolder: false))
+                seeAllDestination: AnyView(CardList(title: "false", isFolderList: true))
             )
             .padding(.horizontal)
             .padding(.vertical, 2)
             if !hasData {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(folders ?? [FolderEntity(name: "New Folder")]) { card in
-                            Button("") {
-                                navigateToPack = true
-                                print("card button")
-                            }.buttonStyle(
+                        ForEach(folders ?? [FolderEntity(name: "New Folder")]) { folder in
+                            NavigationLink(destination: CardList(title: folder.name, isFolderList: true)) {
                                 CardButton(
-                                    cardTitle: card.name,
-                                    numberOfWords: card.packs.count,
+                                    cardTitle: folder.name,
+                                    numberOfWords: folder.packs.count,
                                     icon: "folder"
                                 )
-                            )
-                            .background(
-                                NavigationLink(
-                                    destination: PackView(),
-                                    isActive: $navigateToPack,
-                                    label: { EmptyView() }
-                                )
-                            )
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.vertical, 7)
@@ -117,21 +108,21 @@ struct CardSlider: View {
 #Preview {
     CardSlider(
         packTitle: "Your Packs", packNumber: 34,
-//        cards: [
-//            CardButtonData(
-//                title: "Car transport only nouns", numberOfWords: 20,
-//                icon: "cards"),
-//            CardButtonData(
-//                title: "Medicine", numberOfWords: 133, icon: "cards"),
-//            CardButtonData(
-//                title: "Sports", numberOfWords: 40, icon: "cards"),
-//            CardButtonData(
-//                title: "Law", numberOfWords: 10, icon: "folder"),
-//        ],
+        //        cards: [
+        //            CardButtonData(
+        //                title: "Car transport only nouns", numberOfWords: 20,
+        //                icon: "cards"),
+        //            CardButtonData(
+        //                title: "Medicine", numberOfWords: 133, icon: "cards"),
+        //            CardButtonData(
+        //                title: "Sports", numberOfWords: 40, icon: "cards"),
+        //            CardButtonData(
+        //                title: "Law", numberOfWords: 10, icon: "folder"),
+        //        ],
         folders: [
             FolderEntity(name: "Folder 1"),
             FolderEntity(name: "Folder 2"),
-            FolderEntity(name: "Folder 3")
+            FolderEntity(name: "Folder 3"),
         ],
         hasData: false,
         isFolder: true

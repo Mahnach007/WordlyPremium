@@ -13,23 +13,25 @@ struct CardList: View {
     @State private var navigateToCreateCards = false
     @State private var navigateToPack = false
     @StateObject var folderViewModel: AddFolderViewModel = AddFolderViewModel()
+    @StateObject var packViewModel: AddPackViewModel = AddPackViewModel()
 
-    var isForFolder: Bool
+    var title: String
+    var isFolderList: Bool
 
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
-                Text(isForFolder ? "Your Folders" : "Your Packs")
+                Text(title)
                     .font(.custom("Feather", size: 32))
                 SearchBar()
             }
             .padding(.bottom, 15)
             ScrollView(.vertical) {
                 VStack(spacing: 10) {
-                    ForEach(folderViewModel.folders) { folder in
+                    ForEach(packViewModel.packs) { pack in
                         CardButtonExtended(
-                            cardTitle: folder.name,
-                            description: String(folder.packs.count),
+                            cardTitle: pack.name,
+                            description: String(pack.flashcardCount),
                             icon: "folder",
                             isGradient: false,
                             hasIcon: true,
@@ -43,6 +45,23 @@ struct CardList: View {
                             )
                         )
                     }
+//                    ForEach(folderViewModel.folders) { folder in
+//                        CardButtonExtended(
+//                            cardTitle: folder.name,
+//                            description: String(folder.packs.count),
+//                            icon: "folder",
+//                            isGradient: false,
+//                            hasIcon: true,
+//                            color: .rhino
+//                        )
+//                        .background(
+//                            NavigationLink(
+//                                destination: PackView(),
+//                                isActive: $navigateToPack,
+//                                label: { EmptyView() }
+//                            )
+//                        )
+//                    }
                 }
             }
         }
@@ -73,7 +92,7 @@ struct CardList: View {
                     }
                 }
                 Button(action: {
-                    if isForFolder {
+                    if isFolderList {
                         navigateToCreateFolder = true
                     } else {
                         navigateToCreateCards = true
@@ -101,11 +120,11 @@ struct CardList: View {
 }
 
 #Preview {
-    CardList(isForFolder: false)
+    CardList(title: "true", isFolderList: true)
 }
 
 #Preview {
-    CardList(isForFolder: false)
+    CardList(title: "false", isFolderList: false)
 }
 
 #Preview {

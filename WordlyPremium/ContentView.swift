@@ -12,8 +12,6 @@ struct ContentView: View {
     @StateObject private var cardViewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
-
-    
     
     var body: some View {
         ZStack {

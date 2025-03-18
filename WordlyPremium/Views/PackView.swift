@@ -119,11 +119,11 @@ struct PackView: View {
             }
         }
         .font(.custom("Feather", size: 12))
-        .onAppear {
-            self.pack = MockData.getMockPacks().first
-            progress = pack?.studiedPercentage ?? 0
-            progressPercentage = Int(progress * 100)
-        }
+//        .onAppear {
+//            self.pack = MockData.getMockPacks().first
+//            progress = pack?.studiedPercentage ?? 0
+//            progressPercentage = Int(progress * 100)
+//        }
         .padding(.top)
         .frame(maxHeight: .infinity, alignment: .top)
         .toolbar {

@@ -59,6 +59,7 @@ struct CreateFolderView: View {
                     Button(action: {
                         folderViewModel.createFolder(withName: text)
                         print(folderViewModel.fetchAllFolders().last?.name ?? "Error")
+                        dismiss()
                     }) {
                         HStack {
                             Text(Image(systemName: "checkmark"))
