@@ -63,6 +63,17 @@ struct Flashcard: Codable, Identifiable {
         self.answer = answer
         self.isStudied = isStudied
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Decode required fields
+        question = try container.decode(String.self, forKey: .question)
+        answer = try container.decode(String.self, forKey: .answer)
+
+        // Decode optional field with default value if missing
+        isStudied = try container.decodeIfPresent(Bool.self, forKey: .isStudied) ?? false
+    }
 }
 
 // Request Model
@@ -76,9 +87,24 @@ struct GenerateCardsRequest: Codable {
 }
 
 // Response Model
+struct APIFlashcard: Codable {
+    var question: String
+    var answer: String
+
+    enum CodingKeys: String, CodingKey {
+        case question = "langFrom"
+        case answer = "langTo"
+    }
+}
+
 struct FlashcardResponse: Codable {
     let packName: String
-    let flashCards: [Flashcard]
+    let flashCards: [APIFlashcard]
+}
+
+struct APIFlashcardResponse: Codable {
+    let packName: String
+    let flashCards: [APIFlashcard]
 }
 
 // Enum for Card Amount Selection
@@ -87,4 +113,17 @@ enum CardAmount: String, CaseIterable, Codable {
     case ten = "10"
     case twenty = "20"
     case automatic = "Automatic"
+}
+
+// Add a conversion method in your service
+extension FlashcardService {
+    func convertToFlashcards(_ apiFlashcards: [APIFlashcard]) -> [Flashcard] {
+        return apiFlashcards.map {
+            Flashcard(
+                question: $0.question,
+                answer: $0.answer,
+                isStudied: false  // Default value
+            )
+        }
+    }
 }

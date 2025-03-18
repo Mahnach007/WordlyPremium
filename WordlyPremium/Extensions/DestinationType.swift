@@ -23,7 +23,6 @@ enum DestinationType: Hashable {
                 isAIGenerated: false,
                 titlePlaceholder: "New Pack",
                 onSave: {},
-                selectedFolder: nil,
                 onAddFlashcard: {}
             )
         case .thirdOption:
