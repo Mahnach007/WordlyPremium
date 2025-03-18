@@ -10,8 +10,10 @@ import SwiftUI
 struct CreateFolderView: View {
     @Environment(\.dismiss) var dismiss
     @State private var text: String = ""
-    @FocusState private var isTextFieldFocused: Bool
-
+    @FocusState private var isFocused: Bool
+    
+    @StateObject var folderViewModel: AddFolderViewModel = AddFolderViewModel()
+    
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 20) {
@@ -22,7 +24,7 @@ struct CreateFolderView: View {
                         inputText: $text, isMultiline: false,
                         placeholder: "Name your folder"
                     )
-                    .focused($isTextFieldFocused)
+                    .focused($isFocused)
                 }
             }
             .font(.custom("Feather", size: 12))
@@ -45,9 +47,18 @@ struct CreateFolderView: View {
                         }
                     }
                 }
+                
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        isFocused = false  // Dismiss keyboard
+                    }
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        // Save the name in backend
+                        folderViewModel.createFolder(withName: text)
+                        print(folderViewModel.fetchAllFolders().last?.name ?? "Error")
                     }) {
                         HStack {
                             Text(Image(systemName: "checkmark"))
@@ -62,7 +73,7 @@ struct CreateFolderView: View {
             .regainSwipeBack()
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    isTextFieldFocused = true
+                    isFocused = true
                 }
             }
         }

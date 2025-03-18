@@ -10,7 +10,8 @@ import SwiftUI
 struct CardSlider: View {
     var packTitle: String
     var packNumber: Int
-    var cards: [CardButtonData]
+    var cards: [CardButtonData]?
+    var folders: [FolderEntity]?
     var hasData: Bool
     var isFolder: Bool
 
@@ -29,18 +30,18 @@ struct CardSlider: View {
             )
             .padding(.horizontal)
             .padding(.vertical, 2)
-            if hasData {
+            if !hasData {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(cards) { card in
+                        ForEach(folders ?? [FolderEntity(name: "New Folder")]) { card in
                             Button("") {
                                 navigateToPack = true
                                 print("card button")
                             }.buttonStyle(
                                 CardButton(
-                                    cardTitle: card.title,
-                                    numberOfWords: card.numberOfWords,
-                                    icon: card.icon
+                                    cardTitle: card.name,
+                                    numberOfWords: card.packs.count,
+                                    icon: "folder"
                                 )
                             )
                             .background(
@@ -116,16 +117,21 @@ struct CardSlider: View {
 #Preview {
     CardSlider(
         packTitle: "Your Packs", packNumber: 34,
-        cards: [
-            CardButtonData(
-                title: "Car transport only nouns", numberOfWords: 20,
-                icon: "cards"),
-            CardButtonData(
-                title: "Medicine", numberOfWords: 133, icon: "cards"),
-            CardButtonData(
-                title: "Sports", numberOfWords: 40, icon: "cards"),
-            CardButtonData(
-                title: "Law", numberOfWords: 10, icon: "cards"),
+//        cards: [
+//            CardButtonData(
+//                title: "Car transport only nouns", numberOfWords: 20,
+//                icon: "cards"),
+//            CardButtonData(
+//                title: "Medicine", numberOfWords: 133, icon: "cards"),
+//            CardButtonData(
+//                title: "Sports", numberOfWords: 40, icon: "cards"),
+//            CardButtonData(
+//                title: "Law", numberOfWords: 10, icon: "folder"),
+//        ],
+        folders: [
+            FolderEntity(name: "Folder 1"),
+            FolderEntity(name: "Folder 2"),
+            FolderEntity(name: "Folder 3")
         ],
         hasData: true,
         isFolder: true

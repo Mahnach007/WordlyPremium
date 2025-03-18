@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = PackSliderViewModel()
+    @StateObject private var folderViewModel = AddFolderViewModel()
+    @StateObject private var cardViewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
 
+    
+    
     var body: some View {
         ZStack {
             NavigationStack {
@@ -44,22 +47,22 @@ struct ContentView: View {
                     VStack(spacing: 35) {
                         CardSlider(
                             packTitle: "Your Packs",
-                            packNumber: viewModel.packs.count,
-                            cards: viewModel.packs,
+                            packNumber: cardViewModel.packs.count,
+                            cards: cardViewModel.packs,
                             hasData: true,
                             isFolder: false
                         )
                         CardSlider(
                             packTitle: "Your Folders",
-                            packNumber: viewModel.folders.count,
-                            cards: viewModel.folders,
-                            hasData: false,
+                            packNumber: folderViewModel.folders.count,
+                            folders: folderViewModel.folders,
+                            hasData: folderViewModel.folders.isEmpty, // Note the negation here
                             isFolder: true
                         )
                         CardSlider(
                             packTitle: "Community Packs",
-                            packNumber: viewModel.community.count,
-                            cards: viewModel.community,
+                            packNumber: cardViewModel.community.count,
+                            cards: cardViewModel.community,
                             hasData: true,
                             isFolder: false
                         )
@@ -69,6 +72,9 @@ struct ContentView: View {
                 .background(Color.background)
                 .navigationDestination(item: $selectedDestination) { destination in
                     destination.view
+                }
+                .onAppear() {
+                    folderViewModel.refreshFolders()
                 }
             }
         }
