@@ -49,13 +49,22 @@ final class PackEntity {
         self.flashcards = flashcards
     }
     
-    var studiedPercentage: Double {
+    var studiedPercentage: CGFloat {
         let studiedCount = flashcards.filter { $0.isStudied }.count
-        return flashcards.isEmpty ? 0 : Double(studiedCount) / Double(flashcards.count)
+        let percentage = CGFloat(studiedCount) / CGFloat(flashcards.count)
+        return percentage
     }
     
     var flashcardCount: Int {
         return flashcards.count
+    }
+
+    var studiedFlashcardsCount: Int {
+        return flashcards.filter { $0.isStudied }.count
+    }
+
+    var notStudiedFlashcardsCount: Int {
+        return flashcards.filter { !$0.isStudied }.count
     }
     
     // Conversion from struct to entity

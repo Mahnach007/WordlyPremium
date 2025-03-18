@@ -2,6 +2,9 @@ import SwiftUI
 
 struct FlashCardLearnView: View {
     @Environment(\.dismiss) var dismiss
+    // Here you should uncomment this
+    // @State var flashCards: FlashCardEntity?
+    // and use that variable to show the words in the flashcards
     @State private var offset = CGSize.zero
     @State private var cardBorderColor: Color = .clear
     @StateObject private var viewModel = FlashCardViewModel()
@@ -21,9 +24,7 @@ struct FlashCardLearnView: View {
             }
             .padding(.top, 15)
             .padding(.horizontal, -27)
-            
             Spacer()
-            
             ZStack {
                 // Only show cards if we're not at the end of a round
                 if !viewModel.isRoundComplete && !viewModel.allCardsLearned {
@@ -70,7 +71,6 @@ struct FlashCardLearnView: View {
                         )
                     }
                 }
-
                 // Show round completion dialog
                 if viewModel.isRoundComplete {
                     RoundCompletionView(
@@ -86,7 +86,6 @@ struct FlashCardLearnView: View {
                     )
 
                 }
-
                 // Show message when all cards are learned
                 if viewModel.allCardsLearned {
                     VStack(spacing: 20) {
@@ -117,17 +116,17 @@ struct FlashCardLearnView: View {
                     .padding()
                 }
             }
-            
             Spacer()
-
         }
+        .padding(.top)
+        .frame(maxHeight: .infinity, alignment: .top)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     dismiss()
                 }) {
                     HStack {
-                        Text(Image(systemName: "arrow.left"))
+                        Text(Image(systemName: "xmark"))
                             .fontWeight(.bold)
                             .foregroundStyle(Color.eel)
                     }
@@ -135,9 +134,11 @@ struct FlashCardLearnView: View {
             }
 
             ToolbarItem(placement: .principal) {
-                Text("\(viewModel.rememberedCards.count)/\(viewModel.allCards.count)")
-                    .foregroundStyle(Color.eel)
-                    .font(.custom("Feather", size: 15))
+                Text(
+                    "\(viewModel.rememberedCards.count)/\(viewModel.allCards.count)"
+                )
+                .foregroundStyle(Color.eel)
+                .font(.custom("Feather", size: 15))
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -152,7 +153,11 @@ struct FlashCardLearnView: View {
                 }
             }
         }
+        .fontWeight(.bold)
+        .foregroundStyle(Color.eel)
+        .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        .regainSwipeBack()
     }
 
     // Update border color based on swipe direction
@@ -287,7 +292,5 @@ struct LearnCardCounterView: View {
 }
 
 #Preview {
-    NavigationStack {
-        FlashCardLearnView()
-    }
+    FlashCardLearnView()
 }

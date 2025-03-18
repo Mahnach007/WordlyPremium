@@ -55,7 +55,8 @@ struct ContentView: View {
                             packTitle: "Your Folders",
                             packNumber: folderViewModel.folders.count,
                             folders: folderViewModel.folders,
-                            hasData: folderViewModel.folders.isEmpty, // Note the negation here
+                            // Note the negation here
+                            hasData: folderViewModel.folders.isEmpty,
                             isFolder: true
                         )
 //                        CardSlider(

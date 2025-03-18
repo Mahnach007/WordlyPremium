@@ -34,7 +34,7 @@ struct CardSlider: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(packs ?? [PackEntity(name: "New Folder")]) { pack in
-                            NavigationLink(destination: PackView(pack: pack, progress: 0.0, progressPercentage: 0)) {
+                            NavigationLink(destination: PackView(pack: pack, progress: 0.1, progressPercentage: 10)) {
                                 CardButton(
                                     cardTitle: pack.name,
                                     numberOfWords: pack.flashcards.count,
