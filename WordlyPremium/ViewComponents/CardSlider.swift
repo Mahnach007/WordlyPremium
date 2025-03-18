@@ -16,9 +16,9 @@ struct CardSlider: View {
 
     @State private var navigateToCreateFolder = false
     @State private var navigateToCreateCards = false
+    @State private var navigateToPack = false
     @State private var selectedDestination: DestinationType? = nil
     @State private var isPressed: Bool = false
-    
     @State private var color: Bool = false
 
     var body: some View {
@@ -33,12 +33,23 @@ struct CardSlider: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(cards) { card in
-                            Button("Button") {
-                                print("ecco")
-                            }.buttonStyle(CardButton(
-                                cardTitle: card.title,
-                                numberOfWords: card.numberOfWords,
-                                icon: card.icon))
+                            Button("") {
+                                navigateToPack = true
+                                print("card button")
+                            }.buttonStyle(
+                                CardButton(
+                                    cardTitle: card.title,
+                                    numberOfWords: card.numberOfWords,
+                                    icon: card.icon
+                                )
+                            )
+                            .background(
+                                NavigationLink(
+                                    destination: PackView(),
+                                    isActive: $navigateToPack,
+                                    label: { EmptyView() }
+                                )
+                            )
                         }
                     }
                     .padding(.vertical, 7)
@@ -48,8 +59,10 @@ struct CardSlider: View {
                 Button(action: {
                     if isFolder {
                         navigateToCreateFolder = true
+                        print("folder create button")
                     } else {
                         navigateToCreateCards = true
+                        print("pack create button")
                     }
                 }) {
                     HStack {

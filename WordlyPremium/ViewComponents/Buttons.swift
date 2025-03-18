@@ -207,17 +207,21 @@ struct AddButton: View {
 struct CardButtonExtended: View {
     @State private var isPressed = false
     var cardTitle: String
-    var description: String
+    var description: String?
     var icon: String
     var isGradient: Bool
     var hasIcon: Bool
+    var color: Color?
 
     var body: some View {
+        let buttonColor = color ?? Color.rhino
+        let buttonDescription = description ?? "description"
+        
         let backgroundGradient: LinearGradient =
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [Color.rhino, Color.rhino]),
+                gradient: Gradient(colors: [buttonColor, buttonColor]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -226,11 +230,11 @@ struct CardButtonExtended: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundStyle(backgroundGradient)
-                    .frame(height: 80)
+                    .frame(height: (description != nil) ? 80 : 55)
                     .offset(y: 10)
                 RoundedRectangle(cornerRadius: 10)
                     .foregroundStyle(Color.background)
-                    .frame(height: 90)
+                    .frame(height: (description != nil) ? 90 : 65)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(backgroundGradient, lineWidth: 3)
@@ -241,16 +245,18 @@ struct CardButtonExtended: View {
                         Text(cardTitle)
                             .font(.custom("Feather", size: 20))
                             .foregroundColor(Color.eel)
-                        Text(description)
-                            .foregroundColor(Color.rhino)
-                            .font(.custom("Feather", size: 16))
+                        if description != nil {
+                            Text(buttonDescription)
+                                .foregroundColor(buttonColor)
+                                .font(.custom("Feather", size: 16))
+                        }
                     }
                     Spacer()
                     if hasIcon {
                         Image(icon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 65, height: 65)
+                            .frame(width: (description != nil) ? 65 : 45, height: 65)
                             .clipped()
                     }
                 }
@@ -449,14 +455,13 @@ struct TextLink: View {
     //        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
     //    ConfirmButton(cardTitle: "e", icon: "gb")
     //        SingleButton(word: "Adjective")
-//    CardButtonExtended(
-//        cardTitle: "AI Flashcards",
-//        description: "Generate flashcards instantly", icon: "cards",
-//        isGradient: false, hasIcon: true)
-    Button("Button") {
-    
-    }.buttonStyle(CardButton(
-        cardTitle: "card.title",
-        numberOfWords: 20,
-        icon: "cards"))
+    CardButtonExtended(
+        cardTitle: "AI Flashcards", icon: "flashcards",
+        isGradient: false, hasIcon: true)
+//    Button("Button") {
+//    
+//    }.buttonStyle(CardButton(
+//        cardTitle: "card.title",
+//        numberOfWords: 20,
+//        icon: "cards"))
 }
