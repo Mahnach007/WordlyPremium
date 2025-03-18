@@ -41,6 +41,18 @@ struct Pack: Codable, Identifiable {
     }
 }
 
+// Flashcard Model
+struct Flashcard: Codable, Identifiable {
+    let id: UUID = UUID()
+    var question: String
+    var answer: String
+
+    enum CodingKeys: String, CodingKey {
+        case question = "langFrom"
+        case answer = "langTo"
+    }
+}
+
 // Request Model
 struct GenerateCardsRequest: Codable {
     var fromLanguage: String? = nil

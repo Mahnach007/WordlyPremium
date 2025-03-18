@@ -9,10 +9,15 @@ import SwiftUI
 
 struct GenerationCardView: View {
     @Environment(\.dismiss) var dismiss
+    @Binding var flashcards: [Flashcard]
+    
+    var titlePlaceholder: String
+    var onSave: () -> Void
+    var onAddFlashcard: () -> Void
+
     @State private var title = ""
     @State var isAIGenerated: Bool
     @FocusState private var isFocused: Bool
-    @State private var flashcards: [Flashcard] = []
 
     var body: some View {
         GeometryReader { geometry in
@@ -21,7 +26,7 @@ struct GenerationCardView: View {
                     Text("Title*")
                     TextArea(
                         inputText: $title, isMultiline: false,
-                        placeholder: "Enter card pack title..."
+                        placeholder: titlePlaceholder
                     )
                     .focused($isFocused)
                 }
@@ -29,15 +34,13 @@ struct GenerationCardView: View {
                     ForEach($flashcards) { $flashcard in
                         AddNewCard(
                             question: $flashcard.question,
-                            answer: $flashcard.answer,
-                            isAIGenerated: isAIGenerated)
-                        .padding(.bottom)
+                            answer: $flashcard.answer
+                        )
                     }
                 }
                 AddButton(isRounded: true)
                     .onTapGesture {
-                        let newCard = Flashcard(question: "", answer: "")
-                        flashcards.append(newCard)
+                        onAddFlashcard()
                     }
             }
             .font(.custom("Feather", size: 12))
@@ -51,9 +54,7 @@ struct GenerationCardView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
+                    Button(action: { dismiss() }) {
                         HStack {
                             Text(Image(systemName: "arrow.left"))
                                 .fontWeight(.bold)
@@ -62,7 +63,7 @@ struct GenerationCardView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Text(isAIGenerated ? "AI Generated Cards" : "Manual Card Generation")
+                    Text(titlePlaceholder)
                         .foregroundStyle(Color.eel)
                         .font(.custom("Feather", size: 16))
                 }
@@ -75,9 +76,7 @@ struct GenerationCardView: View {
                         }
                     }
 
-                    Button(action: {
-                        saveFlashcards()
-                    }) {
+                    Button(action: { onSave() }) {
                         HStack {
                             Text(Image(systemName: "checkmark"))
                                 .fontWeight(.bold)
@@ -91,14 +90,6 @@ struct GenerationCardView: View {
             .regainSwipeBack()
         }
         .background(Color.background)
-    }
-
-    private func saveFlashcards() {
-        for flashcard in flashcards {
-            print(
-                "Question: \(flashcard.question), Answer: \(flashcard.answer)"
-            )
-        }
     }
 }
 

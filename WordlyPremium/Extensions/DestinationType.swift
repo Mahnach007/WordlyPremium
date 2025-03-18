@@ -11,14 +11,19 @@ enum DestinationType: Hashable {
     case firstOption
     case secondOption(isAIGenerated: Bool)
     case thirdOption
-
+    
     @ViewBuilder
     var view: some View {
         switch self {
         case .firstOption:
             AIGenerationCardView()
-        case .secondOption(let isAIGenerated):
-            GenerationCardView(isAIGenerated: isAIGenerated)
+        case .secondOption:
+            GenerationCardView(
+                flashcards: .constant([]),
+                titlePlaceholder: "Manual flashcard list",
+                onSave: {},
+                onAddFlashcard: {}
+            )
         case .thirdOption:
             CreateFolderView()
         }
@@ -50,3 +55,6 @@ enum WordType: String, CaseIterable, Codable {
     case adverb = "adverb"
 }
 
+enum NavigationDestination: Hashable {
+    case generationCardView
+}

@@ -24,111 +24,127 @@ struct AIGenerationCardView: View {
     @State private var wordTypeIsVisible = true
     @FocusState private var isFocused: Bool
     
+    @State private var navigateToGeneratedCards = false
     
     private let flashcardService = FlashcardService()
     
     var body: some View {
-        GeometryReader{ geometry in
-            VStack(spacing: 20) {
-                // Topic
-                VStack(alignment: .leading) {
-                    Text("Topic/Prompt*")
-                    TextArea(inputText: $topic, isMultiline: true, placeholder: "Enter your prompt...")
-                        .focused($isFocused)
-                }
-                // Card Type
-                VStack(alignment: .leading) {
-                    Text("Card type")
-                    SelectorWithModal<CardType>(
-                        selectedOption: $selectedCardOption,
-                        selectionType: .cardType
-                    )
-                }
-                // Amount
-                VStack(alignment: .leading) {
-                    Text("Amount of cards")
-                    NumericField(inputText: cardAmount)
-                        .focused($isFocused)
-                }
-                // Front/Back
-                HStack {
+        GeometryReader { geometry in
+            NavigationStack {
+                VStack(spacing: 20) {
+                    // Topic
                     VStack(alignment: .leading) {
-                        Text("Front side")
-                        SelectorWithModal<LanguageType>(
-                            selectedOption: $selectedFrontLanguageOption,
-                            selectionType: .languageType
+                        Text("Topic/Prompt*")
+                        TextArea(inputText: $topic, isMultiline: true, placeholder: "Enter your prompt...")
+                            .focused($isFocused)
+                    }
+                    // Card Type
+                    VStack(alignment: .leading) {
+                        Text("Card type")
+                        SelectorWithModal<CardType>(
+                            selectedOption: $selectedCardOption,
+                            selectionType: .cardType
                         )
                     }
+                    // Amount
                     VStack(alignment: .leading) {
-                        Text("Back side")
-                        SelectorWithModal<LanguageType>(
-                            selectedOption: $selectedBackLanguageOption,
-                            selectionType: .languageType
-                        )
+                        Text("Amount of cards")
+                        NumericField(inputText: cardAmount)
+                            .focused($isFocused)
                     }
-                }
-                // Word Type (conditional inside the main VStack)
-                if !wordTypeIsVisible {
-                    VStack(alignment: .leading) {
-                        Text("Word type")
-                        HStack {
-                            ForEach(WordType.allCases, id: \.self) { word in
-                                SingleButton(word: word.rawValue, onTap: {
-                                    if selectedWordTypes.contains(word.rawValue) {
-                                        selectedWordTypes.remove(word.rawValue)
-                                    } else {
-                                        selectedWordTypes.insert(word.rawValue)
-                                    }
-                                }).tag(word.rawValue)
+                    // Front/Back
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Front side")
+                            SelectorWithModal<LanguageType>(
+                                selectedOption: $selectedFrontLanguageOption,
+                                selectionType: .languageType
+                            )
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Back side")
+                            SelectorWithModal<LanguageType>(
+                                selectedOption: $selectedBackLanguageOption,
+                                selectionType: .languageType
+                            )
+                        }
+                    }
+                    // Word Type (conditional inside the main VStack)
+                    if !wordTypeIsVisible {
+                        VStack(alignment: .leading) {
+                            Text("Word type")
+                            HStack {
+                                ForEach(WordType.allCases, id: \.self) { word in
+                                    SingleButton(word: word.rawValue, onTap: {
+                                        if selectedWordTypes.contains(word.rawValue) {
+                                            selectedWordTypes.remove(word.rawValue)
+                                        } else {
+                                            selectedWordTypes.insert(word.rawValue)
+                                        }
+                                    }).tag(word.rawValue)
+                                }
                             }
                         }
                     }
+                    Spacer()
+                    
+                    // Generate Button
+                    ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
+                        .padding(.bottom, 50)
                 }
-                
-                Spacer()
-                
-                // Generate Button
-                ConfirmButton(cardTitle: "Generate", icon: "generate", action: generateFlashcards)
-                    .padding(.bottom, 50)
-            }
-            .font(.custom("Feather", size: 12))
-            .frame(maxHeight: .infinity, alignment: .top)
-            .padding()
-            .toolbar {
-                ToolbarItemGroup(placement:.keyboard) {
-                                    Spacer()
-                                    Button("Done") {
-                                        isFocused = false // Dismiss keyboard
-                                    }
-                                }
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        HStack {
-                            Text(Image(systemName: "arrow.left"))
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.eel)
+                .font(.custom("Feather", size: 12))
+                .frame(maxHeight: .infinity, alignment: .top)
+                .padding()
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") {
+                            isFocused = false // Dismiss keyboard
                         }
                     }
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            HStack {
+                                Text(Image(systemName: "arrow.left"))
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color.eel)
+                            }
+                        }
+                    }
+                    ToolbarItem(placement: .principal) {
+                        Text("AI Card Generation")
+                            .foregroundStyle(Color.eel)
+                            .font(.custom("Feather", size: 15))
+                    }
                 }
-                ToolbarItem(placement: .principal) {
-                    Text("AI Card Generation")
-                        .foregroundStyle(Color.eel)
-                        .font(.custom("Feather", size: 15))
+                .navigationBarBackButtonHidden(true)
+                .navigationBarTitleDisplayMode(.inline)
+                .regainSwipeBack()
+                .onChange(of: selectedCardOption) {
+                    if let newValue = selectedCardOption {
+                        wordTypeIsVisible = (newValue != .singleWord)
+                    }
                 }
-            }
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitleDisplayMode(.inline)
-            .regainSwipeBack()
-            .onChange(of: selectedCardOption) {
-                if let newValue = selectedCardOption {
-                    wordTypeIsVisible = (newValue != .singleWord)
+                .navigationDestination(for: NavigationDestination.self) { destination in
+                    switch destination {
+                    case .generationCardView:
+                        GenerationCardView(
+                            flashcards: $flashcards,
+                            titlePlaceholder: "AI-generated pack title...",
+                            onSave: {
+                                print("AI-generated flashcards saved!")
+                            },
+                            onAddFlashcard: {
+                                flashcards.append(Flashcard(question: "Question", answer: "Answer"))
+                            }
+                        )
+                    }
                 }
             }
         }
     }
-
     
     private func generateFlashcards() {
         isLoading = true
@@ -149,6 +165,7 @@ struct AIGenerationCardView: View {
                 switch result {
                 case .success(let cards):
                     flashcards = cards
+                    navigateToGeneratedCards = true
                 case .failure(let error):
                     errorMessage = error.localizedDescription
                 }
