@@ -10,7 +10,6 @@ import SwiftUI
 
 struct AIGenerationCardView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.dataService) private var dataService
     // Parameters
     @State private var selectedCardOption: CardType? = nil
     @State private var selectedFrontLanguageOption: LanguageType? = nil
@@ -21,16 +20,12 @@ struct AIGenerationCardView: View {
     @State private var selectedWordTypes: Set<String> = []
     @State private var flashcards: [Flashcard] = []
 
-    // Add state to track selected folder
-    @State private var selectedFolder: FolderEntity?
-    @State private var showFolderSelector = false
-    @State private var folders: [FolderEntity] = []
-
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var wordTypeIsVisible = true
     @FocusState private var isFocused: Bool
 
+    // Navigation state
     @State private var navigateToGeneratedCards = false
 
     private let flashcardService = FlashcardService()
@@ -100,44 +95,20 @@ struct AIGenerationCardView: View {
                         }
                     }
 
-                    // Folder selector
-                    VStack(alignment: .leading) {
-                        Text("Save to folder")
-                        Menu {
-                            ForEach(folders, id: \.id) { folder in
-                                Button(folder.name) {
-                                    selectedFolder = folder
-                                }
-                            }
-
-                            Button("Create New Folder") {
-                                // Add new folder creation logic here
-                                let newFolder = dataService.createFolder(name: "New Folder")
-                                folders.append(newFolder)
-                                selectedFolder = newFolder
-                            }
-                        } label: {
-                            HStack {
-                                Text(selectedFolder?.name ?? "Select Folder")
-                                    .foregroundColor(selectedFolder == nil ? .gray : .black)
-                                Spacer()
-                                Image(systemName: "chevron.down")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                        }
-                    }
-                    .padding(.top)
-
                     Spacer()
+
+                    // At the bottom, add a progress indicator when loading
+                    if isLoading {
+                        ProgressView("Generating cards...")
+                            .padding()
+                    }
 
                     // Generate Button
                     ConfirmButton(
                         cardTitle: "Generate", icon: "generate", action: generateFlashcards
                     )
                     .padding(.bottom, 50)
+                    .disabled(isLoading)
                 }
                 .font(.custom("Feather", size: 12))
                 .frame(maxHeight: .infinity, alignment: .top)
@@ -174,43 +145,39 @@ struct AIGenerationCardView: View {
                         wordTypeIsVisible = (newValue != .singleWord)
                     }
                 }
-                .onAppear {
-                    // Load folders when view appears
-                    folders = dataService.fetchAllFolders()
-                    // Create default folder if none exist
-                    if folders.isEmpty {
-                        let defaultFolder = dataService.createFolder(name: "My Cards")
-                        folders.append(defaultFolder)
-                    }
-                    selectedFolder = folders.first
+
+                // Add a navigation link that will activate when cards are generated
+                .navigationDestination(isPresented: $navigateToGeneratedCards) {
+                    GenerationCardView(
+                        flashcards: $flashcards,
+                        isAIGenerated: true,
+                        titlePlaceholder: "AI-generated pack title...",
+                        onSave: {
+                            print("AI-generated flashcards saved!")
+                        },
+                        onAddFlashcard: {
+                            flashcards.append(Flashcard(question: "", answer: ""))
+                        }
+                    )
                 }
-                .navigationDestination(for: NavigationDestination.self) { destination in
-                    switch destination {
-                    case .generationCardView:
-                        GenerationCardView(
-                            flashcards: $flashcards,
-                            isAIGenerated: true,
-                            titlePlaceholder: "AI-generated pack title...",
-                            onSave: {
-                                print("AI-generated flashcards saved!")
-                            },
-                            selectedFolder: selectedFolder,
-                            onAddFlashcard: {
-                                flashcards.append(Flashcard(question: "Question", answer: "Answer"))
-                            }
-                        )
-                    }
+
+                // Show error message if there is one
+                .alert(
+                    "Error",
+                    isPresented: .init(
+                        get: { errorMessage != nil },
+                        set: { if !$0 { errorMessage = nil } }
+                    )
+                ) {
+                    Button("OK") { errorMessage = nil }
+                } message: {
+                    Text(errorMessage ?? "An unknown error occurred")
                 }
             }
         }
     }
 
     private func generateFlashcards() {
-        guard selectedFolder != nil else {
-            errorMessage = "Please select a folder to save the cards"
-            return
-        }
-
         isLoading = true
         errorMessage = nil
 
@@ -229,6 +196,7 @@ struct AIGenerationCardView: View {
                 switch result {
                 case .success(let cards):
                     flashcards = cards
+                    // This will now trigger the navigation
                     navigateToGeneratedCards = true
                 case .failure(let error):
                     errorMessage = error.localizedDescription

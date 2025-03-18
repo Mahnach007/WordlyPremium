@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-class DataService {
+class DataService: ObservableObject {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
 

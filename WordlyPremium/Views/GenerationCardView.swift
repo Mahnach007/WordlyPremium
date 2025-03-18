@@ -10,43 +10,70 @@ import SwiftUI
 
 struct GenerationCardView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.dataService) private var dataService
     @Binding var flashcards: [Flashcard]
 
     var isAIGenerated: Bool
     var titlePlaceholder: String
     var onSave: () -> Void
-    var selectedFolder: FolderEntity?
     var onAddFlashcard: () -> Void
 
     @State private var title = ""
     @FocusState private var isFocused: Bool
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var showSaveConfirmation = false
 
     private var canSave: Bool {
         return !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !flashcards.isEmpty
     }
 
     private func savePack() {
-        guard let folder = selectedFolder else {
-            alertMessage = "Please select a folder to save to"
+        // Validate title and cards
+        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            alertMessage = "Please enter a title for the pack"
             showAlert = true
             return
         }
 
-        if canSave {
-            dataService.saveGeneratedPack(
-                title: title,
-                flashcards: flashcards,
-                isAIGenerated: isAIGenerated,
-                inFolder: folder
-            )
+        guard !flashcards.isEmpty else {
+            alertMessage = "Please add at least one card"
+            showAlert = true
+            return
+        }
 
-            onSave()
+        // Create a Pack (but don't save to a folder yet)
+        let pack = Pack(
+            name: title,
+            isAIGenerated: isAIGenerated,
+            flashcards: flashcards
+        )
 
+        // Call the original onSave callback
+        // This will pass the created pack to parent components
+        onSave()
+
+        // Show success message
+        showSaveConfirmation = true
+
+        // Print confirmation for debugging
+        print(
+            "✅ \(isAIGenerated ? "AI-generated" : "Manual") pack created: \(title) with \(flashcards.count) cards"
+        )
+
+        // Dismiss after a short delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             dismiss()
         }
+    }
+
+    // Function to add a new flashcard to the collection
+    private func addNewFlashcard() {
+        withAnimation {
+            flashcards.append(Flashcard(question: "", answer: ""))
+            print("New flashcard added. Total: \(flashcards.count)")
+        }
+        // Also call the provided onAddFlashcard function
+        onAddFlashcard()
     }
 
     var body: some View {
@@ -71,7 +98,7 @@ struct GenerationCardView: View {
                 }
                 AddButton(isRounded: true)
                     .onTapGesture {
-                        onAddFlashcard()
+                        addNewFlashcard()
                     }
             }
             .font(.custom("Feather", size: 12))
@@ -131,19 +158,26 @@ struct GenerationCardView: View {
             } message: {
                 Text(alertMessage)
             }
+            .overlay {
+                // Success message overlay
+                if showSaveConfirmation {
+                    VStack {
+                        Text("Pack Created Successfully!")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.green.opacity(0.8))
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.opacity(0.3))
+                    .edgesIgnoringSafeArea(.all)
+                    .transition(.opacity)
+                }
+            }
         }
         .background(Color.background)
-    }
-}
-
-struct DataServiceKey: EnvironmentKey {
-    static let defaultValue = DataService()
-}
-
-extension EnvironmentValues {
-    var dataService: DataService {
-        get { self[DataServiceKey.self] }
-        set { self[DataServiceKey.self] = newValue }
     }
 }
 
@@ -153,7 +187,6 @@ extension EnvironmentValues {
         isAIGenerated: false,
         titlePlaceholder: "New Pack",
         onSave: {},
-        selectedFolder: nil,
         onAddFlashcard: {}
     )
 }
