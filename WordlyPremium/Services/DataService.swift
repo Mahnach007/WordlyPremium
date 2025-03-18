@@ -141,79 +141,79 @@ class DataService: ObservableObject {
 
     // MARK: - Search and Filter
 
-//    func searchPacks(byName searchTerm: String) -> [PackEntity] {
-//        let predicate = #Predicate<PackEntity> { pack in
-//            pack.name.localizedStandardContains(searchTerm)
-//        }
-//
-//        var descriptor = FetchDescriptor<PackEntity>(predicate: predicate)
-//        descriptor.sortBy = [SortDescriptor(\.name)]
-//
-//        do {
-//            return try modelContext.fetch(descriptor)
-//        } catch {
-//            print("Failed to search packs: \(error)")
-//            return []
-//        }
-//    }
+    //    func searchPacks(byName searchTerm: String) -> [PackEntity] {
+    //        let predicate = #Predicate<PackEntity> { pack in
+    //            pack.name.localizedStandardContains(searchTerm)
+    //        }
+    //
+    //        var descriptor = FetchDescriptor<PackEntity>(predicate: predicate)
+    //        descriptor.sortBy = [SortDescriptor(\.name)]
+    //
+    //        do {
+    //            return try modelContext.fetch(descriptor)
+    //        } catch {
+    //            print("Failed to search packs: \(error)")
+    //            return []
+    //        }
+    //    }
 
-//    func fetchPacksWithStudyProgress(minProgress: Double = 0, maxProgress: Double = 1.0)
-//        -> [PackEntity]
-//    {
-//        let predicate = #Predicate<PackEntity> { pack in
-//            let progress = pack.studiedPercentage
-//            return progress >= minProgress && progress <= maxProgress
-//        }
-//
-//        var descriptor = FetchDescriptor<PackEntity>(predicate: predicate)
-//        descriptor.sortBy = [SortDescriptor(\.name)]
-//
-//        do {
-//            return try modelContext.fetch(descriptor)
-//        } catch {
-//            print("Failed to fetch packs by progress: \(error)")
-//            return []
-//        }
-//    }
+    //    func fetchPacksWithStudyProgress(minProgress: Double = 0, maxProgress: Double = 1.0)
+    //        -> [PackEntity]
+    //    {
+    //        let predicate = #Predicate<PackEntity> { pack in
+    //            let progress = pack.studiedPercentage
+    //            return progress >= minProgress && progress <= maxProgress
+    //        }
+    //
+    //        var descriptor = FetchDescriptor<PackEntity>(predicate: predicate)
+    //        descriptor.sortBy = [SortDescriptor(\.name)]
+    //
+    //        do {
+    //            return try modelContext.fetch(descriptor)
+    //        } catch {
+    //            print("Failed to fetch packs by progress: \(error)")
+    //            return []
+    //        }
+    //    }
 
     // MARK: - App Configuration
 
-//    func getOrCreateAppConfiguration() -> AppConfiguration {
-//        let descriptor = FetchDescriptor<AppConfiguration>()
-//        do {
-//            let configurations = try modelContext.fetch(descriptor)
-//            if let existingConfig = configurations.first {
-//                return existingConfig
-//            } else {
-//                let newConfig = AppConfiguration()
-//                modelContext.insert(newConfig)
-//                saveContext()
-//                return newConfig
-//            }
-//        } catch {
-//            print("Failed to fetch app configuration: \(error)")
-//            let newConfig = AppConfiguration()
-//            modelContext.insert(newConfig)
-//            saveContext()
-//            return newConfig
-//        }
-//    }
+    //    func getOrCreateAppConfiguration() -> AppConfiguration {
+    //        let descriptor = FetchDescriptor<AppConfiguration>()
+    //        do {
+    //            let configurations = try modelContext.fetch(descriptor)
+    //            if let existingConfig = configurations.first {
+    //                return existingConfig
+    //            } else {
+    //                let newConfig = AppConfiguration()
+    //                modelContext.insert(newConfig)
+    //                saveContext()
+    //                return newConfig
+    //            }
+    //        } catch {
+    //            print("Failed to fetch app configuration: \(error)")
+    //            let newConfig = AppConfiguration()
+    //            modelContext.insert(newConfig)
+    //            saveContext()
+    //            return newConfig
+    //        }
+    //    }
 
-//    func updateAppConfiguration(
-//        selectedLanguages: [String]? = nil, selectedCardAmount: String? = nil
-//    ) {
-//        let config = getOrCreateAppConfiguration()
-//
-//        if let languages = selectedLanguages {
-//            config.selectedLanguages = languages
-//        }
-//
-//        if let cardAmount = selectedCardAmount {
-//            config.selectedCardAmount = cardAmount
-//        }
-//
-//        saveContext()
-//    }
+    //    func updateAppConfiguration(
+    //        selectedLanguages: [String]? = nil, selectedCardAmount: String? = nil
+    //    ) {
+    //        let config = getOrCreateAppConfiguration()
+    //
+    //        if let languages = selectedLanguages {
+    //            config.selectedLanguages = languages
+    //        }
+    //
+    //        if let cardAmount = selectedCardAmount {
+    //            config.selectedCardAmount = cardAmount
+    //        }
+    //
+    //        saveContext()
+    //    }
 
     // MARK: - Utility Functions
 
@@ -223,5 +223,39 @@ class DataService: ObservableObject {
         } catch {
             print("Failed to save context: \(error)")
         }
+    }
+
+    // MARK: - Folder-Pack Management
+
+    // Add an existing pack to a folder
+    func addPackToFolder(pack: PackEntity, folder: FolderEntity) {
+        folder.packs.append(pack)
+        saveContext()
+        print("✅ Pack '\(pack.name)' added to folder '\(folder.name)'")
+    }
+
+    // Add a newly created Pack struct to a folder (converts to PackEntity first)
+    func addPackToFolder(pack: Pack, folder: FolderEntity) -> PackEntity {
+        let packEntity = PackEntity.from(pack: pack)
+        folder.packs.append(packEntity)
+        modelContext.insert(packEntity)
+        saveContext()
+        print("✅ Pack '\(pack.name)' converted and added to folder '\(folder.name)'")
+        return packEntity
+    }
+
+    // Remove a pack from a folder (without deleting the pack)
+    func removePackFromFolder(pack: PackEntity, folder: FolderEntity) {
+        folder.packs.removeAll { $0.id == pack.id }
+        saveContext()
+        print("✅ Pack '\(pack.name)' removed from folder '\(folder.name)'")
+    }
+
+    // Move a pack from one folder to another
+    func movePackToFolder(pack: PackEntity, fromFolder: FolderEntity, toFolder: FolderEntity) {
+        fromFolder.packs.removeAll { $0.id == pack.id }
+        toFolder.packs.append(pack)
+        saveContext()
+        print("✅ Pack '\(pack.name)' moved from '\(fromFolder.name)' to '\(toFolder.name)'")
     }
 }
