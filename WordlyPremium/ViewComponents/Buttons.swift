@@ -15,7 +15,8 @@ struct PressableButton<Content: View>: View {
     @State private var hasTriggeredHaptic = false
 
     init(
-        isPressed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content, action: @escaping () -> Void = {}
+        isPressed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content,
+        action: @escaping () -> Void = {}
     ) {
         self._isPressed = isPressed
         self.content = content
@@ -41,8 +42,6 @@ struct PressableButton<Content: View>: View {
                         withAnimation(.easeInOut(duration: 0.1)) {
                             isPressed = false
                         }
-                        let impact = UIImpactFeedbackGenerator(style: .light)
-                        impact.impactOccurred()
                         hasTriggeredHaptic = false
                         action()
                     }
@@ -50,22 +49,93 @@ struct PressableButton<Content: View>: View {
     }
 }
 
+struct CardButton: ButtonStyle {
+
+    var cardTitle: String
+    let numberOfWords: Int
+    let icon: String
+
+    init(
+        cardTitle: String,
+        numberOfWords: Int,
+        icon: String
+    ) {
+        self.cardTitle = cardTitle
+        self.numberOfWords = numberOfWords
+        self.icon = icon
+    }
+
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(Color.rhino)
+                .frame(width: 178, height: 115)
+                .offset(y: 5)
+
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(Color.background)
+                .frame(width: 175, height: 115)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.rhino, lineWidth: 3)
+                )
+                .offset(y: configuration.isPressed ? 4 : 0)
+                .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+
+            ZStack {
+                Text(cardTitle)
+                    .font(.custom("Feather", size: 16))
+                    .foregroundStyle(Color.eel)
+                    .offset(x: -5)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(width: 140)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .frame(height: 90)
+
+                Text("\(numberOfWords) words")
+                    .font(.custom("Feather Bold", size: 16))
+                    .foregroundStyle(Color.rhino)
+                    .offset(x: -35, y: 35)
+                    .padding(0)
+            }
+            .offset(y: configuration.isPressed ? 4 : 0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+        }
+        .overlay(
+            Image(icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+                .offset(y: configuration.isPressed ? 4 : 0)
+                .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+                .padding(.bottom, 12)
+                .padding(.trailing, 8),
+            alignment: .bottomTrailing
+        )
+    }
+}
+
 struct AddButton: View {
     @State private var isPressed = false
-    @State private var hasTriggeredHaptic = false
     var isRounded: Bool
-    
+
     var body: some View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: isRounded ? 30 : 3)
                     .foregroundStyle(Color.treeFrog)
-                    .frame(width: isRounded ? 60 : 35, height: isRounded ? 60 : 35)
+                    .frame(
+                        width: isRounded ? 60 : 35, height: isRounded ? 60 : 35
+                    )
                     .offset(y: isRounded ? 3 : 4)
                 ZStack {
                     RoundedRectangle(cornerRadius: isRounded ? 30 : 3)
                         .foregroundStyle(Color.owl)
-                        .frame(width: isRounded ? 60 : 35, height: isRounded ? 60 : 35)
+                        .frame(
+                            width: isRounded ? 60 : 35,
+                            height: isRounded ? 60 : 35
+                        )
                         .offset(y: -3)
                     Text("+")
                         .font(.custom("Feather", size: 42))
@@ -78,78 +148,80 @@ struct AddButton: View {
     }
 }
 
-struct CardButton: View {
-    @State private var isPressed = false
-    var cardTitle: String
-    var numberOfWords: Int
-    var icon: String
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
-
-    var body: some View {
-        PressableButton(isPressed: $isPressed) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(Color.gray)
-                    .frame(width: 178, height: 115)
-                    .offset(y: 5)
-
-                RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(Color.background)
-                    .frame(width: 175, height: 115)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray, lineWidth: 3)
-                    )
-                    .offset(y: isPressed ? 4 : 0)
-                ZStack {
-                    Text(cardTitle)
-                        .font(.custom("Feather", size: 16))
-                        .foregroundStyle(Color.eel)
-                        .offset(x: -5)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .frame(width: 140)
-                        .frame(maxHeight: .infinity, alignment: .top)
-                        .frame(height: 90)
-                    Text("\(numberOfWords) words")
-                        .font(.custom("Feather Bold", size: 16))
-                        .foregroundStyle(Color.gray)
-                        .offset(x: -35, y: 35)
-                        .padding(0)
-                }
-                .offset(y: isPressed ? 4 : 0)
-            }
-            .overlay(
-                Image(icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 60, height: 60)
-                    .offset(y: isPressed ? 4 : 0)
-                    .padding(.bottom, 12)
-                    .padding(.trailing, 8),
-                alignment: .bottomTrailing
-            )
-        }
-    }
-}
+//struct CardButton: View {
+//    @State private var isPressed = false
+//    var cardTitle: String
+//    var numberOfWords: Int
+//    var icon: String
+//
+//    var body: some View {
+//        PressableButton(isPressed: $isPressed) {
+//            ZStack {
+//                RoundedRectangle(cornerRadius: 10)
+//                    .foregroundStyle(Color.rhino)
+//                    .frame(width: 178, height: 115)
+//                    .offset(y: 5)
+//
+//                RoundedRectangle(cornerRadius: 10)
+//                    .foregroundStyle(Color.background)
+//                    .frame(width: 175, height: 115)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .stroke(Color.rhino, lineWidth: 3)
+//                    )
+//                    .offset(y: isPressed ? 4 : 0)
+//
+//                ZStack {
+//                    Text(cardTitle)
+//                        .font(.custom("Feather", size: 16))
+//                        .foregroundStyle(Color.eel)
+//                        .offset(x: -5)
+//                        .multilineTextAlignment(.leading)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .frame(width: 140)
+//                        .frame(maxHeight: .infinity, alignment: .top)
+//                        .frame(height: 90)
+//
+//                    Text("\(numberOfWords) words")
+//                        .font(.custom("Feather Bold", size: 16))
+//                        .foregroundStyle(Color.rhino)
+//                        .offset(x: -35, y: 35)
+//                        .padding(0)
+//                }
+//                .offset(y: isPressed ? 4 : 0)
+//            }
+//            .overlay(
+//                Image(icon)
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 60, height: 60)
+//                    .offset(y: isPressed ? 4 : 0)
+//                    .padding(.bottom, 12)
+//                    .padding(.trailing, 8),
+//                alignment: .bottomTrailing
+//            )
+//        }
+//    }
+//}
 
 struct CardButtonExtended: View {
     @State private var isPressed = false
     var cardTitle: String
-    var description: String
+    var description: String?
     var icon: String
     var isGradient: Bool
-    var isFolder: Bool
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
+    var hasIcon: Bool
+    var color: Color?
 
     var body: some View {
+        let buttonColor = color ?? Color.rhino
+        let buttonDescription = description ?? "description"
+        
         let backgroundGradient: LinearGradient =
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [Color.gray, Color.gray]),
+                gradient: Gradient(colors: [buttonColor, buttonColor]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -158,11 +230,11 @@ struct CardButtonExtended: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundStyle(backgroundGradient)
-                    .frame(height: 80)
+                    .frame(height: (description != nil) ? 80 : 55)
                     .offset(y: 10)
                 RoundedRectangle(cornerRadius: 10)
                     .foregroundStyle(Color.background)
-                    .frame(height: 90)
+                    .frame(height: (description != nil) ? 90 : 65)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(backgroundGradient, lineWidth: 3)
@@ -173,16 +245,18 @@ struct CardButtonExtended: View {
                         Text(cardTitle)
                             .font(.custom("Feather", size: 20))
                             .foregroundColor(Color.eel)
-                        Text(description)
-                            .foregroundColor(Color.gray)
-                            .font(.custom("Feather", size: 16))
+                        if description != nil {
+                            Text(buttonDescription)
+                                .foregroundColor(buttonColor)
+                                .font(.custom("Feather", size: 16))
+                        }
                     }
                     Spacer()
-                    if isFolder {
+                    if hasIcon {
                         Image(icon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 45, height: 50)
+                            .frame(width: (description != nil) ? 65 : 45, height: 65)
                             .clipped()
                     }
                 }
@@ -199,15 +273,13 @@ struct ButtonWithImage: View {
     var icon: String
     var isGradient: Bool
     var isChecked: Bool
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
 
     var body: some View {
         let backgroundGradient: LinearGradient =
             isGradient
             ? AppColors.gradient
             : LinearGradient(
-                gradient: Gradient(colors: [Color.gray, Color.gray]),
+                gradient: Gradient(colors: [Color.rhino, Color.rhino]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -237,12 +309,12 @@ struct ButtonWithImage: View {
             }
             .background(Color.background)
             .overlay {
-                isChecked ?
-                Text(Image(systemName: "checkmark"))
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(Color.blue)
-                    .offset(x: 140)
-                : nil
+                isChecked
+                    ? Text(Image(systemName: "checkmark"))
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundStyle(Color.azure)
+                        .offset(x: 140)
+                    : nil
             }
             .overlay(
                 Image(icon)
@@ -264,8 +336,6 @@ struct ConfirmButton: View {
     var cardTitle: String
     var icon: String
     let action: () -> Void
-    let impact = UIImpactFeedbackGenerator(style: .light)
-    @State private var hasTriggeredHaptic = false
 
     var body: some View {
         let backgroundGradient: LinearGradient = AppColors.gradient
@@ -321,17 +391,17 @@ struct SingleButton: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundStyle(
-                    isPressed ? Color.blue : Color.gray
+                    isPressed ? Color.azure : Color.rhino
                 )
                 .frame(width: 81, height: 40)
                 .offset(y: 3)
             RoundedRectangle(cornerRadius: 10)
-                .fill(isPressed ? Color.lightBlue : Color.background)
+                .fill(isPressed ? Color.ocean : Color.background)
                 .frame(width: 80, height: 40)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            isPressed ? Color.blue : Color.gray,
+                            isPressed ? Color.azure : Color.rhino,
                             lineWidth: 2)
                 )
                 .offset(y: isPressed ? 3 : 0)
@@ -366,7 +436,7 @@ struct TextLink: View {
         NavigationLink(destination: destination) {
             Text(label)
                 .font(.custom("Feather", size: 17))
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Color.azure)
                 .underline()
                 .offset(y: 3)
         }
@@ -374,24 +444,24 @@ struct TextLink: View {
 }
 
 #Preview {
-    NavigationStack {
-        TextLink(label: "Go to View", destination: AnyView(AddButton(isRounded: false)))
-    }
-}
-
-
-#Preview {
+    //    NavigationStack {
+    //        TextLink(label: "Go to View", destination: AnyView(AddButton(isRounded: false)))
+    //    }
     //    ButtonWithImage(
     //        cardTitle: "Englishoens", icon: "gb", isGradient: false)
     //    ButtonWithImage(
     //        cardTitle: "Italian", icon: "it", isGradient: false)
-//    ButtonWithImage(
-//        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
+    //    ButtonWithImage(
+    //        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
     //    ConfirmButton(cardTitle: "e", icon: "gb")
-        SingleButton(word: "Adjective")
+    //        SingleButton(word: "Adjective")
+    CardButtonExtended(
+        cardTitle: "AI Flashcards", icon: "flashcards",
+        isGradient: false, hasIcon: true)
+//    Button("Button") {
+//    
+//    }.buttonStyle(CardButton(
+//        cardTitle: "card.title",
+//        numberOfWords: 20,
+//        icon: "cards"))
 }
-
-//#Preview {
-//    CardButtonExtended(
-//        cardTitle: "AI Flashcards", description: "Generate flashcards instantly", icon: "cards", isGradient: false, isFolder: false)
-//}

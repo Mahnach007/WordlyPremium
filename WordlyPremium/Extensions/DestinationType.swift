@@ -9,18 +9,25 @@ import SwiftUI
 // Parameter types
 enum DestinationType: Hashable {
     case firstOption
-    case secondOption
+    case secondOption(isAIGenerated: Bool)
     case thirdOption
-
+    
     @ViewBuilder
     var view: some View {
         switch self {
         case .firstOption:
             AIGenerationCardView()
         case .secondOption:
-            GenerationCardView()
+            GenerationCardView(
+                flashcards: .constant([Flashcard(question: "Example", answer: "Answer")]),
+                isAIGenerated: false,
+                titlePlaceholder: "New Pack",
+                onSave: {},
+                selectedFolder: nil,
+                onAddFlashcard: {}
+            )
         case .thirdOption:
-            CardList()
+            CreateFolderView()
         }
     }
 }
@@ -61,3 +68,6 @@ enum WordType: String, CaseIterable, Codable {
     case adverb = "adverb"
 }
 
+enum NavigationDestination: Hashable {
+    case generationCardView
+}

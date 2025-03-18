@@ -6,14 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct WordlyPremiumApp: App {
+    let dataService = DataService()
+    
     var body: some Scene {
         WindowGroup {
             ZStack {
                 Color.background.ignoresSafeArea()
-                FlashCardLearnView()
+                ContentView()
+                    .environment(\.dataService, dataService)
             }
         }
     }

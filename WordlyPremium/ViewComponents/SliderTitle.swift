@@ -21,7 +21,7 @@ struct SliderTitle: View {
                     .foregroundStyle(Color.eel)
                 Text("(\(sliderNumber))")
                     .font(.custom("Feather", size: 13))
-                    .foregroundStyle(Color.gray)
+                    .foregroundStyle(Color.rhino)
                     .offset(y: 2)
             }
             Spacer()

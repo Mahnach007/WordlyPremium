@@ -11,7 +11,7 @@ struct ContentView: View {
     @StateObject private var viewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
-    
+
     var body: some View {
         ZStack {
             NavigationStack {
@@ -19,7 +19,7 @@ struct ContentView: View {
                     HStack {
                         AddButton(isRounded: false)
                             .padding()
-                            .padding(.vertical, -30)
+                            .padding(.vertical, -25)
                             .padding(.top, 20)
                             .onTapGesture {
                                 isModalPresented = true
@@ -45,17 +45,23 @@ struct ContentView: View {
                         CardSlider(
                             packTitle: "Your Packs",
                             packNumber: viewModel.packs.count,
-                            cards: viewModel.packs
+                            cards: viewModel.packs,
+                            hasData: true,
+                            isFolder: false
                         )
                         CardSlider(
                             packTitle: "Your Folders",
                             packNumber: viewModel.folders.count,
-                            cards: viewModel.folders
+                            cards: viewModel.folders,
+                            hasData: false,
+                            isFolder: true
                         )
                         CardSlider(
                             packTitle: "Community Packs",
                             packNumber: viewModel.community.count,
-                            cards: viewModel.community
+                            cards: viewModel.community,
+                            hasData: true,
+                            isFolder: false
                         )
                     }
                     .padding(.top, 20)

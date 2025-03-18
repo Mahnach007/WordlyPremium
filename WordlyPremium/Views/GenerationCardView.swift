@@ -5,13 +5,49 @@
 //  Created by Diego Arroyo on 11/03/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct GenerationCardView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.dataService) private var dataService
+    @Binding var flashcards: [Flashcard]
+
+    var isAIGenerated: Bool
+    var titlePlaceholder: String
+    var onSave: () -> Void
+    var selectedFolder: FolderEntity?
+    var onAddFlashcard: () -> Void
+
     @State private var title = ""
     @FocusState private var isFocused: Bool
-    @State private var flashcards: [Flashcard] = []
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+
+    private var canSave: Bool {
+        return !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !flashcards.isEmpty
+    }
+
+    private func savePack() {
+        guard let folder = selectedFolder else {
+            alertMessage = "Please select a folder to save to"
+            showAlert = true
+            return
+        }
+
+        if canSave {
+            dataService.saveGeneratedPack(
+                title: title,
+                flashcards: flashcards,
+                isAIGenerated: isAIGenerated,
+                inFolder: folder
+            )
+
+            onSave()
+
+            dismiss()
+        }
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -20,7 +56,7 @@ struct GenerationCardView: View {
                     Text("Title*")
                     TextArea(
                         inputText: $title, isMultiline: false,
-                        placeholder: "Enter the title of the pack..."
+                        placeholder: titlePlaceholder
                     )
                     .focused($isFocused)
                 }
@@ -28,14 +64,14 @@ struct GenerationCardView: View {
                     ForEach($flashcards) { $flashcard in
                         AddNewCard(
                             question: $flashcard.question,
-                            answer: $flashcard.answer)
+                            answer: $flashcard.answer,
+                            isAIGenerated: isAIGenerated
+                        )
                     }
                 }
-
                 AddButton(isRounded: true)
                     .onTapGesture {
-                        let newCard = Flashcard(question: "", answer: "")
-                        flashcards.append(newCard)
+                        onAddFlashcard()
                     }
             }
             .font(.custom("Feather", size: 12))
@@ -49,9 +85,7 @@ struct GenerationCardView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
+                    Button(action: { dismiss() }) {
                         HStack {
                             Text(Image(systemName: "arrow.left"))
                                 .fontWeight(.bold)
@@ -60,38 +94,66 @@ struct GenerationCardView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Text("Manual Card Generation")
+                    Text(titlePlaceholder)
                         .foregroundStyle(Color.eel)
                         .font(.custom("Feather", size: 16))
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    if isAIGenerated {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image("regenerate2")
+                        }
+                    }
+
                     Button(action: {
-                        saveFlashcards()
+                        if canSave {
+                            savePack()
+                        }
                     }) {
                         HStack {
                             Text(Image(systemName: "checkmark"))
                                 .fontWeight(.bold)
-                                .foregroundStyle(Color.aqua)
+                                .foregroundStyle(canSave ? Color.aqua : Color.gray)
                         }
                     }
+                    .disabled(!canSave)
                 }
             }
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .regainSwipeBack()
+            .alert("Save Error", isPresented: $showAlert) {
+                Button("OK") {
+                    showAlert = false
+                }
+            } message: {
+                Text(alertMessage)
+            }
         }
         .background(Color.background)
     }
+}
 
-    private func saveFlashcards() {
-        for flashcard in flashcards {
-            print(
-                "Question: \(flashcard.question), Answer: \(flashcard.answer)"
-            )
-        }
+struct DataServiceKey: EnvironmentKey {
+    static let defaultValue = DataService()
+}
+
+extension EnvironmentValues {
+    var dataService: DataService {
+        get { self[DataServiceKey.self] }
+        set { self[DataServiceKey.self] = newValue }
     }
 }
 
 #Preview {
-    GenerationCardView()
+    GenerationCardView(
+        flashcards: .constant([Flashcard(question: "Example", answer: "Answer")]),
+        isAIGenerated: false,
+        titlePlaceholder: "New Pack",
+        onSave: {},
+        selectedFolder: nil,
+        onAddFlashcard: {}
+    )
 }
