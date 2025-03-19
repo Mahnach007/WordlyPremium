@@ -31,7 +31,7 @@ struct CardListView: View {
             ScrollView(.vertical) {
                 VStack(spacing: 10) {
                     if packs != nil {
-                        ForEach(packs ?? [PackEntity(name: "Pack")]) { pack in
+                        ForEach(packs ?? []) { pack in
                             NavigationLink(
                                 destination: PackView(
                                     pack: pack)

@@ -12,9 +12,9 @@ struct FlashcardAIGenView: View {
     @Environment(\.dismiss) var dismiss
     
     /// Parameters
-    @State private var selectedCardOption: CardType = .mixed
-    @State private var selectedFrontLanguageOption: LanguageType = LanguageType.english
-    @State private var selectedBackLanguageOption: LanguageType = LanguageType.italian
+    @State private var selectedCardOption: CardType?
+    @State private var selectedFrontLanguageOption: LanguageType?
+    @State private var selectedBackLanguageOption: LanguageType?
     @State private var topic = ""
     @State private var cardAmount: String = ""
     @State private var wordType: WordType? = nil
@@ -62,14 +62,14 @@ struct FlashcardAIGenView: View {
                     /// Front/Back
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("Front side")
+                            Text("Front side*")
                             SelectorWithModal<LanguageType>(
                                 selectedOption: $selectedFrontLanguageOption,
                                 selectionType: .languageType
                             )
                         }
                         VStack(alignment: .leading) {
-                            Text("Back side")
+                            Text("Back side*")
                             SelectorWithModal<LanguageType>(
                                 selectedOption: $selectedBackLanguageOption,
                                 selectionType: .languageType
@@ -147,16 +147,18 @@ struct FlashcardAIGenView: View {
 //                    }
                 }
                 .navigationDestination(isPresented: $navigateToGeneratedCards) {
-                    FlashcardAIManGenView(
-                        flashcards: $flashcards,
-                        isAIGenerated: true,
-                        titlePlaceholder: packTitle,
-                        langFrom: selectedFrontLanguageOption,
-                        langTo: selectedBackLanguageOption,
-                        onAddFlashcard: {
-                            flashcards.append(FlashcardEntity(question: "", answer: "", isStudied: false))
-                        }
-                    )
+                    if let selectedFrontLanguageOption, let selectedBackLanguageOption {
+                        FlashcardAIManGenView(
+                            flashcards: $flashcards,
+                            isAIGenerated: true,
+                            titlePlaceholder: packTitle,
+                            langFrom: selectedFrontLanguageOption,
+                            langTo: selectedBackLanguageOption,
+                            onAddFlashcard: {
+                                flashcards.append(FlashcardEntity(question: "", answer: "", isStudied: false))
+                            }
+                        )
+                    }
                 }
                 .alert(
                     "Error",
@@ -181,8 +183,13 @@ struct FlashcardAIGenView: View {
         }
 
         /// Ensure language selections are made
-        if selectedFrontLanguageOption == nil || selectedBackLanguageOption == nil {
+        guard let selectedFrontLanguageOption, let selectedBackLanguageOption else {
             errorMessage = "Please select both front and back languages"
+            return
+        }
+        
+        guard let selectedCardOption else {
+            errorMessage = "Please select a card type"
             return
         }
 

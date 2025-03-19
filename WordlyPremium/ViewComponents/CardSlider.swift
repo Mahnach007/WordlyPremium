@@ -41,7 +41,7 @@ struct CardSlider: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         if packs != nil {
-                            ForEach(packs ?? [PackEntity(name: "Pack")]) {
+                            ForEach(packs ?? []) {
                                 pack in
                                 NavigationLink(
                                     destination: PackView(

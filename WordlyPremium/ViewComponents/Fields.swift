@@ -73,7 +73,7 @@ struct TextArea: View {
 }
 
 struct SelectorWithModal<T: Equatable>: View {
-    @Binding var selectedOption: T
+    @Binding var selectedOption: T?
     var selectionType: SelectionType
     @State private var isModalPresented = false
     @State private var placeholderText: String = "Select type"
@@ -111,64 +111,66 @@ struct SelectorWithModal<T: Equatable>: View {
             isModalPresented = true
         }
         .sheet(isPresented: $isModalPresented) {
-            if T.self == CardType.self {
-                SelectWordTypeInModalView(
-                    isPresented: $isModalPresented,
-                    selectedOption: Binding<CardType?>(
-                        get: { selectedOption as? CardType },
-                        set: { selectedOption = $0 as? T }
-                    )
-                )
-                .presentationDetents([.fraction(0.65)])
-                .presentationDragIndicator(.visible)
-            } else if T.self == LanguageType.self {
-                SelectLanguageInModalView(
-                    isPresented: $isModalPresented,
-                    selectedOption: Binding<LanguageType?>(
-                        get: { selectedOption as? LanguageType },
-                        set: { selectedOption = $0 as? T }
-                    )
-                )
-                .presentationDetents([.fraction(0.5)])
-                .presentationDragIndicator(.visible)
-            }
+            destinationView
         }
         .background(Color.background)
         .onChange(of: selectedOption) {
             updatePlaceholder()
         }
     }
+    
+    @ViewBuilder var destinationView: some View {
+        if T.self == CardType.self {
+            SelectWordTypeInModalView(
+                isPresented: $isModalPresented,
+                selectedOption: Binding<CardType?>(
+                    get: { self.selectedOption as? CardType },
+                    set: { self.selectedOption = $0 as? T }
+                )
+            )
+            .presentationDetents([.fraction(0.65)])
+            .presentationDragIndicator(.visible)
+        } else if T.self == LanguageType.self {
+            SelectLanguageInModalView(
+                isPresented: $isModalPresented,
+                selectedOption: Binding<LanguageType?>(
+                    get: { self.selectedOption as? LanguageType },
+                    set: { self.selectedOption = $0 as? T }
+                )
+            )
+            .presentationDetents([.fraction(0.5)])
+            .presentationDragIndicator(.visible)
+        }
+    }
 
     private func updatePlaceholder() {
-        if let newValue = selectedOption {
-            placeholderColor = Color.eel
-            switch selectionType {
-            case .cardType:
-                if let wordType = newValue as? CardType {
-                    switch wordType {
-                    case .singleWord:
-                        placeholderText = "Single Word"
-                    case .phrase:
-                        placeholderText = "Phrase"
-                    case .sentence:
-                        placeholderText = "Full Sentence"
-                    case .mixed:
-                        placeholderText = "Mixed"
-                    }
+        placeholderColor = Color.eel
+        switch selectionType {
+        case .cardType:
+            if let wordType = selectedOption as? CardType {
+                switch wordType {
+                case .singleWord:
+                    placeholderText = "Single Word"
+                case .phrase:
+                    placeholderText = "Phrase"
+                case .sentence:
+                    placeholderText = "Full Sentence"
+                case .mixed:
+                    placeholderText = "Mixed"
                 }
-            case .languageType:
-                if let language = newValue as? LanguageType {
-                    switch language {
-                    case .english:
-                        placeholderText = "English"
-                        placeholderImage = "gb"
-                    case .ukrainian:
-                        placeholderText = "Ukranian"
-                        placeholderImage = "ua"
-                    case .italian:
-                        placeholderText = "Italian"
-                        placeholderImage = "it"
-                    }
+            }
+        case .languageType:
+            if let language = selectedOption as? LanguageType {
+                switch language {
+                case .english:
+                    placeholderText = "English"
+                    placeholderImage = "gb"
+                case .ukrainian:
+                    placeholderText = "Ukranian"
+                    placeholderImage = "ua"
+                case .italian:
+                    placeholderText = "Italian"
+                    placeholderImage = "it"
                 }
             }
         }

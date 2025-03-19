@@ -17,11 +17,11 @@ struct FlashcardManGenView: View {
     var onAddFlashcard: () -> Void
 
     @State private var title = ""
-    @FocusState private var isFocused: Bool
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var showSaveConfirmation = false
-
+    @State var selectedFrontLanguageOption: LanguageType?
+    @State var selectedBackLanguageOption: LanguageType?
     private var canSave: Bool {
         return !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && !flashcards.isEmpty
@@ -45,14 +45,22 @@ struct FlashcardManGenView: View {
         }
 
         /// Create a Pack (but don't save to a folder yet)
+        
+        guard let selectedBackLanguageOption, let selectedFrontLanguageOption else {
+            alertMessage = "Please select language"
+            showAlert = true
+            return
+        }
         let pack = PackEntity(
             name: title,
             isAIGenerated: isAIGenerated,
+            langFrom: selectedFrontLanguageOption,
+            langTo: selectedBackLanguageOption,
             flashcards: flashcards
         )
 
         dataService.createPack(
-            name: title, isAIGenerated: isAIGenerated, flashcards: flashcards)
+            name: title, isAIGenerated: isAIGenerated, langFrom: selectedFrontLanguageOption, langTo: selectedBackLanguageOption, flashcards: flashcards)
 
         /// Show success message
         showSaveConfirmation = true
@@ -85,7 +93,22 @@ struct FlashcardManGenView: View {
                         inputText: $title, isMultiline: false,
                         placeholder: titlePlaceholder
                     )
-                    .focused($isFocused)
+                }
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Front side*")
+                        SelectorWithModal<LanguageType>(
+                            selectedOption: $selectedFrontLanguageOption,
+                            selectionType: .languageType
+                        )
+                    }
+                    VStack(alignment: .leading) {
+                        Text("Back side*")
+                        SelectorWithModal<LanguageType>(
+                            selectedOption: $selectedBackLanguageOption,
+                            selectionType: .languageType
+                        )
+                    }
                 }
                 ScrollView(.vertical) {
                     ForEach($flashcards) { $flashcard in
@@ -96,6 +119,7 @@ struct FlashcardManGenView: View {
                         )
                     }
                 }
+                Spacer()
                 AddButton(isRounded: true)
                     .onTapGesture {
                         addNewFlashcard()
@@ -105,12 +129,6 @@ struct FlashcardManGenView: View {
             .frame(maxHeight: .infinity, alignment: .top)
             .padding()
             .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        isFocused = false
-                    }
-                }
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: { dismiss() }) {
                         HStack {
