@@ -47,7 +47,8 @@ struct ContentView: View {
                             packTitle: "Your Packs",
                             packNumber: packViewModel.packs.count,
                             packs: packViewModel.packs,
-                            hasData: true,
+                            /// Note the negation here
+                            hasData: !packViewModel.packs.isEmpty,
                             isFolder: false
                         )
                         CardSlider(
