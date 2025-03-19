@@ -81,7 +81,8 @@ struct GenerationCardView: View {
                 VStack(alignment: .leading) {
                     Text("Title*")
                     TextArea(
-                        inputText: $title, isMultiline: false,
+                        inputText: $title,
+                        isMultiline: false,
                         placeholder: titlePlaceholder
                     )
                     .focused($isFocused)
@@ -177,6 +178,11 @@ struct GenerationCardView: View {
             }
         }
         .background(Color.background)
+        .onAppear {
+            if isAIGenerated {
+                title = titlePlaceholder
+            }
+        }
     }
 }
 

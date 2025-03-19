@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EE052EA32D79B7C500A97623 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EE052EA22D79B7C500A97623 /* Alamofire */; };
+		EEB8E39A2D8B00CA0094DEF0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = EEB8E3992D8B00CA0094DEF0 /* Lottie */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE052EA32D79B7C500A97623 /* Alamofire in Frameworks */,
+				EEB8E39A2D8B00CA0094DEF0 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +100,7 @@
 			name = WordlyPremium;
 			packageProductDependencies = (
 				EE052EA22D79B7C500A97623 /* Alamofire */,
+				EEB8E3992D8B00CA0094DEF0 /* Lottie */,
 			);
 			productName = WordlyPremium;
 			productReference = F5735EF52D75B597004C38B4 /* WordlyPremium.app */;
@@ -129,6 +132,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				EE052EA12D79B7C500A97623 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				EEB8E3982D8B00CA0094DEF0 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F5735EF62D75B597004C38B4 /* Products */;
@@ -376,6 +380,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		EEB8E3982D8B00CA0094DEF0 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -383,6 +395,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EE052EA12D79B7C500A97623 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		EEB8E3992D8B00CA0094DEF0 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EEB8E3982D8B00CA0094DEF0 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -21,7 +21,7 @@ class FlashcardService {
 
     func generateCards(
         request: GenerateCardsRequest,
-        completion: @escaping (Result<[FlashcardEntity], Error>) -> Void
+        completion: @escaping (Result<([FlashcardEntity], String), Error>) -> Void
     ) {
         // Validate request parameters
         let safeFromLanguage =
@@ -165,7 +165,7 @@ class FlashcardService {
                             )
                             completion(.failure(error))
                         } else {
-                            completion(.success(flashcardEntities))
+                            completion(.success((flashcardEntities, apiResponse.packName)))
                         }
                     } catch {
                         print("❌ JSON Decoding Error: \(error)")

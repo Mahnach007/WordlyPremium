@@ -19,6 +19,7 @@ struct AIGenerationCardView: View {
     @State private var wordType: WordType? = nil
     @State private var selectedWordTypes: Set<String> = []
     @State private var flashcards: [FlashcardEntity] = []
+    @State private var packTitle: String = ""
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -98,10 +99,10 @@ struct AIGenerationCardView: View {
                     Spacer()
 
                     // At the bottom, add a progress indicator when loading
-                    if isLoading {
-                        ProgressView("Generating cards...")
-                            .padding()
-                    }
+//                    if isLoading {
+//                        ProgressView("Generating cards...")
+//                            .padding()
+//                    }
 
                     // Generate Button
                     ConfirmButton(
@@ -113,6 +114,7 @@ struct AIGenerationCardView: View {
                 .font(.custom("Feather", size: 12))
                 .frame(maxHeight: .infinity, alignment: .top)
                 .padding()
+                
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         Spacer()
@@ -137,6 +139,7 @@ struct AIGenerationCardView: View {
                             .font(.custom("Feather", size: 15))
                     }
                 }
+                .addLoader($isLoading)
                 .navigationBarBackButtonHidden(true)
                 .navigationBarTitleDisplayMode(.inline)
                 .regainSwipeBack()
@@ -151,7 +154,7 @@ struct AIGenerationCardView: View {
                     GenerationCardView(
                         flashcards: $flashcards,
                         isAIGenerated: true,
-                        titlePlaceholder: "AI-generated pack title...",
+                        titlePlaceholder: packTitle,
                         onAddFlashcard: {
                             flashcards.append(FlashcardEntity(question: "", answer: ""))
                         }
@@ -215,7 +218,8 @@ struct AIGenerationCardView: View {
             DispatchQueue.main.async {
                 isLoading = false
                 switch result {
-                case .success(let cards):
+                case .success(let (cards, packName)):
+                    self.packTitle = packName
                     // Convert the Flashcard objects to FlashcardEntity objects if needed
                     self.flashcards = cards.map { card in
                         return FlashcardEntity(

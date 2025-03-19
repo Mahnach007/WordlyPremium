@@ -6,13 +6,44 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct OnboardingView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Color.owl.ignoresSafeArea()
+            LottieView(animation: .named("panda"))
+                .looping()
+            VStack {
+                Spacer()
+                Spacer()
+                Text("Generating...")
+                    .font(.custom("feather", size: 25))
+                    .foregroundStyle(.white)
+                Spacer()
+            }
+        }
     }
 }
 
 #Preview {
     OnboardingView()
+}
+
+struct AnimationLoader: ViewModifier {
+    @Binding var isAnimating: Bool
+    
+    func body(content: Content) -> some View {
+        if isAnimating {
+            OnboardingView()
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+    public func addLoader(_ isAnimating: Binding<Bool>) -> some View {
+        modifier(AnimationLoader(isAnimating: isAnimating))
+    }
 }
