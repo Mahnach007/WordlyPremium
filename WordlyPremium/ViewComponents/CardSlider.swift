@@ -61,7 +61,7 @@ struct CardSlider: View {
                             ) { folder in
                                 NavigationLink(
                                     destination: CardListView(
-                                        title: folder.name, isFolderList: true)
+                                        title: folder.name, isFolderList: false)
                                 ) {
                                     CardButton(
                                         cardTitle: folder.name,
