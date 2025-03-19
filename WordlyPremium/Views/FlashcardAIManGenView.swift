@@ -1,16 +1,16 @@
 //
-//  FlashcardManGenView.swift
+//  FlashcardAIManGenView.swift
 //  WordlyPremium
 //
-//  Created by Diego Arroyo on 19/03/25.
+//  Created by Diego Arroyo on 11/03/25.
 //
 
 import SwiftData
 import SwiftUI
 
-struct FlashcardManGenView: View {
+struct FlashcardAIManGenView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var flashcards: [FlashcardEntity] = []
+    @Binding var flashcards: [FlashcardEntity]
 
     var isAIGenerated: Bool
     var titlePlaceholder: String
@@ -71,7 +71,10 @@ struct FlashcardManGenView: View {
     /// Function to add a new flashcard to the collection
     private func addNewFlashcard() {
         withAnimation {
+            print(flashcards)
             flashcards.append(FlashcardEntity(question: "", answer: "", isStudied: false))
+            print(flashcards)
+            print("New flashcard added. Total: \(flashcards.count)")
         }
         onAddFlashcard()
     }
@@ -183,7 +186,11 @@ struct FlashcardManGenView: View {
 }
 
 #Preview {
-    FlashcardManGenView(
+    @State var flashcards: [FlashcardEntity] = [
+        FlashcardEntity(question: "Example", answer: "Answer")
+    ]
+    FlashcardAIManGenView(
+        flashcards: $flashcards,
         isAIGenerated: false,
         titlePlaceholder: "New Pack",
         onAddFlashcard: {}

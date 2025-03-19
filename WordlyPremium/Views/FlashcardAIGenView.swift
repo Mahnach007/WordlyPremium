@@ -144,7 +144,7 @@ struct FlashcardAIGenView: View {
                     }
                 }
                 .navigationDestination(isPresented: $navigateToGeneratedCards) {
-                    FlashcardManGenView(
+                    FlashcardAIManGenView(
                         flashcards: $flashcards,
                         isAIGenerated: true,
                         titlePlaceholder: "AI-generated pack title...",

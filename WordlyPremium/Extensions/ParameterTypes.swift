@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 enum DestinationType: Hashable {
     case firstOption
     case secondOption(isAIGenerated: Bool)
@@ -19,9 +20,6 @@ enum DestinationType: Hashable {
             FlashcardAIGenView()
         case .secondOption:
             FlashcardManGenView(
-                flashcards: .constant([
-                    FlashcardEntity(question: "Example", answer: "Answer")
-                ]),
                 isAIGenerated: false,
                 titlePlaceholder: "New Pack",
                 onAddFlashcard: {}
