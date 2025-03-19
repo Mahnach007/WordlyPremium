@@ -1,5 +1,5 @@
 //
-//  GenerationCardView.swift
+//  FlashcardAIManGenView.swift
 //  WordlyPremium
 //
 //  Created by Diego Arroyo on 11/03/25.
@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct GenerationCardView: View {
+struct FlashcardAIManGenView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var flashcards: [FlashcardEntity]
 
@@ -23,14 +23,16 @@ struct GenerationCardView: View {
     @State private var showSaveConfirmation = false
 
     private var canSave: Bool {
-        return !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !flashcards.isEmpty
+        return !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !flashcards.isEmpty
     }
-    
+
     var dataService = DataService()
 
     private func savePack() {
-        // Validate title and cards
-        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+        /// Validate title and cards
+        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
             alertMessage = "Please enter a title for the pack"
             showAlert = true
             return
@@ -42,36 +44,38 @@ struct GenerationCardView: View {
             return
         }
 
-        // Create a Pack (but don't save to a folder yet)
+        /// Create a Pack (but don't save to a folder yet)
         let pack = PackEntity(
             name: title,
             isAIGenerated: isAIGenerated,
             flashcards: flashcards
         )
-        
-        dataService.createPack(name: title, isAIGenerated: isAIGenerated, flashcards: flashcards)
-        
-        // Show success message
+
+        dataService.createPack(
+            name: title, isAIGenerated: isAIGenerated, flashcards: flashcards)
+
+        /// Show success message
         showSaveConfirmation = true
 
-        // Print confirmation for debugging
+        /// Print confirmation for debugging
         print(
-            "✅ \(isAIGenerated ? "AI-generated" : "Manual") pack created: \(title) with \(flashcards.count) cards"
+            "\(isAIGenerated ? "AI-generated" : "Manual") pack created: \(title) with \(flashcards.count) cards"
         )
 
-        // Dismiss after a short delay
+        /// Dismiss after a short delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             dismiss()
         }
     }
 
-    // Function to add a new flashcard to the collection
+    /// Function to add a new flashcard to the collection
     private func addNewFlashcard() {
         withAnimation {
-            flashcards.append(FlashcardEntity(question: "", answer: ""))
+            print(flashcards)
+            flashcards.append(FlashcardEntity(question: "", answer: "", isStudied: false))
+            print(flashcards)
             print("New flashcard added. Total: \(flashcards.count)")
         }
-        // Also call the provided onAddFlashcard function
         onAddFlashcard()
     }
 
@@ -142,7 +146,8 @@ struct GenerationCardView: View {
                         HStack {
                             Text(Image(systemName: "checkmark"))
                                 .fontWeight(.bold)
-                                .foregroundStyle(canSave ? Color.aqua : Color.gray)
+                                .foregroundStyle(
+                                    canSave ? Color.aqua : Color.gray)
                         }
                     }
                     .disabled(!canSave)
@@ -186,11 +191,14 @@ struct GenerationCardView: View {
     }
 }
 
-//#Preview {
-//    GenerationCardView(
-//        flashcards: .constant([FlashcardEntity(question: "Example", answer: "Answer")]),
-//        isAIGenerated: false,
-//        titlePlaceholder: "New Pack",
-//        onAddFlashcard: {}
-//    )
-//}
+#Preview {
+    @State var flashcards: [FlashcardEntity] = [
+        FlashcardEntity(question: "Example", answer: "Answer")
+    ]
+    FlashcardAIManGenView(
+        flashcards: $flashcards,
+        isAIGenerated: false,
+        titlePlaceholder: "New Pack",
+        onAddFlashcard: {}
+    )
+}

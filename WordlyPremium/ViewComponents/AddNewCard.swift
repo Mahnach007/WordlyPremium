@@ -12,8 +12,8 @@ struct AddNewCard: View {
                 .fill(Color.white)
                 .stroke(Color.rhino, lineWidth: 1)
             VStack(alignment: .trailing) {
-                UnderlineTextField(text: $question, wordType: "Question")
-                UnderlineTextField(text: $answer, wordType: "Answer")
+                UnderlineTextField(text: $question, wordType: "Front")
+                UnderlineTextField(text: $answer, wordType: "Back")
             }
             .padding(10)
             if isAIGenerated {
@@ -60,7 +60,7 @@ struct CardComponent: View {
 struct UnderlineTextField: View {
     @Binding var text: String
     var wordType: String
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {

@@ -33,7 +33,7 @@ class AddPackViewModel: ObservableObject {
     ]
 
     init() {
-        // Load folders initially
+        /// Load folders initially
         refreshPacks()
     }
 
@@ -42,6 +42,7 @@ class AddPackViewModel: ObservableObject {
     }
 
     func refreshPacks() {
-        packs = fetchAllPacks()  // Update the published property
+        /// Update the published property
+        packs = fetchAllPacks()
     }
 }

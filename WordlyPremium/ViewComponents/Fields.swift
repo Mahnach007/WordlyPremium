@@ -1,5 +1,5 @@
 //
-//  TextFields.swift
+//  Fields.swift
 //  WordlyPremium
 //
 //  Created by Vlad Gotovchykov on 03/03/25.
@@ -16,7 +16,6 @@ struct SearchBar: View {
         HStack {
             Image(imageName)
                 .padding(4)
-
             TextField(guidingText, text: $searchText)
                 .font(.custom("feather", size: 16))
                 .padding(.trailing, 30)
@@ -43,10 +42,6 @@ struct SearchBar: View {
     }
 }
 
-///
-
-import SwiftUI
-
 struct TextArea: View {
     @Binding var inputText: String
     @FocusState private var isFocused: Bool
@@ -66,7 +61,6 @@ struct TextArea: View {
                         .stroke(Color.rhino, lineWidth: 1)
                 )
                 .frame(height: isMultiline ? 100 : 45)
-            
             if inputText.isEmpty {
                 Text(placeholder)
                     .font(.custom("Feather", size: 16))
@@ -77,10 +71,6 @@ struct TextArea: View {
         }
     }
 }
-
-
-
-///
 
 struct SelectorWithModal<T: Equatable>: View {
     @Binding var selectedOption: T?
@@ -188,7 +178,7 @@ struct SelectorWithModal<T: Equatable>: View {
 struct NumericField: View {
     @Binding var inputText: String
     @FocusState var isFocused: Bool
-    
+
     var guidingText: String = "Enter card amount"
     let imageName: String = "magnifier"
 
@@ -201,6 +191,16 @@ struct NumericField: View {
                 .font(.custom("feather", size: 16))
                 .padding(.horizontal, 10)
                 .frame(height: 45)
+                .onChange(of: inputText, initial: false) {
+                    newValue, initialValue in
+                    if newValue.isEmpty {
+                        inputText = ""
+                    } else if let number = Int(newValue), number >= 0,
+                        number <= 50
+                    {
+                        inputText = "\(number)"
+                    }
+                }
                 .overlay(
                     Text(guidingText)
                         .font(.custom("Feather", size: 16))
@@ -217,10 +217,4 @@ struct NumericField: View {
                 .stroke(Color.rhino, style: .init(lineWidth: 1))
         }
     }
-}
-
-#Preview {
-    AIGenerationCardView()
-    //    SelectorWithModal(selectionType: )
-//        NumericField()
 }

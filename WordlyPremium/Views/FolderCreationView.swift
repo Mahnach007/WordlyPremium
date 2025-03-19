@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreateFolderView: View {
+struct FolderCreationView: View {
     @Environment(\.dismiss) var dismiss
     @State private var text: String = ""
     @FocusState private var isFocused: Bool
@@ -83,5 +83,5 @@ struct CreateFolderView: View {
 }
 
 #Preview {
-    CreateFolderView()
+    FolderCreationView()
 }
