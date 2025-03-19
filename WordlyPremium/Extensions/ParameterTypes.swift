@@ -1,31 +1,33 @@
 //
-//  DestinationType.swift
+//  ParameterTypes.swift
 //  WordlyPremium
 //
 //  Created by Diego Arroyo on 07/03/25.
 //
+
 import SwiftUI
 
-// Parameter types
 enum DestinationType: Hashable {
     case firstOption
     case secondOption(isAIGenerated: Bool)
     case thirdOption
-    
+
     @ViewBuilder
     var view: some View {
         switch self {
         case .firstOption:
-            AIGenerationCardView()
+            FlashcardAIGenView()
         case .secondOption:
-            GenerationCardView(
-                flashcards: .constant([FlashcardEntity(question: "Example", answer: "Answer")]),
+            FlashcardManGenView(
+                flashcards: .constant([
+                    FlashcardEntity(question: "Example", answer: "Answer")
+                ]),
                 isAIGenerated: false,
                 titlePlaceholder: "New Pack",
                 onAddFlashcard: {}
             )
         case .thirdOption:
-            CreateFolderView()
+            FolderCreationView()
         }
     }
 }
@@ -46,7 +48,7 @@ enum LanguageType: String, Hashable {
     case english = "english"
     case ukrainian = "ukrainian"
     case italian = "italian"
-    
+
     var identifier: String {
         switch self {
         case .english:

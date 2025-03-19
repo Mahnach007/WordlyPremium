@@ -76,18 +76,22 @@ struct CardButton: View {
                     Text(cardTitle)
                         .font(.custom("Feather", size: 16))
                         .foregroundStyle(Color.eel)
-                        .offset(x: -5)
+                        .offset(x: -3, y: 4)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(width: 140)
                         .frame(maxHeight: .infinity, alignment: .top)
                         .frame(height: 90)
 
-                    Text("\(numberOfWords) words")
-                        .font(.custom("Feather Bold", size: 16))
-                        .foregroundStyle(Color.gray)
-                        .offset(x: -35, y: 35)
-                        .padding(0)
+                    Text(
+                        icon == "folder"
+                            ? "\(numberOfWords) packs"
+                            : "\(numberOfWords) cards"
+                    )
+                    .font(.custom("Feather Bold", size: 16))
+                    .foregroundStyle(Color.gray)
+                    .offset(x: -42, y: 30)
+                    .padding(0)
                 }
                 .offset(y: isPressed ? 4 : 0)
             }
@@ -96,6 +100,7 @@ struct CardButton: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 60, height: 60)
+                    .offset(x: -4)
                     .offset(y: isPressed ? 4 : 0)
                     .padding(.bottom, 12)
                     .padding(.trailing, 8),
@@ -137,62 +142,6 @@ struct AddButton: View {
     }
 }
 
-//struct CardButton: View {
-//    @State private var isPressed = false
-//    var cardTitle: String
-//    var numberOfWords: Int
-//    var icon: String
-//
-//    var body: some View {
-//        PressableButton(isPressed: $isPressed) {
-//            ZStack {
-//                RoundedRectangle(cornerRadius: 10)
-//                    .foregroundStyle(Color.rhino)
-//                    .frame(width: 178, height: 115)
-//                    .offset(y: 5)
-//
-//                RoundedRectangle(cornerRadius: 10)
-//                    .foregroundStyle(Color.background)
-//                    .frame(width: 175, height: 115)
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .stroke(Color.rhino, lineWidth: 3)
-//                    )
-//                    .offset(y: isPressed ? 4 : 0)
-//
-//                ZStack {
-//                    Text(cardTitle)
-//                        .font(.custom("Feather", size: 16))
-//                        .foregroundStyle(Color.eel)
-//                        .offset(x: -5)
-//                        .multilineTextAlignment(.leading)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .frame(width: 140)
-//                        .frame(maxHeight: .infinity, alignment: .top)
-//                        .frame(height: 90)
-//
-//                    Text("\(numberOfWords) words")
-//                        .font(.custom("Feather Bold", size: 16))
-//                        .foregroundStyle(Color.rhino)
-//                        .offset(x: -35, y: 35)
-//                        .padding(0)
-//                }
-//                .offset(y: isPressed ? 4 : 0)
-//            }
-//            .overlay(
-//                Image(icon)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 60, height: 60)
-//                    .offset(y: isPressed ? 4 : 0)
-//                    .padding(.bottom, 12)
-//                    .padding(.trailing, 8),
-//                alignment: .bottomTrailing
-//            )
-//        }
-//    }
-//}
-
 struct CardButtonExtended: View {
     @State private var isPressed = false
     var cardTitle: String
@@ -205,7 +154,7 @@ struct CardButtonExtended: View {
     var body: some View {
         let buttonColor = color ?? Color.rhino
         let buttonDescription = description ?? "description"
-        
+
         let backgroundGradient: LinearGradient =
             isGradient
             ? AppColors.gradient
@@ -245,7 +194,10 @@ struct CardButtonExtended: View {
                         Image(icon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: (description != nil) ? 65 : 45, height: 65)
+                            .frame(
+                                width: (description != nil) ? 65 : 45,
+                                height: 65
+                            )
                             .clipped()
                     }
                 }
@@ -444,13 +396,14 @@ struct TextLink: View {
     //        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
     //    ConfirmButton(cardTitle: "e", icon: "gb")
     //        SingleButton(word: "Adjective")
-    CardButtonExtended(
-        cardTitle: "AI Flashcards", icon: "flashcards",
-        isGradient: false, hasIcon: true)
-//    Button("Button") {
-//    
-//    }.buttonStyle(CardButton(
-//        cardTitle: "card.title",
-//        numberOfWords: 20,
-//        icon: "cards"))
+    //    CardButtonExtended(
+    //        cardTitle: "AI Flashcards", icon: "flashcards",
+    //        isGradient: false, hasIcon: true)
+    //    Button("Button") {
+    //
+    //    }.buttonStyle(CardButton(
+    //        cardTitle: "card.title",
+    //        numberOfWords: 20,
+    //        icon: "cards"))
+    CardButton(cardTitle: "Sports", numberOfWords: 8, icon: "cards")
 }

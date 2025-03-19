@@ -12,7 +12,7 @@ struct PackView: View {
     @State var pack: PackEntity?
     @State var progress: CGFloat = 0.0
     @State var progressPercentage: Int = 0
-    
+
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
@@ -23,13 +23,18 @@ struct PackView: View {
                                 .font(.custom("Feather", size: 24))
                         }
                         ZStack {
-                            CircularProgressView(progress: pack.studiedPercentage)
-                                .frame(width: 155, height: 155)
-                                .padding()
-//                            Text("\(pack.studiedPercentage*100)%")
-                            Text(String(format: "%.0f", pack.studiedPercentage*100) + "%")
-                                .font(.custom("Feather", size: 36))
-                                .padding()
+                            ProgressCircular(
+                                progress: pack.studiedPercentage
+                            )
+                            .frame(width: 155, height: 155)
+                            .padding()
+                            Text(
+                                String(
+                                    format: "%.0f", pack.studiedPercentage * 100
+                                ) + "%"
+                            )
+                            .font(.custom("Feather", size: 36))
+                            .padding()
                         }
                         HStack(spacing: 50) {
                             VStack {
@@ -52,8 +57,10 @@ struct PackView: View {
                                 .stroke(Color.azure, lineWidth: 2)
                         )
                         VStack(spacing: -17) {
-                            // VLAD: for it to work, you should pass the pack's flashcards as the argument in the FlashCardLearnView as I put in there. Jump to definition to keep track of the argument
-                            NavigationLink(destination: FlashCardLearnView( flashCards: pack.flashcards)) {
+                            NavigationLink(
+                                destination: FlashcardPlayView(
+                                    flashCards: pack.flashcards)
+                            ) {
                                 CardButtonExtended(
                                     cardTitle: "Flashcards", icon: "flashcards",
                                     isGradient: false, hasIcon: true,
@@ -150,11 +157,6 @@ struct PackView: View {
                 }
             }
             .font(.custom("Feather", size: 12))
-            //        .onAppear {
-            //            self.pack = MockData.getMockPacks().first
-            //            progress = pack?.studiedPercentage ?? 0
-            //            progressPercentage = Int(progress * 100)
-            //        }
             .padding(.top)
             .frame(maxHeight: .infinity, alignment: .top)
             .toolbar {
@@ -173,20 +175,20 @@ struct PackView: View {
                         }
                     }
                 }
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button(action: {
-
-                    }) {
-                        Image("link")
-                    }
-                    Button(action: {
-
-                    }) {
-                        HStack {
-                            Text(Image(systemName: "ellipsis"))
-                        }
-                    }
-                }
+                //                ToolbarItemGroup(placement: .topBarTrailing) {
+                //                    Button(action: {
+                //
+                //                    }) {
+                //                        Image("link")
+                //                    }
+                //                    Button(action: {
+                //
+                //                    }) {
+                //                        HStack {
+                //                            Text(Image(systemName: "ellipsis"))
+                //                        }
+                //                    }
+                //                }
             }
             .fontWeight(.bold)
             .foregroundStyle(Color.eel)
@@ -197,9 +199,9 @@ struct PackView: View {
     }
 }
 
-#Preview {
-    @StateObject var packViewModel = AddPackViewModel()
-    var packs = packViewModel.packs
-    var pack1 = packs[0]
-    PackView(pack: pack1)
-}
+//#Preview {
+//    @StateObject var packViewModel = AddPackViewModel()
+//    var packs = packViewModel.packs
+//    var pack1 = packs[0]
+//    PackView(pack: pack1)
+//}

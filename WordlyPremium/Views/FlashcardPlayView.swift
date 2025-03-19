@@ -1,13 +1,12 @@
 import SwiftUI
 
-struct FlashCardLearnView: View {
+struct FlashcardPlayView: View {
     @Environment(\.dismiss) var dismiss
     @State var flashCards: [FlashcardEntity]
     @State private var offset = CGSize.zero
     @State private var cardBorderColor: Color = .clear
     @StateObject private var viewModel: FlashCardViewModel
 
-    // Initialize with flashCards and create the viewModel
     init(flashCards: [FlashcardEntity]) {
         self._flashCards = State(initialValue: flashCards)
         self._viewModel = StateObject(
@@ -18,7 +17,6 @@ struct FlashCardLearnView: View {
             ProgressBar(progress: viewModel.progress)
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
-
             HStack {
                 LearnCardCounterView(
                     count: viewModel.cardsToLearn.count,
@@ -30,7 +28,6 @@ struct FlashCardLearnView: View {
             .padding(.horizontal, -27)
             Spacer()
             ZStack {
-                // Only show cards if we're not at the end of a round
                 if !viewModel.isRoundComplete && !viewModel.allCardsLearned {
                     ForEach(
                         Array(viewModel.currentCards.enumerated()),
@@ -41,7 +38,7 @@ struct FlashCardLearnView: View {
                             answer: card.answer,
                             borderColor: index == 0
                                 ? $cardBorderColor : .constant(.clear),
-                            onSpeak: viewModel.speak  // Pass the speak function from viewModel
+                            onSpeak: viewModel.speak
                         )
                         .padding()
                         .offset(
@@ -75,7 +72,7 @@ struct FlashCardLearnView: View {
                                 : nil
                         )
                     }
-                }  // Show round completion dialog
+                }
                 if viewModel.isRoundComplete {
                     RoundCompletionView(
                         totalCards: viewModel.rememberedCards.count
@@ -89,7 +86,6 @@ struct FlashCardLearnView: View {
                         }
                     )
                 }
-                // Show message when all cards are learned
                 if viewModel.allCardsLearned {
                     VStack(spacing: 20) {
                         Text("Congratulations!")
@@ -163,7 +159,6 @@ struct FlashCardLearnView: View {
         .regainSwipeBack()
     }
 
-    // Update border color based on swipe direction
     func updateBorderColor(width: CGFloat) {
         if width < -70 {
             cardBorderColor = .crab
@@ -174,17 +169,11 @@ struct FlashCardLearnView: View {
         }
     }
 
-    // Handle swipe gesture
     func handleSwipe(width: CGFloat, card: FlashcardEntity) {
         if width < -150 {
-            // Swipe left (need to learn again)
             offset = CGSize(width: -500, height: 0)
             cardBorderColor = .crab
-
-            // Process swipe in view model
             viewModel.processSwipe(card: card, direction: .left)
-
-            // Reset offset after animation
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 withAnimation(.spring()) {
                     offset = .zero
@@ -192,14 +181,9 @@ struct FlashCardLearnView: View {
                 }
             }
         } else if width > 150 {
-            // Swipe right (learned)
             offset = CGSize(width: 500, height: 0)
             cardBorderColor = .turtle
-
-            // Process swipe in view model
             viewModel.processSwipe(card: card, direction: .right)
-
-            // Reset offset after animation
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 withAnimation(.spring()) {
                     offset = .zero
@@ -207,14 +191,12 @@ struct FlashCardLearnView: View {
                 }
             }
         } else {
-            // Not enough swipe distance, reset
             offset = .zero
             cardBorderColor = .clear
         }
     }
 }
 
-// New view for round completion dialog
 struct RoundCompletionView: View {
     let totalCards: Int
     let learnedCards: Int
@@ -226,10 +208,8 @@ struct RoundCompletionView: View {
             Text("Round Complete!")
                 .font(.title)
                 .foregroundColor(.blue)
-
             Text("You've learned \(learnedCards) out of \(totalCards) cards.")
                 .font(.headline)
-
             Text(
                 "Would you like to continue with the remaining cards or reset and start over?"
             )
@@ -273,30 +253,24 @@ struct LearnCardCounterView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            // Main background rectangle
             RoundedRectangle(cornerRadius: 4)
                 .foregroundStyle(backgroundColor)
                 .frame(width: 50, height: 30)
-
-            // Small rectangle at top with padding
             RoundedRectangle(cornerRadius: 4)
                 .frame(width: 45, height: 3.5)
                 .foregroundStyle(topLineColor)
-                .padding(.top, 2)  // Add padding from the top
+                .padding(.top, 2)
                 .padding(.horizontal)
-
-            // Text centered in the main rectangle
             Text("\(count)")
                 .font(.custom("feather", size: 18))
                 .foregroundColor(.white)
-                .frame(width: 50, height: 30)  // Match parent rectangle size for centering
+                .frame(width: 50, height: 30)
         }
     }
 }
 
 #Preview {
-
-    FlashCardLearnView(flashCards: [
+    FlashcardPlayView(flashCards: [
         FlashcardEntity(question: "hello", answer: "hallo")
     ])
 }

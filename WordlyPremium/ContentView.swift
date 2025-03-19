@@ -10,10 +10,9 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var folderViewModel = AddFolderViewModel()
     @StateObject private var packViewModel = AddPackViewModel()
-    @StateObject private var cardViewModel = PackSliderViewModel()
     @State private var isModalPresented = false
     @State private var selectedDestination: DestinationType? = nil
-    
+
     var body: some View {
         ZStack {
             NavigationStack {
@@ -27,7 +26,7 @@ struct ContentView: View {
                                 isModalPresented = true
                             }
                             .sheet(isPresented: $isModalPresented) {
-                                AddPackModalView(
+                                AddPackInModalView(
                                     isPresented: $isModalPresented,
                                     selectedDestination: $selectedDestination
                                 )
@@ -48,32 +47,33 @@ struct ContentView: View {
                             packTitle: "Your Packs",
                             packNumber: packViewModel.packs.count,
                             packs: packViewModel.packs,
-                            hasData: false,
+                            hasData: true,
                             isFolder: false
                         )
                         CardSlider(
                             packTitle: "Your Folders",
                             packNumber: folderViewModel.folders.count,
                             folders: folderViewModel.folders,
-                            // Note the negation here
-                            hasData: folderViewModel.folders.isEmpty,
+                            /// Note the negation here
+                            hasData: !folderViewModel.folders.isEmpty,
                             isFolder: true
                         )
-//                        CardSlider(
-//                            packTitle: "Community Packs",
-//                            packNumber: cardViewModel.community.count,
-//                            cards: cardViewModel.community,
-//                            hasData: true,
-//                            isFolder: false
-//                        )
+                        //                        CardSlider(
+                        //                            packTitle: "Community Packs",
+                        //                            packNumber: cardViewModel.community.count,
+                        //                            cards: cardViewModel.community,
+                        //                            hasData: true,
+                        //                            isFolder: false
+                        //                        )
                     }
                     .padding(.top, 20)
                 }
                 .background(Color.background)
-                .navigationDestination(item: $selectedDestination) { destination in
+                .navigationDestination(item: $selectedDestination) {
+                    destination in
                     destination.view
                 }
-                .onAppear() {
+                .onAppear {
                     folderViewModel.refreshFolders()
                     packViewModel.refreshPacks()
                     print(packViewModel.packs)

@@ -1,5 +1,5 @@
 //
-//  AddPackView.swift
+//  ModalViews.swift
 //  WordlyPremium
 //
 //  Created by Diego Arroyo on 04/03/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddPackModalView: View {
+struct AddPackInModalView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
     @Binding var selectedDestination: DestinationType?
@@ -19,7 +19,8 @@ struct AddPackModalView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     CardButtonExtended(
                         cardTitle: "AI Flashcards",
-                        description: "Generate flashcards instantly", icon: "cards",
+                        description: "Generate flashcards instantly",
+                        icon: "cards",
                         isGradient: true, hasIcon: false
                     )
                     .onTapGesture {
@@ -28,24 +29,28 @@ struct AddPackModalView: View {
                     }
                     CardButtonExtended(
                         cardTitle: "Manual Flashcards",
-                        description: "Create your own flashcards", icon: "handWithPen",
-                        isGradient: false, hasIcon: true)
+                        description: "Create your own flashcards",
+                        icon: "handWithPen",
+                        isGradient: false, hasIcon: true
+                    )
                     .onTapGesture {
                         /// for testing, if this false is changed to true, also change it in ContentView
-                        selectedDestination = .secondOption(isAIGenerated: false)
+                        selectedDestination = .secondOption(
+                            isAIGenerated: false)
                         isPresented = false
                     }
                     CardButtonExtended(
                         cardTitle: "Create Folder",
                         description: "Store your packs in one place",
-                        icon: "folder", isGradient: false, hasIcon: true)
+                        icon: "folder", isGradient: false, hasIcon: true
+                    )
                     .onTapGesture {
                         selectedDestination = .thirdOption
                         isPresented = false
                     }
                 }
                 .navigationBarBackButtonHidden(true)
-            .padding()
+                .padding()
             }
         }
     }
@@ -71,7 +76,8 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Phrase",
                     description: "I love you | Good morning",
-                    icon: "cards", isGradient: false, hasIcon: false)
+                    icon: "cards", isGradient: false, hasIcon: false
+                )
                 .onTapGesture {
                     selectedOption = .phrase
                     isPresented = false
@@ -79,7 +85,8 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Full Sentence",
                     description: "Where can I buy apples?", icon: "cards",
-                    isGradient: false, hasIcon: false)
+                    isGradient: false, hasIcon: false
+                )
                 .onTapGesture {
                     selectedOption = .sentence
                     isPresented = false
@@ -87,7 +94,8 @@ struct SelectWordTypeInModalView: View {
                 CardButtonExtended(
                     cardTitle: "Mixed",
                     description: "All types of cards", icon: "cards",
-                    isGradient: false, hasIcon: false)
+                    isGradient: false, hasIcon: false
+                )
                 .onTapGesture {
                     selectedOption = .mixed
                     isPresented = false
@@ -144,5 +152,5 @@ struct SelectLanguageInModalView: View {
 }
 
 #Preview {
-    AIGenerationCardView()
+    FlashcardAIGenView()
 }

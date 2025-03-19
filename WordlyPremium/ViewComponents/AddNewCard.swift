@@ -60,7 +60,7 @@ struct CardComponent: View {
 struct UnderlineTextField: View {
     @Binding var text: String
     var wordType: String
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {

@@ -16,43 +16,65 @@ struct CardSlider: View {
     var isFolder: Bool
 
     @State private var navigateToCreateFolder = false
-    @State private var navigateToCreateCards = false
-    @State private var navigateToPack = false
+    @State private var navigateToCreatePack = false
+    @State private var navigateToAllPacks = true
+    @State private var navigateToFolder = false
     @State private var selectedDestination: DestinationType? = nil
     @State private var isPressed: Bool = false
     @State private var color: Bool = false
+    @State private var folderName: String = ""
 
     var body: some View {
         VStack {
             SliderTitle(
                 sliderTitle: packTitle, sliderNumber: packNumber,
-                seeAllDestination: AnyView(CardList(title: "false", isFolderList: true))
+                seeAllDestination: AnyView(
+                    CardListView(
+                        title: packs != nil ? "Your packs" : "Your folders",
+                        isFolderList: isFolder,
+                        packs: packs != nil ? packs : nil,
+                        folders: folders != nil ? folders : nil))
             )
             .padding(.horizontal)
             .padding(.vertical, 2)
-            if !hasData {
+            if hasData {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(packs ?? [PackEntity(name: "New Folder")]) { pack in
-                            NavigationLink(destination: PackView(pack: pack, progress: 0.1, progressPercentage: 10)) {
-                                CardButton(
-                                    cardTitle: pack.name,
-                                    numberOfWords: pack.flashcards.count,
-                                    icon: "cards"
-                                )
+                        if packs != nil {
+                            ForEach(packs ?? [PackEntity(name: "Pack")]) {
+                                pack in
+                                NavigationLink(
+                                    destination: PackView(
+                                        pack: pack)
+                                ) {
+                                    CardButton(
+                                        cardTitle: pack.name,
+                                        numberOfWords: pack.flashcards.count,
+                                        icon: "cards"
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
-                            .buttonStyle(PlainButtonStyle())
+                        } else if folders != nil {
+                            ForEach(
+                                folders ?? [FolderEntity(name: "Folder")]
+                            ) { folder in
+                                NavigationLink(
+                                    destination: CardListView(
+                                        title: folder.name, isFolderList: true)
+                                ) {
+                                    CardButton(
+                                        cardTitle: folder.name,
+                                        numberOfWords: folder.packs.count,
+                                        icon: "folder"
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .onTapGesture {
+                                    folderName = folder.name
+                                }
+                            }
                         }
-//                        ForEach(folders ?? [FolderEntity(name: "New Folder")]) { folder in
-//                            NavigationLink(destination: CardList(title: folder.name, isFolderList: true)) {
-//                                CardButton(
-//                                    cardTitle: folder.name,
-//                                    numberOfWords: folder.packs.count,
-//                                    icon: "folder"
-//                                )
-//                            }
-//                            .buttonStyle(PlainButtonStyle())
-//                        }
                     }
                     .padding(.vertical, 7)
                     .padding(.horizontal)
@@ -63,7 +85,7 @@ struct CardSlider: View {
                         navigateToCreateFolder = true
                         print("folder create button")
                     } else {
-                        navigateToCreateCards = true
+                        navigateToCreatePack = true
                         print("pack create button")
                     }
                 }) {
@@ -81,14 +103,14 @@ struct CardSlider: View {
                 .foregroundStyle(Color.rhino)
                 .background(
                     NavigationLink(
-                        destination: CreateFolderView(),
+                        destination: FolderCreationView(),
                         isActive: $navigateToCreateFolder,
                         label: { EmptyView() }
                     )
                 )
-                .sheet(isPresented: $navigateToCreateCards) {
-                    AddPackModalView(
-                        isPresented: $navigateToCreateCards,
+                .sheet(isPresented: $navigateToCreatePack) {
+                    AddPackInModalView(
+                        isPresented: $navigateToCreatePack,
                         selectedDestination: $selectedDestination
                     )
                     .presentationBackground(Color.background)
@@ -116,24 +138,62 @@ struct CardSlider: View {
 
 #Preview {
     CardSlider(
-        packTitle: "Your Packs", packNumber: 34,
-        //        cards: [
-        //            CardButtonData(
-        //                title: "Car transport only nouns", numberOfWords: 20,
-        //                icon: "cards"),
-        //            CardButtonData(
-        //                title: "Medicine", numberOfWords: 133, icon: "cards"),
-        //            CardButtonData(
-        //                title: "Sports", numberOfWords: 40, icon: "cards"),
-        //            CardButtonData(
-        //                title: "Law", numberOfWords: 10, icon: "folder"),
-        //        ],
-        folders: [
-            FolderEntity(name: "Folder 1"),
-            FolderEntity(name: "Folder 2"),
-            FolderEntity(name: "Folder 3"),
+        packTitle: "Your Packs",
+        packNumber: 2,
+        packs: [
+            PackEntity(
+                name: "Spanish Pack", isAIGenerated: false,
+                flashcards: [
+                    FlashcardEntity(
+                        question: "Hello", answer: "Hola", isStudied: true),
+                    FlashcardEntity(
+                        question: "Goodbye", answer: "Adiós", isStudied: false),
+                    FlashcardEntity(
+                        question: "Please", answer: "Por favor", isStudied: true
+                    ),
+                    FlashcardEntity(
+                        question: "Thank you", answer: "Gracias",
+                        isStudied: true),
+                    FlashcardEntity(
+                        question: "Yes", answer: "Sí", isStudied: false),
+                    FlashcardEntity(
+                        question: "No", answer: "No", isStudied: false),
+                    FlashcardEntity(
+                        question: "Excuse me", answer: "Perdón", isStudied: true
+                    ),
+                    FlashcardEntity(
+                        question: "Sorry", answer: "Lo siento", isStudied: true),
+                ]),
+            PackEntity(
+                name: "French Pack", isAIGenerated: true,
+                flashcards: [
+                    FlashcardEntity(
+                        question: "Hello", answer: "Bonjour", isStudied: false),
+                    FlashcardEntity(
+                        question: "Goodbye", answer: "Au revoir",
+                        isStudied: true),
+                    FlashcardEntity(
+                        question: "Please", answer: "S'il vous plaît",
+                        isStudied: false),
+                    FlashcardEntity(
+                        question: "Thank you", answer: "Merci", isStudied: true),
+                    FlashcardEntity(
+                        question: "Yes", answer: "Oui", isStudied: false),
+                    FlashcardEntity(
+                        question: "No", answer: "Non", isStudied: true),
+                    FlashcardEntity(
+                        question: "Excuse me", answer: "Excusez-moi",
+                        isStudied: true),
+                    FlashcardEntity(
+                        question: "Sorry", answer: "Désolé", isStudied: true),
+                ]),
         ],
-        hasData: false,
+        //        folders: [
+        //            FolderEntity(name: "Folder 1"),
+        //            FolderEntity(name: "Folder 2"),
+        //            FolderEntity(name: "Folder 3"),
+        //        ],
+        hasData: true,
         isFolder: true
     )
 }

@@ -1,5 +1,5 @@
 //
-//  AIGenerationCardView.swift
+//  FlashcardAIGenView.swift
 //  WordlyPremium
 //
 //  Created by Diego Arroyo on 07/03/25.
@@ -8,9 +8,10 @@
 import SwiftData
 import SwiftUI
 
-struct AIGenerationCardView: View {
+struct FlashcardAIGenView: View {
     @Environment(\.dismiss) var dismiss
-    // Parameters
+    
+    /// Parameters
     @State private var selectedCardOption: CardType? = nil
     @State private var selectedFrontLanguageOption: LanguageType? = nil
     @State private var selectedBackLanguageOption: LanguageType? = nil
@@ -25,7 +26,7 @@ struct AIGenerationCardView: View {
     @State private var wordTypeIsVisible = true
     @FocusState private var isFocused: Bool
 
-    // Navigation state
+    /// Navigation state
     @State private var navigateToGeneratedCards = false
 
     private let flashcardService = FlashcardService()
@@ -34,7 +35,7 @@ struct AIGenerationCardView: View {
         GeometryReader { geometry in
             NavigationStack {
                 VStack(spacing: 20) {
-                    // Topic
+                    /// Topic
                     VStack(alignment: .leading) {
                         Text("Topic/Prompt*")
                         TextArea(
@@ -43,7 +44,7 @@ struct AIGenerationCardView: View {
                         )
                         .focused($isFocused)
                     }
-                    // Card Type
+                    /// Card Type
                     VStack(alignment: .leading) {
                         Text("Card type")
                         SelectorWithModal<CardType>(
@@ -51,13 +52,13 @@ struct AIGenerationCardView: View {
                             selectionType: .cardType
                         )
                     }
-                    // Amount
+                    /// Amount
                     VStack(alignment: .leading) {
-                        Text("Amount of cards")
+                        Text("Amount of cards (max. 50)")
                         NumericField(inputText: $cardAmount)
                             .focused($isFocused)
                     }
-                    // Front/Back
+                    /// Front/Back
                     HStack {
                         VStack(alignment: .leading) {
                             Text("Front side")
@@ -74,7 +75,7 @@ struct AIGenerationCardView: View {
                             )
                         }
                     }
-                    // Word Type (conditional inside the main VStack)
+                    /// Word Type (conditional inside the main VStack)
                     if !wordTypeIsVisible {
                         VStack(alignment: .leading) {
                             Text("Word type")
@@ -94,16 +95,13 @@ struct AIGenerationCardView: View {
                             }
                         }
                     }
-
                     Spacer()
-
-                    // At the bottom, add a progress indicator when loading
+                    /// At the bottom, add a progress indicator when loading
                     if isLoading {
                         ProgressView("Generating cards...")
                             .padding()
                     }
-
-                    // Generate Button
+                    /// Generate Button
                     ConfirmButton(
                         cardTitle: "Generate", icon: "generate", action: generateFlashcards
                     )
@@ -145,10 +143,8 @@ struct AIGenerationCardView: View {
                         wordTypeIsVisible = (newValue != .singleWord)
                     }
                 }
-
-                // Add a navigation link that will activate when cards are generated
                 .navigationDestination(isPresented: $navigateToGeneratedCards) {
-                    GenerationCardView(
+                    FlashcardManGenView(
                         flashcards: $flashcards,
                         isAIGenerated: true,
                         titlePlaceholder: "AI-generated pack title...",
@@ -157,8 +153,6 @@ struct AIGenerationCardView: View {
                         }
                     )
                 }
-
-                // Show error message if there is one
                 .alert(
                     "Error",
                     isPresented: .init(
@@ -175,22 +169,22 @@ struct AIGenerationCardView: View {
     }
 
     private func generateFlashcards() {
-        // Validate inputs first
+        /// Validate inputs first
         if topic.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "Please enter a topic or prompt"
             return
         }
 
-        // Ensure language selections are made
+        /// Ensure language selections are made
         if selectedFrontLanguageOption == nil || selectedBackLanguageOption == nil {
             errorMessage = "Please select both front and back languages"
             return
         }
 
-        // Set reasonable defaults if needed
+        /// Set reasonable defaults if needed
         let effectiveCardAmount = cardAmount.isEmpty ? "10" : cardAmount
 
-        // For single word type, ensure at least one word type is selected
+        /// For single word type, ensure at least one word type is selected
         if selectedCardOption == .singleWord && selectedWordTypes.isEmpty {
             selectedWordTypes.insert("Mixed")  // Default to mixed if nothing selected
         }
@@ -207,16 +201,15 @@ struct AIGenerationCardView: View {
             wordTypes: selectedWordTypes
         )
         
-//        print("✅ here is the amount: \(cardAmount)")
-
-//        print("✅ Generating cards with parameters: \(request)")
+//        print("Here is the amount: \(cardAmount)")
+//        print("Generating cards with parameters: \(request)")
 
         flashcardService.generateCards(request: request) { result in
             DispatchQueue.main.async {
                 isLoading = false
                 switch result {
                 case .success(let cards):
-                    // Convert the Flashcard objects to FlashcardEntity objects if needed
+                    /// Convert the Flashcard objects to FlashcardEntity objects if needed
                     self.flashcards = cards.map { card in
                         return FlashcardEntity(
                             question: card.question,
@@ -224,11 +217,10 @@ struct AIGenerationCardView: View {
                             isStudied: false
                         )
                     }
+                    /// Log success
+//                  print("Generated \(self.flashcards.count) flashcards successfully")
 
-                    // Log success
-//                    print("✅ Generated \(self.flashcards.count) flashcards successfully")
-
-                    // Only navigate if we actually got cards
+                    /// Only navigate if we actually got cards
                     if !self.flashcards.isEmpty {
                         navigateToGeneratedCards = true
                     } else {
@@ -237,7 +229,7 @@ struct AIGenerationCardView: View {
                     }
 
                 case .failure(let error):
-                    print("❌ Error generating flashcards: \(error.localizedDescription)")
+                    print("Error generating flashcards: \(error.localizedDescription)")
                     errorMessage = error.localizedDescription
                 }
             }
@@ -246,5 +238,5 @@ struct AIGenerationCardView: View {
 }
 
 #Preview {
-    AIGenerationCardView()
+    FlashcardAIGenView()
 }

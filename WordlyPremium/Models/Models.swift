@@ -1,5 +1,5 @@
 //
-//  model.swift
+//  Models.swift
 //  WordlyPremium
 //
 //  Created by Jahongir Abdujalilov on 06/03/25.
@@ -7,8 +7,6 @@
 
 import Foundation
 
-// Models for Components
-// Folder
 struct Folder: Codable, Identifiable {
     let id: UUID = UUID()
     let name: String
@@ -19,7 +17,6 @@ struct Folder: Codable, Identifiable {
     }
 }
 
-// Pack
 struct Pack: Codable, Identifiable {
     let id: UUID = UUID()
     var name: String
@@ -49,7 +46,6 @@ struct Pack: Codable, Identifiable {
     }
 }
 
-// Flashcard Model
 struct Flashcard: Codable, Identifiable {
     var id: UUID = UUID()
     var question: String
@@ -74,17 +70,14 @@ struct Flashcard: Codable, Identifiable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        // Decode required fields
         question = try container.decode(String.self, forKey: .question)
         answer = try container.decode(String.self, forKey: .answer)
-
-        // Decode optional field with default value if missing
-        isStudied = try container.decodeIfPresent(Bool.self, forKey: .isStudied) ?? false
+        isStudied =
+            try container.decodeIfPresent(Bool.self, forKey: .isStudied)
+            ?? false
     }
 }
 
-// Request Model
 struct GenerateCardsRequest: Codable {
     var fromLanguage: String? = nil
     var toLanguage: String? = nil
@@ -94,7 +87,6 @@ struct GenerateCardsRequest: Codable {
     var wordTypes: Set<String>
 }
 
-// Response Model
 struct APIFlashcard: Codable {
     var question: String
     var answer: String
@@ -115,22 +107,13 @@ struct APIFlashcardResponse: Codable {
     let flashCards: [APIFlashcard]
 }
 
-// Enum for Card Amount Selection
-enum CardAmount: String, CaseIterable, Codable {
-    case five = "5"
-    case ten = "10"
-    case twenty = "20"
-    case automatic = "Automatic"
-}
-
-// Add a conversion method in your service
 extension FlashcardService {
     func convertToFlashcards(_ apiFlashcards: [APIFlashcard]) -> [Flashcard] {
         return apiFlashcards.map {
             Flashcard(
                 question: $0.question,
                 answer: $0.answer,
-                isStudied: false  // Default value
+                isStudied: false
             )
         }
     }

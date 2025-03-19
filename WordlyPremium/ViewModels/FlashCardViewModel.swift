@@ -23,67 +23,63 @@ class FlashCardViewModel: ObservableObject {
 
 
     init(flashCards: [FlashcardEntity]) {
-        // Initialize with sample cards
         let initialCards = flashCards
-        self.allCards = initialCards  // Add this line to initialize allCards
+        self.allCards = initialCards
         self.cardsToLearn = []
         self.currentCards = initialCards
         updateProgress()
     }
 
     func speak(word: String, language: LanguageType) {
-        // Stop any ongoing speech
+        /// Stop any ongoing speech
         if synthesizer.isSpeaking {
             synthesizer.stopSpeaking(at: .immediate)
         }
 
-        // Create utterance with appropriate language code
+        /// Create utterance with appropriate language code
         let utterance = AVSpeechUtterance(string: word)
         utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = 0.5
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
 
-        // Speak
+        /// Speak
         synthesizer.speak(utterance)
     }
 
     func processSwipe(card: FlashcardEntity, direction: SwipeDirection) {
-        // Remove the card from current deck
+        /// Remove the card from current deck
         if let index = currentCards.firstIndex(where: { $0.id == card.id }) {
             currentCards.remove(at: index)
         }
 
         switch direction {
-        case .right:  // Learned
-            // Add to remembered cards
+        case .right:
+            /// Add to remembered cards
             rememberedCards.append(card)
-            // Remove from cards to learn
+            /// Remove from cards to learn
             card.isStudied = true
             if let index = cardsToLearn.firstIndex(where: { $0.id == card.id }) {
                 cardsToLearn.remove(at: index)
             }
-            // Update progress
+            /// Update progress
             updateProgress()
 
-        case .left:  // Need to learn again
-            // For left swipe, we just need to make sure it stays in cardsToLearn
-            // The card is already removed from currentCards above
-            // We don't need to add it back to currentCards - it will be included in the next round
+        case .left:
             card.isStudied = false
-            // Make sure it's in cardsToLearn (in case it was somehow not there)
+            /// Make sure it's in cardsToLearn
             if !cardsToLearn.contains(where: { $0.id == card.id }) {
                 cardsToLearn.append(card)
             }
         }
 
-        // Check if current round is complete
+        /// Check if current round is complete
         if currentCards.isEmpty {
             if cardsToLearn.isEmpty {
-                // All cards learned
+                /// All cards learned
                 allCardsLearned = true
             } else {
-                // Round complete, but still cards to learn
+                /// Round complete, but still cards to learn
                 isRoundComplete = true
             }
         }
@@ -94,7 +90,7 @@ class FlashCardViewModel: ObservableObject {
             isRoundComplete = false
         }
         
-        // Reset all cards
+        /// Reset all cards
         func resetAllCards() {
             rememberedCards = []
             cardsToLearn = []
@@ -104,7 +100,7 @@ class FlashCardViewModel: ObservableObject {
             updateProgress()
         }
         
-        // Calculate progress based on remembered cards
+        /// Calculate progress based on remembered cards
         func updateProgress() {
             if allCards.count > 0 {
                 progress = Double(rememberedCards.count) / Double(allCards.count)

@@ -8,9 +8,9 @@
 import SwiftUI
 
 class NavigationViewModel: ObservableObject {
-    @Published var destination: AnyView? = nil  // Almacena AnyView para poder almacenar cualquier vista
+    @Published var destination: AnyView? = nil
 
     func navigateTo<Destination: View>(_ view: Destination) {
-        destination = AnyView(view) // Convierte la vista destino a AnyView
+        destination = AnyView(view)
     }
 }

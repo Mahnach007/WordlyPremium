@@ -29,7 +29,3 @@ struct SliderTitle: View {
         }
     }
 }
-
-//#Preview {
-//    SliderTitle(sliderTitle: "Your Packs", sliderNumber: 34, seeAllDestination: AnyView(CardList(type: "card")))
-//}
