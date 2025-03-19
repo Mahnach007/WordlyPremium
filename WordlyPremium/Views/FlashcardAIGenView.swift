@@ -12,9 +12,9 @@ struct FlashcardAIGenView: View {
     @Environment(\.dismiss) var dismiss
     
     /// Parameters
-    @State private var selectedCardOption: CardType? = nil
-    @State private var selectedFrontLanguageOption: LanguageType? = nil
-    @State private var selectedBackLanguageOption: LanguageType? = nil
+    @State private var selectedCardOption: CardType = .mixed
+    @State private var selectedFrontLanguageOption: LanguageType = LanguageType.english
+    @State private var selectedBackLanguageOption: LanguageType = LanguageType.italian
     @State private var topic = ""
     @State private var cardAmount: String = ""
     @State private var wordType: WordType? = nil
@@ -142,17 +142,19 @@ struct FlashcardAIGenView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .regainSwipeBack()
                 .onChange(of: selectedCardOption) {
-                    if let newValue = selectedCardOption {
-                        wordTypeIsVisible = (newValue != .singleWord)
-                    }
+//                    if let newValue = selectedCardOption {
+                        wordTypeIsVisible = (selectedCardOption != .singleWord)
+//                    }
                 }
                 .navigationDestination(isPresented: $navigateToGeneratedCards) {
                     FlashcardAIManGenView(
                         flashcards: $flashcards,
                         isAIGenerated: true,
                         titlePlaceholder: packTitle,
+                        langFrom: selectedFrontLanguageOption,
+                        langTo: selectedBackLanguageOption,
                         onAddFlashcard: {
-                            flashcards.append(FlashcardEntity(question: "", answer: ""))
+                            flashcards.append(FlashcardEntity(question: "", answer: "", isStudied: false))
                         }
                     )
                 }
@@ -196,10 +198,10 @@ struct FlashcardAIGenView: View {
         errorMessage = nil
 
         let request = GenerateCardsRequest(
-            fromLanguage: selectedFrontLanguageOption?.rawValue,
-            toLanguage: selectedBackLanguageOption?.rawValue,
+            fromLanguage: selectedFrontLanguageOption.rawValue,
+            toLanguage: selectedBackLanguageOption.rawValue,
             topic: topic,
-            cardType: selectedCardOption?.rawValue,
+            cardType: selectedCardOption.rawValue,
             numCards: effectiveCardAmount,
             wordTypes: selectedWordTypes
         )

@@ -73,7 +73,7 @@ struct TextArea: View {
 }
 
 struct SelectorWithModal<T: Equatable>: View {
-    @Binding var selectedOption: T?
+    @Binding var selectedOption: T
     var selectionType: SelectionType
     @State private var isModalPresented = false
     @State private var placeholderText: String = "Select type"

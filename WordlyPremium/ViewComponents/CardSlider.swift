@@ -142,7 +142,7 @@ struct CardSlider: View {
         packNumber: 2,
         packs: [
             PackEntity(
-                name: "Spanish Pack", isAIGenerated: false,
+                name: "Spanish Pack", isAIGenerated: false, langFrom: LanguageType.english, langTo: LanguageType.italian,
                 flashcards: [
                     FlashcardEntity(
                         question: "Hello", answer: "Hola", isStudied: true),
@@ -165,7 +165,7 @@ struct CardSlider: View {
                         question: "Sorry", answer: "Lo siento", isStudied: true),
                 ]),
             PackEntity(
-                name: "French Pack", isAIGenerated: true,
+                name: "French Pack", isAIGenerated: true, langFrom: LanguageType.english, langTo: LanguageType.italian,
                 flashcards: [
                     FlashcardEntity(
                         question: "Hello", answer: "Bonjour", isStudied: false),
