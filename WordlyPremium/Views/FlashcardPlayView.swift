@@ -269,8 +269,8 @@ struct LearnCardCounterView: View {
     }
 }
 
-#Preview {
-    FlashcardPlayView(flashCards: [
-        FlashcardEntity(question: "hello", answer: "hallo")
-    ])
-}
+//#Preview {
+//    FlashcardPlayView(flashCards: [
+//        FlashcardEntity(question: "hello", answer: "hallo")
+//    ])
+//}

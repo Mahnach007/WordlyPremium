@@ -41,7 +41,7 @@ struct CardSlider: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         if packs != nil {
-                            ForEach(packs ?? [PackEntity(name: "Pack")]) {
+                            ForEach(packs ?? []) {
                                 pack in
                                 NavigationLink(
                                     destination: PackView(
@@ -61,6 +61,7 @@ struct CardSlider: View {
                             ) { folder in
                                 NavigationLink(
                                     destination: CardListView(
+                                        title: folder.name, isFolderList: false)
                                         title: folder.name, isFolderList: false)
                                 ) {
                                     CardButton(
@@ -140,59 +141,59 @@ struct CardSlider: View {
     CardSlider(
         packTitle: "Your Packs",
         packNumber: 2,
-//        packs: [
-//            PackEntity(
-//                name: "Spanish Pack", isAIGenerated: false,
-//                flashcards: [
-//                    FlashcardEntity(
-//                        question: "Hello", answer: "Hola", isStudied: true),
-//                    FlashcardEntity(
-//                        question: "Goodbye", answer: "Adiós", isStudied: false),
-//                    FlashcardEntity(
-//                        question: "Please", answer: "Por favor", isStudied: true
-//                    ),
-//                    FlashcardEntity(
-//                        question: "Thank you", answer: "Gracias",
-//                        isStudied: true),
-//                    FlashcardEntity(
-//                        question: "Yes", answer: "Sí", isStudied: false),
-//                    FlashcardEntity(
-//                        question: "No", answer: "No", isStudied: false),
-//                    FlashcardEntity(
-//                        question: "Excuse me", answer: "Perdón", isStudied: true
-//                    ),
-//                    FlashcardEntity(
-//                        question: "Sorry", answer: "Lo siento", isStudied: true),
-//                ]),
-//            PackEntity(
-//                name: "French Pack", isAIGenerated: true,
-//                flashcards: [
-//                    FlashcardEntity(
-//                        question: "Hello", answer: "Bonjour", isStudied: false),
-//                    FlashcardEntity(
-//                        question: "Goodbye", answer: "Au revoir",
-//                        isStudied: true),
-//                    FlashcardEntity(
-//                        question: "Please", answer: "S'il vous plaît",
-//                        isStudied: false),
-//                    FlashcardEntity(
-//                        question: "Thank you", answer: "Merci", isStudied: true),
-//                    FlashcardEntity(
-//                        question: "Yes", answer: "Oui", isStudied: false),
-//                    FlashcardEntity(
-//                        question: "No", answer: "Non", isStudied: true),
-//                    FlashcardEntity(
-//                        question: "Excuse me", answer: "Excusez-moi",
-//                        isStudied: true),
-//                    FlashcardEntity(
-//                        question: "Sorry", answer: "Désolé", isStudied: true),
-//                ]),
-//        ],
-                folders: [
-                    FolderEntity(name: "Folder 1"),
-                    FolderEntity(name: "Folder 2"),
-                    FolderEntity(name: "Folder 3"),
-                ],
+        packs: [
+            PackEntity(
+                name: "Spanish Pack", isAIGenerated: false, langFrom: LanguageType.english, langTo: LanguageType.italian,
+                flashcards: [
+                    FlashcardEntity(
+                        question: "Hello", answer: "Hola", isStudied: true),
+                    FlashcardEntity(
+                        question: "Goodbye", answer: "Adiós", isStudied: false),
+                    FlashcardEntity(
+                        question: "Please", answer: "Por favor", isStudied: true
+                    ),
+                    FlashcardEntity(
+                        question: "Thank you", answer: "Gracias",
+                        isStudied: true),
+                    FlashcardEntity(
+                        question: "Yes", answer: "Sí", isStudied: false),
+                    FlashcardEntity(
+                        question: "No", answer: "No", isStudied: false),
+                    FlashcardEntity(
+                        question: "Excuse me", answer: "Perdón", isStudied: true
+                    ),
+                    FlashcardEntity(
+                        question: "Sorry", answer: "Lo siento", isStudied: true),
+                ]),
+            PackEntity(
+                name: "French Pack", isAIGenerated: true, langFrom: LanguageType.english, langTo: LanguageType.italian,
+                flashcards: [
+                    FlashcardEntity(
+                        question: "Hello", answer: "Bonjour", isStudied: false),
+                    FlashcardEntity(
+                        question: "Goodbye", answer: "Au revoir",
+                        isStudied: true),
+                    FlashcardEntity(
+                        question: "Please", answer: "S'il vous plaît",
+                        isStudied: false),
+                    FlashcardEntity(
+                        question: "Thank you", answer: "Merci", isStudied: true),
+                    FlashcardEntity(
+                        question: "Yes", answer: "Oui", isStudied: false),
+                    FlashcardEntity(
+                        question: "No", answer: "Non", isStudied: true),
+                    FlashcardEntity(
+                        question: "Excuse me", answer: "Excusez-moi",
+                        isStudied: true),
+                    FlashcardEntity(
+                        question: "Sorry", answer: "Désolé", isStudied: true),
+                ]),
+        ],
+        //        folders: [
+        //            FolderEntity(name: "Folder 1"),
+        //            FolderEntity(name: "Folder 2"),
+        //            FolderEntity(name: "Folder 3"),
+        //        ],
         hasData: true,
         isFolder: true
     )

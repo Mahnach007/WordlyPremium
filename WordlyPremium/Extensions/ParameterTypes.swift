@@ -42,7 +42,7 @@ enum CardType: String, CaseIterable, Codable {
     case mixed = "mixed"
 }
 
-enum LanguageType: String, Hashable {
+enum LanguageType: String, Hashable, Codable {
     case english = "english"
     case ukrainian = "ukrainian"
     case italian = "italian"

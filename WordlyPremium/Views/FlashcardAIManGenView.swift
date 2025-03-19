@@ -14,6 +14,8 @@ struct FlashcardAIManGenView: View {
 
     var isAIGenerated: Bool
     var titlePlaceholder: String
+    var langFrom: LanguageType
+    var langTo: LanguageType
     var onAddFlashcard: () -> Void
 
     @State private var title = ""
@@ -48,11 +50,13 @@ struct FlashcardAIManGenView: View {
         let pack = PackEntity(
             name: title,
             isAIGenerated: isAIGenerated,
+            langFrom: langFrom,
+            langTo: langTo,
             flashcards: flashcards
         )
 
         dataService.createPack(
-            name: title, isAIGenerated: isAIGenerated, flashcards: flashcards)
+            name: title, isAIGenerated: isAIGenerated, langFrom: langFrom, langTo: langTo, flashcards: flashcards)
 
         /// Show success message
         showSaveConfirmation = true
@@ -194,14 +198,15 @@ struct FlashcardAIManGenView: View {
 }
 
 #Preview {
-    @State var flashcards: [FlashcardEntity] = [
-        FlashcardEntity(question: "Example", answer: "Answer"),
-        FlashcardEntity(question: "aa", answer: "ee")
+    @Previewable @State var flashcards: [FlashcardEntity] = [
+        FlashcardEntity(question: "Example", answer: "Answer", isStudied: false)
     ]
     FlashcardAIManGenView(
         flashcards: $flashcards,
         isAIGenerated: true,
         titlePlaceholder: "New Pack",
+        langFrom: LanguageType.english,
+        langTo: LanguageType.italian,
         onAddFlashcard: {}
     )
 }
