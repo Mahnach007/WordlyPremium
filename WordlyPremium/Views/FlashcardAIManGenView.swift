@@ -92,12 +92,14 @@ struct FlashcardAIManGenView: View {
                     .focused($isFocused)
                 }
                 ScrollView(.vertical) {
-                    ForEach($flashcards) { $flashcard in
-                        AddNewCard(
-                            question: $flashcard.question,
-                            answer: $flashcard.answer,
-                            isAIGenerated: isAIGenerated
-                        )
+                    VStack(spacing: 10) {
+                        ForEach($flashcards) { $flashcard in
+                            AddNewCard(
+                                question: $flashcard.question,
+                                answer: $flashcard.answer,
+                                isAIGenerated: isAIGenerated
+                            )
+                        }
                     }
                 }
                 AddButton(isRounded: true)
@@ -193,11 +195,12 @@ struct FlashcardAIManGenView: View {
 
 #Preview {
     @State var flashcards: [FlashcardEntity] = [
-        FlashcardEntity(question: "Example", answer: "Answer")
+        FlashcardEntity(question: "Example", answer: "Answer"),
+        FlashcardEntity(question: "aa", answer: "ee")
     ]
     FlashcardAIManGenView(
         flashcards: $flashcards,
-        isAIGenerated: false,
+        isAIGenerated: true,
         titlePlaceholder: "New Pack",
         onAddFlashcard: {}
     )
