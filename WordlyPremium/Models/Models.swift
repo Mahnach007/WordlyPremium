@@ -7,6 +7,7 @@
 
 import Foundation
 
+<<<<<<< Updated upstream
 struct Folder: Codable, Identifiable {
     let id: UUID = UUID()
     let name: String
@@ -45,6 +46,51 @@ struct Pack: Codable, Identifiable {
         case name, isAIGenerated, flashcards
     }
 }
+=======
+// Models for Components
+// Folder
+//struct Folder: Codable, Identifiable {
+//    let id: UUID = UUID()
+//    let name: String
+//    var packs: [Pack]
+//
+//    enum CodingKeys: String, CodingKey {
+//        case name, packs
+//    }
+//}
+
+// Pack
+//struct Pack: Codable, Identifiable {
+//    let id: UUID = UUID()
+//    var name: String
+//    let isAIGenerated: Bool
+//    var langFrom: LanguageType
+//    var langTo: LanguageType
+//    var flashcards: [Flashcard]
+//
+//    var studiedPercentage: CGFloat {
+//        let studiedCount = flashcards.filter { $0.isStudied }.count
+//        let percentage = CGFloat(studiedCount) / CGFloat(flashcards.count)
+//        return percentage
+//    }
+//
+//    var flashcardCount: Int {
+//        return flashcards.count
+//    }
+//
+//    var studiedFlashcardsCount: Int {
+//        return flashcards.filter { $0.isStudied }.count
+//    }
+//
+//    var notStudiedFlashcardsCount: Int {
+//        return flashcards.filter { !$0.isStudied }.count
+//    }
+//
+//    enum CodingKeys: String, CodingKey {
+//        case name, isAIGenerated, flashcards
+//    }
+//}
+>>>>>>> Stashed changes
 
 struct Flashcard: Codable, Identifiable {
     var id: UUID = UUID()

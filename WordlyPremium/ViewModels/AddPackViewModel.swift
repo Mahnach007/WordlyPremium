@@ -12,7 +12,7 @@ class AddPackViewModel: ObservableObject {
     private var dataService: DataService = DataService()
     @Published var packs: [PackEntity] = [
         PackEntity(
-            name: "Spanish Pack", isAIGenerated: false,
+            name: "Spanish Pack", isAIGenerated: false, langFrom: LanguageType.english, langTo: LanguageType.italian,
             flashcards: [
                 FlashcardEntity(
                     question: "Hello", answer: "Hola", isStudied: true),

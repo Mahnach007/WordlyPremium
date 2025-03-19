@@ -75,17 +75,26 @@ class DataService: ObservableObject {
     }
 
     func createPack(
+<<<<<<< Updated upstream
         name: String, isAIGenerated: Bool, flashcards: [FlashcardEntity] = []
             //        inFolder: FolderEntity
     ) -> PackEntity {
         let pack = PackEntity(
             name: name, isAIGenerated: isAIGenerated, flashcards: flashcards)
         //        inFolder.packs.append(pack)
+=======
+        name: String, isAIGenerated: Bool, langFrom: LanguageType, langTo: LanguageType, flashcards: [FlashcardEntity] = []
+//        inFolder: FolderEntity
+    ) -> PackEntity {
+        let pack = PackEntity(name: name, isAIGenerated: isAIGenerated, langFrom: langFrom, langTo: langTo, flashcards: flashcards)
+//        inFolder.packs.append(pack)
+>>>>>>> Stashed changes
         modelContext.insert(pack)
         saveContext()
         return pack
     }
 
+<<<<<<< Updated upstream
     /// Create a pack from struct models
     func createPack(fromStructPack pack: Pack, inFolder: FolderEntity)
         -> PackEntity
@@ -113,6 +122,29 @@ class DataService: ObservableObject {
         saveContext()
         return pack
     }
+=======
+    // Create a pack from struct models
+//    func createPack(fromStructPack pack: Pack, inFolder: FolderEntity) -> PackEntity {
+//        let packEntity = PackEntity.from(pack: pack)
+//        inFolder.packs.append(packEntity)
+//        modelContext.insert(packEntity)
+//        saveContext()
+//        return packEntity
+//    }
+
+    // Direct creation method for GenerationCardView
+//    func saveGeneratedPack(
+//        title: String, flashcards: [Flashcard], isAIGenerated: Bool, langFrom: LanguageType, langTo: LanguageType, inFolder: FolderEntity
+//    ) -> PackEntity {
+//        let flashcardEntities = flashcards.map { FlashcardEntity.from(flashcard: $0) }
+//        let pack = PackEntity(
+//            name: title, isAIGenerated: isAIGenerated, flashcards: flashcardEntities)
+//        inFolder.packs.append(pack)
+//        modelContext.insert(pack)
+//        saveContext()
+//        return pack
+//    }
+>>>>>>> Stashed changes
 
     func updatePack(_ pack: PackEntity, newName: String) {
         pack.name = newName
