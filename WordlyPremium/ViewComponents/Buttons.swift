@@ -59,7 +59,7 @@ struct CardButton: View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(Color.gray)
+                    .foregroundStyle(Color.rhino)
                     .frame(width: 178, height: 115)
                     .offset(y: 5)
 
@@ -68,7 +68,7 @@ struct CardButton: View {
                     .frame(width: 175, height: 115)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray, lineWidth: 3)
+                            .stroke(Color.rhino, lineWidth: 3)
                     )
                     .offset(y: isPressed ? 4 : 0)
 
@@ -118,7 +118,7 @@ struct AddButton: View {
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: isRounded ? 30 : 3)
-                    .foregroundStyle(Color.treeFrog)
+                    .foregroundStyle(Color.frog)
                     .frame(
                         width: isRounded ? 60 : 35, height: isRounded ? 60 : 35
                     )
@@ -275,47 +275,63 @@ struct ButtonWithImage: View {
 struct ConfirmButton: View {
     @State private var isPressed = false
     var cardTitle: String
-    var icon: String
+    var icon: String?
+    var width: CGFloat
+    var color: Color?
     let action: () -> Void
 
     var body: some View {
-        let backgroundGradient: LinearGradient = AppColors.gradient
+        let parsedColor: LinearGradient = {
+            if let color = color {
+                return LinearGradient(
+                    colors: [color, color], startPoint: .leading,
+                    endPoint: .trailing)
+            } else {
+                return AppColors.gradient
+            }
+        }()
 
         PressableButton(isPressed: $isPressed) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(backgroundGradient)
-                    .frame(width: 208, height: 65)
+                    .foregroundStyle(parsedColor)
+                    .frame(width: width, height: 65)
                     .offset(y: 5)
 
                 RoundedRectangle(cornerRadius: 10)
                     .foregroundStyle(Color.background)
-                    .frame(width: 205, height: 65)
+                    .frame(width: width - 3, height: 65)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(backgroundGradient, lineWidth: 3)
+                            .stroke(parsedColor, lineWidth: 3)
                     )
                     .offset(y: isPressed ? 4 : 0)
+
                 ZStack {
                     Text(cardTitle)
                         .font(.custom("Feather", size: 22))
-                        .offset(x: 20)
+                        .offset(x: icon == nil ? 0 : 20)
                         .foregroundStyle(Color.eel)
                         .multilineTextAlignment(.leading)
                 }
                 .offset(y: isPressed ? 4 : 0)
             }
             .overlay(
-                Image(icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .offset(x: 20, y: -5)
-                    .offset(y: isPressed ? 4 : 0)
-                    .padding(.bottom, 12)
-                    .padding(.leading, 8),
+                Group {
+                    if let iconName = icon {
+                        Image(iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                            .offset(x: 20, y: -5)
+                            .offset(y: isPressed ? 4 : 0)
+                            .padding(.bottom, 12)
+                            .padding(.leading, 8)
+                    }
+                },
                 alignment: .bottomLeading
             )
+
         } action: {
             action()
         }
@@ -394,7 +410,7 @@ struct TextLink: View {
     //        cardTitle: "Italian", icon: "it", isGradient: false)
     //    ButtonWithImage(
     //        cardTitle: "Ukranian", icon: "ua", isGradient: false, isChecked: false)
-    //    ConfirmButton(cardTitle: "e", icon: "gb")
+    ConfirmButton(cardTitle: "Practice mistakes", width: 228, color: Color.white, action: {})
     //        SingleButton(word: "Adjective")
     //    CardButtonExtended(
     //        cardTitle: "AI Flashcards", icon: "flashcards",
@@ -405,5 +421,5 @@ struct TextLink: View {
     //        cardTitle: "card.title",
     //        numberOfWords: 20,
     //        icon: "cards"))
-    CardButton(cardTitle: "Sports", numberOfWords: 8, icon: "cards")
+    //    CardButton(cardTitle: "Sports", numberOfWords: 8, icon: "cards")
 }

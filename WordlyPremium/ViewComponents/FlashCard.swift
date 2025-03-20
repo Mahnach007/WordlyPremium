@@ -2,6 +2,7 @@ import AVFoundation
 import SwiftUI
 
 struct FlashCard: View {
+    var card: FlashcardEntity
     var question: String
     var answer: String
 
@@ -37,7 +38,11 @@ struct FlashCard: View {
     }
 
     private func speakPressed(isAnswer: Bool) {
-        onSpeak(isAnswer ? answer : question, isAnswer ? .english : .italian)
+        if let langFrom = card.pack?.langFrom, let langTo = card.pack?.langTo {
+            onSpeak(isAnswer ? answer : question, isAnswer ? langTo : langFrom)
+            print("Idioma de origen: \(langFrom)")
+        }
+        
     }
 
     func flipCard() {
@@ -101,7 +106,7 @@ struct FrontPart: View {
                         .foregroundStyle(Color.darkBlue)
                         .offset(y: 7)
                     RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(Color.lightBlue)
+                        .foregroundStyle(Color.azure)
                         .overlay(alignment: .topLeading) {
                             Button {
                                 action()
@@ -178,7 +183,7 @@ struct BackPart: View {
 
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(Color.lightBlue)
+                        .foregroundStyle(Color.azure)
                         .offset(y: 7)
                     RoundedRectangle(cornerRadius: 20)
                         .foregroundStyle(Color.darkBlue)

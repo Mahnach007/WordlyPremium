@@ -34,6 +34,7 @@ struct FlashcardPlayView: View {
                         id: \.element.id
                     ) { index, card in
                         FlashCard(
+                            card: card,
                             question: card.question,
                             answer: card.answer,
                             borderColor: index == 0
@@ -89,29 +90,20 @@ struct FlashcardPlayView: View {
                 if viewModel.allCardsLearned {
                     VStack(spacing: 20) {
                         Text("Congratulations!")
-                            .font(.title)
-                            .foregroundColor(.green)
-
+                            .font(.custom("Feather", size: 28))
+                            .foregroundColor(Color.owl)
                         Text(
                             "You've learned all \(viewModel.rememberedCards.count) cards!"
                         )
-                        .font(.headline)
-
+                        .font(.custom("Feather", size: 20))
+                        Spacer()
+                            .frame(height: 10)
                         Button(action: {
                             viewModel.resetAllCards()
                         }) {
-                            Text("Start Over")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.blue)
-                                .cornerRadius(10)
+                            ConfirmButton(cardTitle: "Start again", width: 228, color: Color.aqua, action: {})
                         }
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(15)
-                    .shadow(radius: 5)
                     .padding()
                 }
             }
@@ -131,7 +123,6 @@ struct FlashcardPlayView: View {
                     }
                 }
             }
-
             ToolbarItem(placement: .principal) {
                 Text(
                     "\(viewModel.rememberedCards.count)/\(viewModel.allCards.count)"
@@ -139,21 +130,21 @@ struct FlashcardPlayView: View {
                 .foregroundStyle(Color.eel)
                 .font(.custom("Feather", size: 15))
             }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    HStack {
-                        Text(Image(systemName: "gearshape.fill"))
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.eel)
-                    }
-                }
-            }
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                Button(action: {
+//                    dismiss()
+//                }) {
+//                    HStack {
+//                        Text(Image(systemName: "gearshape.fill"))
+//                            .fontWeight(.bold)
+//                            .foregroundStyle(Color.eel)
+//                    }
+//                }
+//            }
         }
         .fontWeight(.bold)
         .foregroundStyle(Color.eel)
+        .background(Color.background)
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .regainSwipeBack()
@@ -206,43 +197,25 @@ struct RoundCompletionView: View {
     var body: some View {
         VStack(spacing: 20) {
             Text("Round Complete!")
-                .font(.title)
-                .foregroundColor(.blue)
+                .font(.custom("Feather", size: 28))
+                .foregroundColor(Color.darkBlue)
             Text("You've learned \(learnedCards) out of \(totalCards) cards.")
-                .font(.headline)
-            Text(
-                "Would you like to continue with the remaining cards or reset and start over?"
-            )
+                .font(.custom("Feather", size: 20))
             .multilineTextAlignment(.center)
             .padding(.horizontal)
-
-            HStack(spacing: 20) {
+            Spacer()
+                .frame(height: 10)
+            VStack(spacing: 20) {
                 Button(action: onContinue) {
-                    Text("Continue")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(minWidth: 120)
-                        .background(Color.green)
-                        .cornerRadius(10)
+                    ConfirmButton(cardTitle: "Practice mistakes", width: 248, color: Color.frog, action: onContinue)
                 }
-
                 Button(action: onReset) {
-                    Text("Reset All")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(minWidth: 120)
-                        .background(Color.red)
-                        .cornerRadius(10)
+                    ConfirmButton(cardTitle: "Restart", width: 248, color: Color.cardinal, action: onReset)
                 }
             }
         }
         .padding()
-        .background(Color.white)
         .cornerRadius(15)
-        .shadow(radius: 5)
-        .padding()
     }
 }
 struct LearnCardCounterView: View {
@@ -269,8 +242,8 @@ struct LearnCardCounterView: View {
     }
 }
 
-//#Preview {
-//    FlashcardPlayView(flashCards: [
-//        FlashcardEntity(question: "hello", answer: "hallo")
-//    ])
-//}
+#Preview {
+    FlashcardPlayView(flashCards: [
+        FlashcardEntity(question: "hello", answer: "hallo", isStudied: false)
+    ])
+}

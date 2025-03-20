@@ -72,6 +72,7 @@ struct CardListView: View {
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .padding()
+        .background(Color.background)
         .navigationBarBackButtonHidden(true)
         .regainSwipeBack()
         .toolbar {

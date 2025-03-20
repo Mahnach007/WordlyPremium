@@ -37,7 +37,7 @@ struct SearchBar: View {
         .background {
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color.background)
-                .stroke(Color.rhino, style: .init(lineWidth: 1))
+                .stroke(Color.rhino, lineWidth: 1)
         }
     }
 }
@@ -105,7 +105,7 @@ struct SelectorWithModal<T: Equatable>: View {
         .background {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.background)
-                .stroke(Color.eel, style: .init(lineWidth: 1))
+                .stroke(Color.rhino, lineWidth: 1)
         }
         .onTapGesture {
             isModalPresented = true
@@ -216,7 +216,7 @@ struct NumericField: View {
         .background {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.background)
-                .stroke(Color.rhino, style: .init(lineWidth: 1))
+                .stroke(Color.rhino, lineWidth: 1)
         }
     }
 }

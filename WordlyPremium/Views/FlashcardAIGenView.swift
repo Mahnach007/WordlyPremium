@@ -104,7 +104,7 @@ struct FlashcardAIGenView: View {
                     }
                     /// Generate Button
                     ConfirmButton(
-                        cardTitle: "Generate", icon: "generate", action: generateFlashcards
+                        cardTitle: "Generate", icon: "generate", width: 200, action: generateFlashcards
                     )
                     .padding(.bottom, 50)
                     .disabled(isLoading)
@@ -112,7 +112,6 @@ struct FlashcardAIGenView: View {
                 .font(.custom("Feather", size: 12))
                 .frame(maxHeight: .infinity, alignment: .top)
                 .padding()
-                
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         Spacer()
@@ -140,6 +139,7 @@ struct FlashcardAIGenView: View {
                 .addLoader($isLoading)
                 .navigationBarBackButtonHidden(true)
                 .navigationBarTitleDisplayMode(.inline)
+                .background(Color.background)
                 .regainSwipeBack()
                 .onChange(of: selectedCardOption) {
 //                    if let newValue = selectedCardOption {
@@ -184,7 +184,7 @@ struct FlashcardAIGenView: View {
 
         /// Ensure language selections are made
         guard let selectedFrontLanguageOption, let selectedBackLanguageOption else {
-            errorMessage = "Please select both front and back languages"
+            errorMessage = "Please select both front and languages"
             return
         }
         

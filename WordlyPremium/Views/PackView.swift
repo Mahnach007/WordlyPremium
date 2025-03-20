@@ -159,6 +159,7 @@ struct PackView: View {
             .font(.custom("Feather", size: 12))
             .padding(.top)
             .frame(maxHeight: .infinity, alignment: .top)
+            .background(Color.background)
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()

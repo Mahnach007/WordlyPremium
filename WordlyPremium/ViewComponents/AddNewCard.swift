@@ -9,7 +9,7 @@ struct AddNewCard: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white)
+                .fill(Color.background)
                 .stroke(Color.rhino, lineWidth: 1)
             VStack(alignment: .trailing) {
                 UnderlineTextField(text: $question, wordType: "Front")
@@ -68,7 +68,7 @@ struct UnderlineTextField: View {
                     "", text: $text
                 )
                 .font(.custom("feather", size: 16))
-                .foregroundColor(.black)
+                .foregroundColor(.eel)
                 .underlineTextField()
             }
 
@@ -97,7 +97,7 @@ struct CardComponentSuggestion: View {
                         Text(suggestion)
                             .padding(5)
                             .font(.custom("feather", size: 10))
-                            .foregroundColor(.black)
+                            .foregroundColor(.rhino)
                             .onTapGesture {
                                 onSelect(suggestion)
                             }, alignment: .leading
@@ -115,7 +115,11 @@ extension View {
                 RoundedRectangle(cornerRadius: 5)
                     .frame(height: 2)
                     .padding(.top, 35)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.rhino)
             )
     }
+}
+
+#Preview {
+    ContentView()
 }
